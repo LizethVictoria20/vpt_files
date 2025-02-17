@@ -5,3 +5,4 @@ package-lock.json
 /node_modules
 /instance
 .DS_Store
+safe_credentials/

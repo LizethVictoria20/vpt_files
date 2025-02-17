@@ -1,4 +1,4 @@
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, session, url_for
 from myapp.models import User

@@ -7,7 +7,8 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from myapp.routes import main_bp
 import openai
-from myapp.models import db
+from myapp.models import db, User
+from flask_wtf import CSRFProtect
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -15,6 +16,7 @@ client = openai
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
+csrf = CSRFProtect(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'main.login'
 login_manager = LoginManager(app)
@@ -30,7 +32,8 @@ app.register_blueprint(main_bp)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return "holis"
+    return User.query.get(int(user_id))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

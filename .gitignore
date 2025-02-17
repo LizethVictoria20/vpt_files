@@ -1,0 +1,7 @@
+.env
+__pycache__
+.vercel
+package-lock.json
+/node_modules
+/instance
+.DS_Store

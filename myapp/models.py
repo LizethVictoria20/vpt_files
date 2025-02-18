@@ -35,6 +35,18 @@ class User(db.Model, UserMixin):
   def check_password(self, password):
     return bcrypt.check_password_hash(self.password_hash, password)
 
+class DriveFolder(db.Model):
+    __tablename__ = 'drive_folders'
+    id = db.Column(db.Integer, primary_key=True)
+    drive_id = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    files = db.relationship('DriveFile', backref='folder', lazy=True)
+    
+    def __repr__(self):
+        return f"<DriveFolder name={self.name}, drive_id={self.drive_id}>"
+
 
 class DriveFile(db.Model):
   __tablename__ = 'drive_files'
@@ -46,6 +58,7 @@ class DriveFile(db.Model):
   description = db.Column(db.Text, nullable=True)
   etiquetas = db.Column(db.String(255), nullable=True)
   uploaded_at = db.Column(db.DateTime, server_default=db.func.now())
-  
+  folder_id = db.Column(db.Integer, db.ForeignKey('drive_folders.id'))
+
   def __repr__(self):
     return f"<DriveFile filename={self.filename} drive_id={self.drive_id}>"

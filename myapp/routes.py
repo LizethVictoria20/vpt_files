@@ -2,9 +2,9 @@ import os
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
-from myapp.import_drive import SERVICE_ACCOUNT_PATH, subir_a_drive, descargar_desde_drive
-from myapp.models import DriveFile, User
-from forms import DeleteForm, LoginForm, ImportForm
+from myapp.import_drive import SERVICE_ACCOUNT_PATH, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
+from myapp.models import DriveFile, DriveFolder, User
+from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm
 
 main_bp = Blueprint('main', __name__)
 admin_permission = Permission(RoleNeed('admin'))
@@ -52,6 +52,47 @@ def mostrar_import_form():
     form = ImportForm()
     return render_template("import.html", form=form,)
 
+@main_bp.route('/crear_carpeta', methods=['GET', 'POST'])
+@login_required
+def crear_carpeta():
+    from app import db
+    form = NewFolderForm()
+    if form.validate_on_submit():
+        folder_name = form.name.data
+        folder_description = form.description.data
+
+        drive_id = crear_carpeta_drive(folder_name)
+
+
+        nueva_carpeta = DriveFolder(
+            drive_id=drive_id,
+            name=folder_name,
+            description=folder_description
+        )
+        db.session.add(nueva_carpeta)
+        db.session.commit()
+        user_email = 'vpt-files@vpt-files.iam.gserviceaccount.com'
+        compartir_carpeta_con_usuario(drive_id, user_email)
+        
+        flash(f"Carpeta '{folder_name}' creada y compartida con {user_email} exitosamente.", "success")
+        return redirect(url_for('main.listar_carpetas'))
+
+    return render_template('crear_carpeta.html', form=form)
+
+
+@main_bp.route('/carpetas', methods=['GET'])
+@login_required
+def listar_carpetas():
+    carpetas = DriveFolder.query.order_by(DriveFolder.created_at.desc()).all()
+    return render_template('listar_carpetas.html', carpetas=carpetas)
+
+@main_bp.route('/carpeta/<int:folder_id>', methods=['GET'])
+@login_required
+def ver_carpeta(folder_id):
+    # Ejemplo de contenido
+    carpeta = DriveFolder.query.get_or_404(folder_id)
+    archivos = DriveFile.query.filter_by(folder_id=folder_id).all()
+    return render_template('ver_carpeta.html', carpeta=carpeta, archivos=archivos)
 
 @main_bp.route('/import', methods=['POST'])
 @login_required

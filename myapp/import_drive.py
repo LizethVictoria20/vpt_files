@@ -55,4 +55,43 @@ def descargar_desde_drive(drive_id, filename, mimetype=None, cred_path=SERVICE_A
         status, done = downloader.next_chunk()
 
     file_handle.seek(0)  
-    return file_handle
+    return file_handle    
+
+def crear_carpeta_drive(folder_name):
+    SCOPES = ['https://www.googleapis.com/auth/drive.file']
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_PATH,
+        scopes=SCOPES
+    )
+    service = build('drive', 'v3', credentials=creds)
+
+    folder_metadata = {
+        'name': folder_name,
+        'mimeType': 'application/vnd.google-apps.folder',
+        'parents': [ID_FOLDER]
+    }
+    folder = service.files().create(
+        body=folder_metadata,
+        fields='id'
+    ).execute()
+    return folder.get('id')
+
+def compartir_carpeta_con_usuario(folder_drive_id, user_email):
+    SCOPES = ['https://www.googleapis.com/auth/drive']
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_PATH, 
+        scopes=SCOPES
+    )
+    service = build('drive', 'v3', credentials=creds)
+
+    permission_body = {
+        'role': 'writer',      # o 'reader'
+        'type': 'user',
+        'emailAddress': user_email
+    }
+    service.permissions().create(
+        fileId=folder_drive_id,
+        body=permission_body,
+        fields='id'
+    ).execute()
+

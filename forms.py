@@ -15,3 +15,7 @@ class ImportForm(FlaskForm):
     
 class DeleteForm(FlaskForm):
     pass
+
+class NewFolderForm(FlaskForm):
+    name = StringField('Nombre de la carpeta', validators=[DataRequired()])
+    description = TextAreaField('Descripción (opcional)')

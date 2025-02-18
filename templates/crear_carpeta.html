@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Crear Carpeta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    {% include 'base.html' %}
+    {% block content %}
+    <div class="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4">Crear Nueva Carpeta</h1>
+
+        <!-- Formulario -->
+        <form action="{{ url_for('main.crear_carpeta') }}" method="POST" class="space-y-4">
+          <!-- CSRF Token (si usas Flask-WTF) -->
+          {{ form.hidden_tag() }}
+
+          <!-- Campo Nombre -->
+          <div>
+            {{ form.name.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.name(class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none 
+                          focus:ring-red-500 focus:border-red-500 transition-colors") }}
+            {% if form.name.errors %}
+              <p class="text-red-600 text-sm mt-1">{{ form.name.errors[0] }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Campo Descripción -->
+          <div>
+            {{ form.description.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.description(class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md 
+                                focus:outline-none focus:ring-red-500 focus:border-red-500 transition-colors") }}
+            {% if form.description.errors %}
+              <p class="text-red-600 text-sm mt-1">{{ form.description.errors[0] }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Botón Crear Carpeta -->
+          <div class="flex justify-end">
+            <button 
+              type="submit"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium 
+                     rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 
+                     focus:ring-offset-2 focus:ring-red-500"
+            >
+              Crear Carpeta
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endblock %}
+  </body>
+</html>

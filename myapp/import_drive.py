@@ -7,7 +7,7 @@ from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
 SERVICE_ACCOUNT_PATH = os.getenv('SERVICE_ACCOUNT_JSON')
 ID_FOLDER = os.getenv('ID_FOLDER_DRIVE')
 
-def subir_a_drive(file_obj):
+def subir_a_drive(file_obj, parent_id=None):
     SCOPES = ['https://www.googleapis.com/auth/drive.file']
     creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_PATH,
@@ -22,11 +22,15 @@ def subir_a_drive(file_obj):
         mimetype=file_obj.mimetype,
         resumable=True
     )
-    
-    file_metadata = {
-        'name': filename,
-        'parents': [ID_FOLDER]
-    }
+    if parent_id:
+        file_metadata = {
+            'name': filename,
+            'parents': [parent_id]
+        }
+    else:
+        file_metadata = {
+            'name': filename
+        } 
 
     uploaded_file = service.files().create(
         body=file_metadata,
@@ -36,6 +40,9 @@ def subir_a_drive(file_obj):
 
     file_id = uploaded_file.get('id')
     print(f"Archivo subido con ID: {file_id}")
+
+    file_id = uploaded_file.get('id')
+    print(f"Archivo '{filename}' subido con ID: {file_id} - Carpeta drive_id={parent_id or 'raíz'}")
 
     return file_id
 

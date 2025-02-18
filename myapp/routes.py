@@ -86,13 +86,46 @@ def listar_carpetas():
     carpetas = DriveFolder.query.order_by(DriveFolder.created_at.desc()).all()
     return render_template('listar_carpetas.html', carpetas=carpetas)
 
-@main_bp.route('/carpeta/<int:folder_id>', methods=['GET'])
+@main_bp.route('/carpeta/<int:folder_id>', methods=['GET', 'POST'])
 @login_required
 def ver_carpeta(folder_id):
-    # Ejemplo de contenido
+    from myapp.models import DriveFolder, DriveFile, db
+
     carpeta = DriveFolder.query.get_or_404(folder_id)
+
+    form = ImportForm()
+    
+    if form.validate_on_submit():
+        files = request.files.getlist('archivos')
+        if not files or files[0].filename == '':
+            flash("No se han seleccionado archivos", "error")
+            return redirect(url_for('main.ver_carpeta', folder_id=folder_id))
+
+        descripcion = request.form.get('descripcion')
+        etiquetas = request.form.get('etiquetas')
+
+        for file in files:
+            if file.filename:
+                drive_id = subir_a_drive(file, carpeta.drive_id)
+
+                new_file = DriveFile(
+                    drive_id=drive_id,
+                    filename=file.filename,
+                    mimetype=file.mimetype,
+                    folder_id=carpeta.id,
+                    description=descripcion,
+                    etiquetas=etiquetas
+                )
+                db.session.add(new_file)
+        db.session.commit()
+        flash(f"Se han subido {len(files)} archivo(s) a la carpeta {carpeta.name}.", "success")
+        return redirect(url_for('main.ver_carpeta', folder_id=folder_id))
+
     archivos = DriveFile.query.filter_by(folder_id=folder_id).all()
-    return render_template('ver_carpeta.html', carpeta=carpeta, archivos=archivos)
+    return render_template('ver_carpeta.html', 
+                           carpeta=carpeta, 
+                           archivos=archivos, 
+                           form=form)
 
 @main_bp.route('/import', methods=['POST'])
 @login_required

@@ -10,12 +10,10 @@
     <!-- Contenedor principal -->
     <div class="min-h-screen bg-gray-50">
       <!-- Contenido principal -->
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-12">
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumbs -->
 
-        <div class="flex items-center space-x-2 text-sm mb-8">
-          <a href="#" class="text-gray-500 hover:text-gray-700">Inicio</a>
-          <span class="text-gray-400">/</span>
+        <div class="flex items-center space-x-2 text-sm my-8 pt-4">
           <a href="#" class="text-gray-500 hover:text-gray-700">Importación</a>
           <span class="text-gray-400">/</span>
           <span class="text-gray-900">Nuevo archivo</span>
@@ -34,62 +32,38 @@
             {{ form.hidden_tag() }}
 
             <!-- Área de arrastrar y soltar -->
-            <div
-              class="border-2 border-dashed border-gray-200 rounded-lg p-12 text-center hover:border-red-500 transition duration-150 ease-in-out cursor-pointer"
-            >
-              <svg
-                class="mx-auto h-12 w-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                ></path>
+            <div class="border-2 border-dashed border-gray-200 rounded-lg p-12 text-center hover:border-red-500 transition duration-150 ease-in-out cursor-pointer">
+              <!-- Ícono de subida -->
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
               </svg>
+              
+              <!-- Texto instructivo -->
               <p class="mt-4 text-lg text-gray-700">
-                Arrastra y suelta tus archivos aquí
-              </p>
-              <p class="mt-2 text-sm text-gray-500">o</p>
-              <label
-                for="archivo-1"
-                class="block text-sm font-medium text-gray-700"
-              >
                 Seleccione un archivo:
-                <p id="nombre-archivo" style="font-style: italic"></p>
-              </label>
-              <div class="relative w-[20rem]">
-                <input
-                  type="file"
-                  id="archivo-1"
-                  class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  aria-label="Seleccionar archivo"
-                  name="archivo"
-                />
-                <button
-                  class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
-                >
-                  <svg
-                    class="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                    />
-                  </svg>
-                  Seleccionar archivo
-                </button>
+              </p>
+              <!-- Contenedor centrado para el input -->
+              <div class="flex justify-center mt-4">
+                  <div class="relative w-64">
+                      <input
+                          type="file"
+                          id="archivo-1"
+                          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                          aria-label="Seleccionar archivo"
+                          name="archivo"
+                      />
+                      <button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+                          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                          </svg>
+                          Seleccionar archivo
+                      </button>
+                  </div>
               </div>
-              <p class="mt-2 text-sm text-gray-500">Máximo 50MB por archivo</p>
-            </div>
+              
+              <!-- Texto informativo -->
+              <p class="mt-4 text-sm text-gray-500">Máximo 50MB por archivo</p>
+          </div>
             
           <div class="mt-8 space-y-6">
             <div class="space-y-2">
@@ -164,67 +138,6 @@
           </div>
         </div>
       </form>
-
-        <!-- Archivos recientes -->
-        <div class="mt-12">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6">
-            Archivos recientes
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Tarjeta de archivo -->
-            <div
-              class="bg-white shadow-lg rounded-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300 ease-in-out"
-            >
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <svg
-                    class="w-8 h-8 text-red-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    ></path>
-                  </svg>
-                  <div>
-                    <h3 class="text-lg font-medium text-gray-900">
-                      datos_ventas.csv
-                    </h3>
-                    <p class="text-sm text-gray-500">Importado hace 2 horas</p>
-                  </div>
-                </div>
-                <button class="text-gray-400 hover:text-gray-500">
-                  <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                    ></path>
-                  </svg>
-                </button>
-              </div>
-              <div class="mt-4">
-                <div class="flex items-center space-x-2">
-                  <span
-                    class="px-2 py-1 text-xs font-medium text-green-700 bg-green-50 rounded-full"
-                    >Completado</span
-                  >
-                  <span class="text-sm text-gray-500">2.4 MB</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </main>
     </div>
     <script>

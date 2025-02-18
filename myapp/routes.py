@@ -54,42 +54,42 @@ def procesar_import_form():
     print("¡Entrando a procesar_import_form!")
     form = ImportForm()
     if form.validate_on_submit():
-
-        file = request.files.get('archivo')
-        if not file:
-            flash("No se ha seleccionado ningún archivo", "error")
+        files = request.files.getlist('archivos')
+        if not files or len(files) == 0 or files[0].filename == '':
+            flash("No se han seleccionado archivos", "error")
             return redirect(url_for('main.mostrar_import_form'))
 
         descripcion = request.form.get('descripcion')
         etiquetas = request.form.get('etiquetas')
 
         ALLOWED_EXTENSIONS = {'csv', 'xls', 'xlsx', 'json', 'xml'}
-        filename = file.filename
-        if not filename:
-            flash("El archivo no tiene nombre.", "error")
-            return redirect(url_for('main.mostrar_import_form'))
 
-        ext = filename.rsplit('.', 1)[-1].lower()
-        if ext not in ALLOWED_EXTENSIONS:
-            flash("Tipo de archivo no soportado", "error")
-            return redirect(url_for('main.mostrar_import_form'))
+        for file in files:
+            filename = file.filename
+            if not filename:
+                flash("Uno de los archivos no tiene nombre.", "error")
+                continue
 
-        drive_id = subir_a_drive(file)
-        new_file = DriveFile(
-            drive_id=drive_id,
-            filename=file.filename,
-            mimetype=file.mimetype,
-            description=descripcion,
-            etiquetas=etiquetas
-        )
-        db.session.add(new_file)
-        db.session.commit()
+            ext = filename.rsplit('.', 1)[-1].lower()
+            if ext not in ALLOWED_EXTENSIONS:
+                flash(f"Archivo {filename} - Tipo de archivo no soportado", "error")
+                continue
 
-        print(f"Archivo {filename} importado con éxito. ID de Drive: {drive_id}")
+            drive_id = subir_a_drive(file)
 
-        flash(f"Archivo {filename} importado con éxito.", "success")
+            new_file = DriveFile(
+                drive_id=drive_id,
+                filename=filename,
+                mimetype=file.mimetype,
+                description=descripcion,
+                etiquetas=etiquetas
+            )
+            db.session.add(new_file)
 
+        db.session.commit() 
+        flash(f"Se han importado {len(files)} archivos.", "success")
     return redirect(url_for('main.listar_archivos'))
+
 
 @admin_permission.require(http_exception=403)
 @main_bp.route('/archivos', methods=['GET'])

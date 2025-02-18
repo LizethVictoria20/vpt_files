@@ -8,6 +8,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class ImportForm(FlaskForm):
-    archivo = FileField('Archivo', validators=[DataRequired()])
+    archivos = FileField('Archivo', validators=[DataRequired()])
     descripcion = StringField('Descripción')
     etiquetas = StringField('Etiquetas')

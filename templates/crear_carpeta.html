@@ -16,125 +16,86 @@
     {% include 'base.html' %} {% block content %}
     
     <div class="min-h-screen bg-gray-50">
-      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-        <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-100">
-          <!-- Header -->
-          <div class="my-12">
-            <h1 class="text-3xl font-bold text-gray-900">
-              Crear Nueva Carpeta
-            </h1>
-            <p class="text-sm text-gray-600">
-              Complete los campos para crear una nueva carpeta personal. Esta
-              carpeta le permitirá organizar y almacenar sus archivos de manera
-              segura dentro del sistema.
-            </p>
-          </div>
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+        <!-- Header Simple -->
+        <div class="flex items-center space-x-2 text-sm mb-8">
+          <a href="#" class="text-gray-500 hover:text-gray-700">Dashboard</a>
+          <span class="text-gray-400">/</span>
+          <span class="text-gray-900">Nueva Carpeta</span>
+        </div>
 
+        <div class="bg-white rounded-lg p-8">
+          <!-- Header -->
+          <div class="flex items-center gap-3 mb-8">
+            <h1 class="text-xl font-semibold text-gray-900">Nueva Carpeta</h1>
+            
+          </div>
+          <p class="text-sm text-gray-600">
+            Complete los campos para crear una nueva carpeta personal. Esta
+            carpeta le permitirá organizar y almacenar sus archivos de manera
+            segura dentro del sistema.
+          </p>
           <!-- Formulario -->
-          <form method="POST" class="space-y-2">
+          <form method="POST" class="space-y-6">
             {{ form.hidden_tag() }}
 
             <!-- Campo Nombre -->
-            <div class="space-y-2">
-              <label for="name" class="block text-sm font-medium text-gray-700"
-                >Nombre de la carpeta</label
-              >
+            <div class="space-y-1">
+              <label for="name" class="block text-sm font-medium text-gray-700">
+                Nombre
+              </label>
               <input
                 type="text"
                 id="name"
                 name="name"
-                class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out"
-                placeholder="Ingrese el nombre de la carpeta"
+                class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                placeholder="Ej: Documentos Personales"
                 required
               />
-              <p class="mt-1 text-sm text-gray-500">
-                El nombre debe ser único y descriptivo.
-              </p>
             </div>
 
             <!-- Campo Descripción -->
-            <div class="space-y-2">
-              <label
-                for="description"
-                class="block text-sm font-medium text-gray-700"
-                >Descripción</label
-              >
+            <div class="space-y-1">
+              <label for="description" class="block text-sm font-medium text-gray-700">
+                Descripción
+              </label>
               <textarea
                 id="description"
                 name="description"
-                rows="4"
-                class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out"
-                placeholder="Describa el propósito de esta carpeta"
+                rows="3"
+                class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                placeholder="Describa brevemente el contenido de la carpeta"
               ></textarea>
-            </div>            
+            </div>
 
             <!-- Campo Etiquetas -->
-            <div class="space-y-2">
-              <label for="tags" class="block text-sm font-medium text-gray-700"
-                >Etiquetas (Opcional)</label
-              >
+            <div class="space-y-1">
+              <label for="tags" class="block text-sm font-medium text-gray-700">
+                Etiquetas
+                <span class="text-gray-500 font-normal">(opcional)</span>
+              </label>
               <input
                 type="text"
                 id="tags"
                 name="tags"
-                class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out"
-                placeholder="Ej: proyectos, documentos (separadas por comas)"
+                class="block w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-1 focus:ring-red-500 focus:border-red-500"
+                placeholder="personal, trabajo, documentos"
               />
-              <p class="mt-1 text-sm text-gray-500">
-                Las etiquetas ayudan a organizar y encontrar carpetas
-                rápidamente
-              </p>
-            </div>
-
-            <!-- Alerta Informativa -->
-            <div class="p-4 rounded-lg border bg-blue-50 border-blue-200 my-4">
-              <div class="flex">
-                <svg
-                  class="w-5 h-5 text-blue-600 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <p class="text-sm text-blue-700">
-                  Las carpetas creadas serán accesibles desde el panel
-                  principal. Puede editar los detalles más tarde.
-                </p>
-              </div>
             </div>
 
             <!-- Botones -->
-            <div class="flex flex-col sm:flex-row sm:justify-end gap-3 my-4">
-              <button
-                type="button"
-                class="flex justify-center py-3 px-4 border-2 border-gray-200 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out w-full sm:w-auto"
+            <div class="flex justify-end gap-3 pt-6">
+              <a
+                href="#"
+                class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
               >
                 Cancelar
-              </button>
+              </a>
               <button
                 type="submit"
-                class="flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out w-full sm:w-auto"
+                class="flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
-                <svg
-                  class="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Crear Carpeta
+                Crear carpeta
               </button>
             </div>
           </form>
@@ -143,17 +104,13 @@
     </div>
 
     <!-- Loading Overlay -->
-    <div
-      id="loadingOverlay"
-      class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden flex items-center justify-center"
-    >
-      <div class="bg-white shadow-lg rounded-lg p-6 border border-gray-100">
-        <div class="flex items-center">
-          <div class="animate-spin h-5 w-5 text-red-600 mr-3"></div>
-          <span class="text-base text-gray-700">Creando carpeta...</span>
-        </div>
+    <div id="loadingOverlay" class="fixed inset-0 bg-white bg-opacity-75 hidden flex items-center justify-center">
+      <div class="flex items-center">
+        <div class="animate-spin h-5 w-5 text-red-600 mr-3"></div>
+        <span class="text-sm font-medium text-gray-900">Creando carpeta...</span>
       </div>
     </div>
+
     {% endblock %}
   </body>
 </html>

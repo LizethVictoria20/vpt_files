@@ -6,6 +6,7 @@ from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
 
 SERVICE_ACCOUNT_PATH = os.getenv('SERVICE_ACCOUNT_JSON')
 ID_FOLDER = os.getenv('ID_FOLDER_DRIVE')
+USER_EMAIL = os.getenv('USER_EMAIL_SERVICE')
 
 def subir_a_drive(file_obj, parent_id=None):
     SCOPES = ['https://www.googleapis.com/auth/drive.file']

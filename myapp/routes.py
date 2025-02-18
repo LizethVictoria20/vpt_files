@@ -2,7 +2,7 @@ import os
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
-from myapp.import_drive import SERVICE_ACCOUNT_PATH, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
+from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
 from myapp.models import DriveFile, DriveFolder, User
 from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm
 
@@ -71,11 +71,11 @@ def crear_carpeta():
         )
         db.session.add(nueva_carpeta)
         db.session.commit()
-        user_email = 'vpt-files@vpt-files.iam.gserviceaccount.com'
+        user_email = USER_EMAIL
         compartir_carpeta_con_usuario(drive_id, user_email)
         
         flash(f"Carpeta '{folder_name}' creada y compartida con {user_email} exitosamente.", "success")
-        return redirect(url_for('main.listar_carpetas'))
+        return redirect(url_for('main.ver_carpeta', folder_id=nueva_carpeta.id))
 
     return render_template('crear_carpeta.html', form=form)
 

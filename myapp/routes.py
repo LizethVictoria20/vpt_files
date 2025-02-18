@@ -39,6 +39,12 @@ def logout():
     return redirect(url_for('main.login'))
 
 
+@main_bp.route('/dashboard', methods=['GET'])
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
+
+
 @main_bp.route('/import', methods=['GET'])
 @login_required
 def mostrar_import_form():

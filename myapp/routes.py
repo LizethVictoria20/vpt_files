@@ -2,9 +2,8 @@ import os
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, session, url_for
-from myapp.models import User
+from myapp.models import DriveFile, User
 from forms import LoginForm, ImportForm
-
 
 main_bp = Blueprint('main', __name__)
 admin_permission = Permission(RoleNeed('admin'))
@@ -43,27 +42,15 @@ def logout():
 @main_bp.route('/import', methods=['GET'])
 @login_required
 def mostrar_import_form():
-    """
-    Muestra el formulario de importación (GET).
-    """
-    # Se podría consultar una lista de 'archivos recientes'
-    archivos_recientes = [
-        {
-            "nombre": "datos_ventas.csv",
-            "fecha": "Importado hace 2 horas",
-            "estado": "Completado",
-            "tamano": "2.4 MB",
-        },
-        # ... Más si lo deseas
-    ]
     form = ImportForm()
-    return render_template("import.html", archivos_recientes=archivos_recientes, form=form,)
+    return render_template("import.html", form=form,)
 
 
 @main_bp.route('/import', methods=['POST'])
 @login_required
 def procesar_import_form():
     from myapp.import_drive import subir_a_drive
+    from app import db
     print("¡Entrando a procesar_import_form!")
     form = ImportForm()
     if form.validate_on_submit():
@@ -73,7 +60,9 @@ def procesar_import_form():
             flash("No se ha seleccionado ningún archivo", "error")
             return redirect(url_for('main.mostrar_import_form'))
 
-        
+        descripcion = request.form.get('descripcion')
+        etiquetas = request.form.get('etiquetas')
+
         ALLOWED_EXTENSIONS = {'csv', 'xls', 'xlsx', 'json', 'xml'}
         filename = file.filename
         if not filename:
@@ -86,13 +75,26 @@ def procesar_import_form():
             return redirect(url_for('main.mostrar_import_form'))
 
         drive_id = subir_a_drive(file)
+        new_file = DriveFile(
+            drive_id=drive_id,
+            filename=file.filename,
+            mimetype=file.mimetype,
+            description=descripcion,
+            etiquetas=etiquetas
+        )
+        db.session.add(new_file)
+        db.session.commit()
+
         print(f"Archivo {filename} importado con éxito. ID de Drive: {drive_id}")
 
         flash(f"Archivo {filename} importado con éxito.", "success")
 
-    return redirect(url_for('main.confirmation'))
+    return redirect(url_for('main.listar_archivos'))
 
 @admin_permission.require(http_exception=403)
-@main_bp.route('/confirmation')
-def confirmation():
-    return render_template('confirmation.html')
+@main_bp.route('/archivos', methods=['GET'])
+@login_required
+def listar_archivos():
+    from myapp.models import DriveFile
+    archivos = DriveFile.query.order_by(DriveFile.uploaded_at.desc()).all()
+    return render_template('archivos_list.html', archivos=archivos)

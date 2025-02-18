@@ -36,3 +36,16 @@ class User(db.Model, UserMixin):
     return bcrypt.check_password_hash(self.password_hash, password)
 
 
+class DriveFile(db.Model):
+  __tablename__ = 'drive_files'
+
+  id = db.Column(db.Integer, primary_key=True)
+  drive_id = db.Column(db.String(100), nullable=False)
+  filename = db.Column(db.String(255), nullable=False)
+  mimetype = db.Column(db.String(100), nullable=True)
+  description = db.Column(db.Text, nullable=True)
+  etiquetas = db.Column(db.String(255), nullable=True)
+  uploaded_at = db.Column(db.DateTime, server_default=db.func.now())
+  
+  def __repr__(self):
+    return f"<DriveFile filename={self.filename} drive_id={self.drive_id}>"

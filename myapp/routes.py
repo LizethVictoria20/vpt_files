@@ -1,7 +1,8 @@
 import os
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
-from flask import Blueprint, flash, render_template, request, redirect, session, url_for
+from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
+from myapp.import_drive import SERVICE_ACCOUNT_PATH, subir_a_drive, descargar_desde_drive
 from myapp.models import DriveFile, User
 from forms import LoginForm, ImportForm
 
@@ -55,7 +56,6 @@ def mostrar_import_form():
 @main_bp.route('/import', methods=['POST'])
 @login_required
 def procesar_import_form():
-    from myapp.import_drive import subir_a_drive
     from app import db
     print("¡Entrando a procesar_import_form!")
     form = ImportForm()
@@ -96,6 +96,24 @@ def procesar_import_form():
         flash(f"Se han importado {len(files)} archivos.", "success")
     return redirect(url_for('main.listar_archivos'))
 
+@main_bp.route('/descargar/<int:file_id>', methods=['GET'])
+@login_required
+def descargar_archivo(file_id):
+    archivo = DriveFile.query.get_or_404(file_id)
+
+    fh = descargar_desde_drive(
+        drive_id=archivo.drive_id,
+        filename=archivo.filename,
+        mimetype=archivo.mimetype,
+        cred_path=SERVICE_ACCOUNT_PATH
+    )
+
+    return send_file(
+        fh,
+        as_attachment=True,
+        download_name=archivo.filename,
+        mimetype=archivo.mimetype or 'application/octet-stream'
+    )
 
 @admin_permission.require(http_exception=403)
 @main_bp.route('/archivos', methods=['GET'])

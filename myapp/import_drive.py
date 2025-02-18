@@ -1,15 +1,13 @@
+from io import BytesIO
 import os
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-from googleapiclient.http import MediaIoBaseUpload
+from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
 
 SERVICE_ACCOUNT_PATH = os.getenv('SERVICE_ACCOUNT_JSON')
 ID_FOLDER = os.getenv('ID_FOLDER_DRIVE')
 
 def subir_a_drive(file_obj):
-    """
-    Sube un archivo a Drive dentro de la carpeta cuyo ID ya existe y está compartida.
-    """
     SCOPES = ['https://www.googleapis.com/auth/drive.file']
     creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_PATH,
@@ -17,10 +15,8 @@ def subir_a_drive(file_obj):
     )
     service = build('drive', 'v3', credentials=creds)
 
-    # Nombre que tendrá el archivo en Drive
     filename = file_obj.filename
 
-    # Prepara la subida desde el FileStorage
     media = MediaIoBaseUpload(
         file_obj.stream,
         mimetype=file_obj.mimetype,
@@ -29,7 +25,7 @@ def subir_a_drive(file_obj):
     
     file_metadata = {
         'name': filename,
-        'parents': [ID_FOLDER]  # ID de tu carpeta compartida
+        'parents': [ID_FOLDER]
     }
 
     uploaded_file = service.files().create(
@@ -42,3 +38,21 @@ def subir_a_drive(file_obj):
     print(f"Archivo subido con ID: {file_id}")
 
     return file_id
+
+def descargar_desde_drive(drive_id, filename, mimetype=None, cred_path=SERVICE_ACCOUNT_PATH):
+    SCOPES = ['https://www.googleapis.com/auth/drive.readonly']
+    creds = service_account.Credentials.from_service_account_file(
+        cred_path,
+        scopes=SCOPES
+    )
+    service = build('drive', 'v3', credentials=creds)
+
+    request = service.files().get_media(fileId=drive_id)
+    file_handle = BytesIO()
+    downloader = MediaIoBaseDownload(file_handle, request)
+    done = False
+    while not done:
+        status, done = downloader.next_chunk()
+
+    file_handle.seek(0)  
+    return file_handle

@@ -14,21 +14,29 @@
 
   <body class="font-sans">
     {% include 'base.html' %} {% block content %}
-    
+
     <div class="min-h-screen bg-gray-50">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <!-- Header Simple -->
         <div class="flex items-center space-x-2 text-sm mb-8">
           <a href="#" class="text-gray-500 hover:text-gray-700">Dashboard</a>
           <span class="text-gray-400">/</span>
-          <span class="text-gray-900">Nueva Carpeta</span>
+          <span class="text-gray-900">Crear registro</span>
         </div>
-
+        <!-- Encabezado -->
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-2xl font-bold text-gray-900">Crear carpeta</h1>
+          <a
+            href="{{ url_for('main.crear_carpeta') }}"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            Crear Carpeta
+          </a>
+        </div>
         <div class="bg-white rounded-lg p-8">
           <!-- Header -->
           <div class="flex items-center gap-3 mb-8">
             <h1 class="text-xl font-semibold text-gray-900">Nueva Carpeta</h1>
-            
           </div>
           <p class="text-sm text-gray-600">
             Complete los campos para crear una nueva carpeta personal. Esta
@@ -56,7 +64,10 @@
 
             <!-- Campo Descripción -->
             <div class="space-y-1">
-              <label for="description" class="block text-sm font-medium text-gray-700">
+              <label
+                for="description"
+                class="block text-sm font-medium text-gray-700"
+              >
                 Descripción
               </label>
               <textarea
@@ -104,10 +115,15 @@
     </div>
 
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-white bg-opacity-75 hidden flex items-center justify-center">
+    <div
+      id="loadingOverlay"
+      class="fixed inset-0 bg-white bg-opacity-75 hidden flex items-center justify-center"
+    >
       <div class="flex items-center">
         <div class="animate-spin h-5 w-5 text-red-600 mr-3"></div>
-        <span class="text-sm font-medium text-gray-900">Creando carpeta...</span>
+        <span class="text-sm font-medium text-gray-900"
+          >Creando carpeta...</span
+        >
       </div>
     </div>
 

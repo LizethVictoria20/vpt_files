@@ -24,7 +24,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
             flash('Inicio de sesión exitoso', 'success')
-            return redirect(url_for('main.mostrar_import_form'))
+            return redirect(url_for('main.listar_carpetas'))
         else:
             flash('Nombre de usuario o contraseña incorrectos', 'danger')
             return redirect(url_for('main.login'))

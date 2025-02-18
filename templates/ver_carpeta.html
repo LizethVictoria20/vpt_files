@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <title>Carpeta: {{ carpeta.name }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../static/js/ver_carpeta.js"></script>
+    <script src="{{ url_for('static', filename='js/ver_carpeta.js') }}"></script>
   </head>
   <body>
     {% include 'base.html' %} {% block content %}
     <div class="min-h-screen bg-gray-50">
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Encabezado con título y botón -->
         <div class="flex justify-between items-center mb-8">
           <h1 class="text-2xl font-bold">Carpeta: {{ carpeta.name }}</h1>
@@ -228,32 +230,7 @@
       </main>
     </div>
 
-    <!-- Scripts -->
-    <script>
-      function openUploadModal() {
-        document.getElementById("uploadModal").classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-      }
 
-      function closeUploadModal() {
-        document.getElementById("uploadModal").classList.add("hidden");
-        document.body.style.overflow = "auto";
-      }
-
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          closeUploadModal();
-        }
-      });
-
-      document
-        .querySelector("#uploadModal")
-        .addEventListener("click", function (event) {
-          if (event.target === this) {
-            closeUploadModal();
-          }
-        });
-    </script>
     {% endblock %}
   </body>
 </html>

@@ -136,7 +136,10 @@
                       </a>
                       <!-- Botón de eliminar -->
                       <button
+                        type="button"
                         class="text-gray-600 hover:text-red-600 transition-colors duration-150"
+                        title="Eliminar"
+                        onclick='openDeleteModal(`{{ url_for("main.eliminar_archivo", file_id=archivo.id) }}`, `{{ archivo.filename }}`)'
                       >
                         <svg
                           class="w-5 h-5"
@@ -148,7 +151,8 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 
+                                 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                           ></path>
                         </svg>
                       </button>
@@ -246,6 +250,95 @@
         </div>
       </main>
     </div>
+    <form id="hiddenDeleteForm" method="POST" style="display: none">
+      {{ delete_form.csrf_token }}
+    </form>
+    <!-- Modal de eliminación -->
+    <div
+      id="deleteModal"
+      class="fixed inset-0 z-50 flex items-center justify-center hidden"
+      role="dialog"
+      aria-labelledby="modalTitle"
+      aria-modal="true"
+    >
+      <div
+        class="absolute inset-0 bg-gray-900 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div
+        class="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 sm:mx-auto"
+      >
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 id="modalTitle" class="text-2xl font-bold text-gray-900">
+            Confirmar eliminación
+          </h2>
+        </div>
+        <div class="px-6 py-4">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <svg
+                class="h-6 w-6 text-red-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+            <div>
+              <p id="deleteModalMessage" class="text-base text-gray-700">
+                ¿Estás seguro de que deseas eliminar este archivo? Esta acción
+                no se puede deshacer.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="px-6 py-4 bg-gray-50 rounded-b-lg border-t border-gray-200 flex justify-end space-x-4"
+        >
+          <button
+            type="button"
+            onclick="closeDeleteModal()"
+            class="w-auto flex justify-center py-3 px-6 border-2 border-gray-200 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onclick="confirmDelete()"
+            class="w-auto flex justify-center py-3 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+          >
+            Sí, eliminar
+          </button>
+        </div>
+      </div>
+    </div>
     {% endblock %}
+    <script>
+      let deleteUrl = null;
+
+      function openDeleteModal(url, filename) {
+        deleteUrl = url;
+        const modal = document.getElementById("deleteModal");
+        const msg = document.getElementById("deleteModalMessage");
+        msg.textContent = `¿Estás seguro de eliminar el archivo ${filename}?`;
+        modal.classList.remove("hidden");
+      }
+
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.add("hidden");
+      }
+
+      function confirmDelete() {
+        const form = document.getElementById("hiddenDeleteForm");
+        form.action = deleteUrl;
+        form.submit();
+      }
+    </script>
   </body>
 </html>

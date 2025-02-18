@@ -4,7 +4,7 @@ from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
 from myapp.import_drive import SERVICE_ACCOUNT_PATH, subir_a_drive, descargar_desde_drive
 from myapp.models import DriveFile, User
-from forms import LoginForm, ImportForm
+from forms import DeleteForm, LoginForm, ImportForm
 
 main_bp = Blueprint('main', __name__)
 admin_permission = Permission(RoleNeed('admin'))
@@ -115,10 +115,23 @@ def descargar_archivo(file_id):
         mimetype=archivo.mimetype or 'application/octet-stream'
     )
 
+@main_bp.route('/eliminar/<int:file_id>', methods=['POST'])
+@login_required
+def eliminar_archivo(file_id):
+    from app import db
+    archivo = DriveFile.query.get_or_404(file_id)
+
+    db.session.delete(archivo)
+    db.session.commit()
+
+    flash(f"Archivo '{archivo.filename}' eliminado de la base de datos", "success")
+    return redirect(url_for('main.listar_archivos'))
+
 @admin_permission.require(http_exception=403)
 @main_bp.route('/archivos', methods=['GET'])
 @login_required
 def listar_archivos():
-    from myapp.models import DriveFile
     archivos = DriveFile.query.order_by(DriveFile.uploaded_at.desc()).all()
-    return render_template('archivos_list.html', archivos=archivos)
+    delete_form = DeleteForm()
+
+    return render_template('archivos_list.html', archivos=archivos, delete_form=delete_form)

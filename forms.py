@@ -11,3 +11,7 @@ class ImportForm(FlaskForm):
     archivos = FileField('Archivo', validators=[DataRequired()])
     descripcion = StringField('Descripción')
     etiquetas = StringField('Etiquetas')
+    
+    
+class DeleteForm(FlaskForm):
+    pass

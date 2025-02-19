@@ -80,11 +80,12 @@ def crear_carpeta():
     return render_template('crear_carpeta.html', form=form)
 
 
-@main_bp.route('/carpetas', methods=['GET'])
+@main_bp.route('/carpetas', methods=['GET', 'POST'])
 @login_required
 def listar_carpetas():
     carpetas = DriveFolder.query.order_by(DriveFolder.created_at.desc()).all()
-    return render_template('listar_carpetas.html', carpetas=carpetas)
+    delete_form = DeleteForm()
+    return render_template('listar_carpetas.html', carpetas=carpetas, delete_form=delete_form)
 
 @main_bp.route('/carpeta/<int:folder_id>', methods=['GET', 'POST'])
 @login_required
@@ -127,48 +128,48 @@ def ver_carpeta(folder_id):
                            archivos=archivos, 
                            form=form)
 
-@main_bp.route('/import', methods=['POST'])
-@login_required
-def procesar_import_form():
-    from app import db
-    print("¡Entrando a procesar_import_form!")
-    form = ImportForm()
-    if form.validate_on_submit():
-        files = request.files.getlist('archivos')
-        if not files or len(files) == 0 or files[0].filename == '':
-            flash("No se han seleccionado archivos", "error")
-            return redirect(url_for('main.mostrar_import_form'))
+# @main_bp.route('/import', methods=['POST'])
+# @login_required
+# def procesar_import_form():
+#     from app import db
+#     print("¡Entrando a procesar_import_form!")
+#     form = ImportForm()
+#     if form.validate_on_submit():
+#         files = request.files.getlist('archivos')
+#         if not files or len(files) == 0 or files[0].filename == '':
+#             flash("No se han seleccionado archivos", "error")
+#             return redirect(url_for('main.mostrar_import_form'))
 
-        descripcion = request.form.get('descripcion')
-        etiquetas = request.form.get('etiquetas')
+#         descripcion = request.form.get('descripcion')
+#         etiquetas = request.form.get('etiquetas')
 
-        ALLOWED_EXTENSIONS = {'csv', 'xls', 'xlsx', 'json', 'xml'}
+#         ALLOWED_EXTENSIONS = {'csv', 'xls', 'xlsx', 'json', 'xml'}
 
-        for file in files:
-            filename = file.filename
-            if not filename:
-                flash("Uno de los archivos no tiene nombre.", "error")
-                continue
+#         for file in files:
+#             filename = file.filename
+#             if not filename:
+#                 flash("Uno de los archivos no tiene nombre.", "error")
+#                 continue
 
-            ext = filename.rsplit('.', 1)[-1].lower()
-            if ext not in ALLOWED_EXTENSIONS:
-                flash(f"Archivo {filename} - Tipo de archivo no soportado", "error")
-                continue
+#             ext = filename.rsplit('.', 1)[-1].lower()
+#             if ext not in ALLOWED_EXTENSIONS:
+#                 flash(f"Archivo {filename} - Tipo de archivo no soportado", "error")
+#                 continue
 
-            drive_id = subir_a_drive(file)
+#             drive_id = subir_a_drive(file)
 
-            new_file = DriveFile(
-                drive_id=drive_id,
-                filename=filename,
-                mimetype=file.mimetype,
-                description=descripcion,
-                etiquetas=etiquetas
-            )
-            db.session.add(new_file)
+#             new_file = DriveFile(
+#                 drive_id=drive_id,
+#                 filename=filename,
+#                 mimetype=file.mimetype,
+#                 description=descripcion,
+#                 etiquetas=etiquetas
+#             )
+#             db.session.add(new_file)
 
-        db.session.commit() 
-        flash(f"Se han importado {len(files)} archivos.", "success")
-    return redirect(url_for('main.listar_archivos'))
+#         db.session.commit() 
+#         flash(f"Se han importado {len(files)} archivos.", "success")
+#     return redirect(url_for('main.listar_archivos'))
 
 @main_bp.route('/descargar/<int:file_id>', methods=['GET'])
 @login_required
@@ -189,7 +190,7 @@ def descargar_archivo(file_id):
         mimetype=archivo.mimetype or 'application/octet-stream'
     )
 
-@main_bp.route('/eliminar/<int:file_id>', methods=['POST'])
+@main_bp.route('/eliminar_file/<int:file_id>', methods=['POST'])
 @login_required
 def eliminar_archivo(file_id):
     from app import db
@@ -200,6 +201,16 @@ def eliminar_archivo(file_id):
 
     flash(f"Archivo '{archivo.filename}' eliminado de la base de datos", "success")
     return redirect(url_for('main.listar_archivos'))
+
+@main_bp.route('/eliminar_folder/<int:folder_id>', methods=['POST'])
+@login_required
+def eliminar_carpeta(folder_id):
+    from app import db
+    carpeta = DriveFolder.query.get_or_404(folder_id)
+    db.session.delete(carpeta)
+    db.session.commit()
+    flash(f"Carpeta '{carpeta.name}' eliminada exitosamente.", "success")
+    return redirect(url_for('main.listar_carpetas'))
 
 @admin_permission.require(http_exception=403)
 @main_bp.route('/archivos', methods=['GET'])

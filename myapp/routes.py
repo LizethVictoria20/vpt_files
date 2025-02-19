@@ -1,4 +1,6 @@
 import os
+from io import BytesIO
+from zipfile import ZipFile
 from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
@@ -221,3 +223,37 @@ def eliminar_carpeta(folder_id):
 #     delete_form = DeleteForm()
 
 #     return render_template('archivos_list.html', archivos=archivos, delete_form=delete_form)
+
+@main_bp.route('/descargar_carpeta/<int:folder_id>', methods=['GET'])
+@login_required
+def descargar_carpeta(folder_id):
+    from app import db
+    from myapp.models import DriveFolder, DriveFile
+    
+    carpeta = DriveFolder.query.get_or_404(folder_id)
+    archivos = DriveFile.query.filter_by(folder_id=carpeta.id).all()
+    
+    if not archivos:
+        flash(f"La carpeta '{carpeta.name}' no tiene archivos o no existe.", "warning")
+        return redirect(url_for('main.listar_carpetas'))
+    
+    memory_file = BytesIO()
+    with ZipFile(memory_file, 'w') as zipf:
+        for archivo in archivos:
+            fh = descargar_desde_drive(
+                drive_id=archivo.drive_id,
+                filename=archivo.filename,
+                mimetype=archivo.mimetype,
+                cred_path=SERVICE_ACCOUNT_PATH
+            )
+            
+            file_data = fh.read()
+            zipf.writestr(archivo.filename, file_data)
+    memory_file.seek(0)
+
+    return send_file(
+        memory_file, 
+        as_attachment=True,
+        download_name=f"{carpeta.name}.zip",
+        mimetype="application/zip"
+    )

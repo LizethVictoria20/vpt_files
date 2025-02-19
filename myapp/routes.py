@@ -90,8 +90,8 @@ def listar_carpetas():
 @main_bp.route('/carpeta/<int:folder_id>', methods=['GET', 'POST'])
 @login_required
 def ver_carpeta(folder_id):
-    from myapp.models import DriveFolder, DriveFile, db
-
+    from myapp.models import db
+    delete_form = DeleteForm()
     carpeta = DriveFolder.query.get_or_404(folder_id)
 
     form = ImportForm()
@@ -126,7 +126,8 @@ def ver_carpeta(folder_id):
     return render_template('ver_carpeta.html', 
                            carpeta=carpeta, 
                            archivos=archivos, 
-                           form=form)
+                           form=form, 
+                           delete_form=delete_form)
 
 # @main_bp.route('/import', methods=['POST'])
 # @login_required
@@ -200,7 +201,7 @@ def eliminar_archivo(file_id):
     db.session.commit()
 
     flash(f"Archivo '{archivo.filename}' eliminado de la base de datos", "success")
-    return redirect(url_for('main.listar_archivos'))
+    return redirect(url_for('main.listar_carpetas'))
 
 @main_bp.route('/eliminar_folder/<int:folder_id>', methods=['POST'])
 @login_required
@@ -212,11 +213,11 @@ def eliminar_carpeta(folder_id):
     flash(f"Carpeta '{carpeta.name}' eliminada exitosamente.", "success")
     return redirect(url_for('main.listar_carpetas'))
 
-@admin_permission.require(http_exception=403)
-@main_bp.route('/archivos', methods=['GET'])
-@login_required
-def listar_archivos():
-    archivos = DriveFile.query.order_by(DriveFile.uploaded_at.desc()).all()
-    delete_form = DeleteForm()
+# @admin_permission.require(http_exception=403)
+# @main_bp.route('/archivos', methods=['GET'])
+# @login_required
+# def listar_archivos():
+#     archivos = DriveFile.query.order_by(DriveFile.uploaded_at.desc()).all()
+#     delete_form = DeleteForm()
 
-    return render_template('archivos_list.html', archivos=archivos, delete_form=delete_form)
+#     return render_template('archivos_list.html', archivos=archivos, delete_form=delete_form)

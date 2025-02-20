@@ -26,7 +26,10 @@
         </div>
 
         <!-- Tabla de carpetas -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Tabla de carpetas -->
+        <div
+          class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-100"
+        >
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
@@ -34,19 +37,64 @@
                   scope="col"
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Nombre
+                  <div class="flex items-center space-x-2">
+                    <svg
+                      class="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                      ></path>
+                    </svg>
+                    <span>Nombre</span>
+                  </div>
                 </th>
                 <th
                   scope="col"
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Descripción
+                  <div class="flex items-center space-x-2">
+                    <svg
+                      class="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      ></path>
+                    </svg>
+                    <span>Descripción</span>
+                  </div>
                 </th>
                 <th
                   scope="col"
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Creado en
+                  <div class="flex items-center space-x-2">
+                    <svg
+                      class="w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      ></path>
+                    </svg>
+                    <span>Creado en</span>
+                  </div>
                 </th>
                 <th
                   scope="col"
@@ -58,39 +106,11 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               {% for carpeta in carpetas %}
-              <tr class="hover:bg-gray-50 transition-colors">
+              <tr class="hover:bg-gray-50 transition-base">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">
-                    {{ carpeta.name }}
-                  </div>
-                  <div class="text-sm text-gray-500">
-                    {{ carpeta.description }}
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ carpeta.description }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {{ carpeta.created_at }}
-                </td>
-                <td
-                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                >
-                  <!-- Acciones: Ver / Editar / Eliminar -->
-                  <a
-                    href="{{ url_for('main.ver_carpeta', folder_id=carpeta.id) }}"
-                    class="text-indigo-600 hover:text-indigo-900"
-                  >
-                    Ver
-                  </a>
-                  <button
-                    type="button"
-                    class="text-red-600 hover:text-red-700 transition-colors duration-150 inline-flex items-center"
-                    onclick='openDeleteModal(`{{ url_for("main.eliminar_carpeta", folder_id=carpeta.id) }}`, `{{ carpeta.name }}`)'
-                  >
-                    <!-- Ícono basura (Tailwind + heroicons style) -->
+                  <div class="flex items-center space-x-3">
                     <svg
-                      class="w-5 h-5"
+                      class="w-5 h-5 text-gray-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -99,18 +119,71 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 
-                         01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 
-                         0 00-1 1v3M4 7h16"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
                       ></path>
                     </svg>
-                  </button>
-                  <a
-                    href="{{ url_for('main.descargar_carpeta', folder_id=carpeta.id) }}"
-                    class="text-blue-600 hover:text-blue-900 mr-2"
-                  >
-                    Descargar
-                  </a>
+                    <div>
+                      <a
+                      href="{{ url_for('main.ver_carpeta', folder_id=carpeta.id) }}"
+                      class="text-gray-600 hover:text-gray-900 transition-base"
+                    >
+                      <div class="text-sm font-medium text-gray-900">
+                        {{ carpeta.name }}
+                      </div>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-500">
+                    {{ carpeta.description }}
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ carpeta.created_at }}
+                </td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                >
+                  <div class="flex items-center justify-end space-x-3">
+                    <a
+                      href="{{ url_for('main.descargar_carpeta', folder_id=carpeta.id) }}"
+                      class="text-blue-600 hover:text-blue-900 transition-base"
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                        ></path>
+                      </svg>
+                    </a>
+                    <button
+                      type="button"
+                      class="text-red-600 hover:text-red-700 transition-base"
+                      onclick='openDeleteModal(`{{ url_for("main.eliminar_carpeta", folder_id=carpeta.id) }}`, `{{ carpeta.name }}`)'
+                    >
+                      <svg
+                        class="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
                 </td>
               </tr>
               {% endfor %}

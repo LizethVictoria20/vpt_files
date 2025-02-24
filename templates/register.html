@@ -2,88 +2,222 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Registro de Usuario</title>
+    <title>Crear Nuevo Usuario</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
   </head>
-  <body class="bg-gray-100 font-sans">
-    <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-      <h1 class="text-xl font-bold mb-4">Registro de Usuario</h1>
-
-      <!-- Formulario que envia a /register con método POST -->
-      <form action="{{ url_for('main.register') }}" method="POST" class="space-y-4">
-        {{ new_user.csrf_token }}
-        <div>
-          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
+  <body class="bg-gray-50 font-sans">
+    {% include 'base.html' %} {% block content %}
+    <div class="max-w-5xl mx-auto px-4 py-6">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-gray-900">Crear Nuevo Usuario</h1>
         </div>
+      </div>
+      <div class="bg-white shadow-md rounded-lg border border-gray-100">
+        <div class="px-6 py-4">
+          <form
+            action="{{ url_for('main.register') }}"
+            method="POST"
+            class="space-y-5"
+          >
+            {{ new_user.csrf_token }}
 
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="space-y-2">
+                <label
+                  for="username"
+                  class="block text-sm font-medium text-gray-700"
+                  >Nombre de usuario *</label
+                >
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  class="block w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+                  required
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-gray-700"
+                  >Correo Electrónico *</label
+                >
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="block w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="space-y-2">
+                <label
+                  for="name"
+                  class="block text-sm font-medium text-gray-700"
+                  >Nombre *</label
+                >
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="block w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+                  required
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="lastname"
+                  class="block text-sm font-medium text-gray-700"
+                  >Apellido *</label
+                >
+                <input
+                  type="text"
+                  name="lastname"
+                  id="lastname"
+                  class="block w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label
+                for="telephone"
+                class="block text-sm font-medium text-gray-700"
+                >Teléfono</label
+              >
+              <input
+                type="tel"
+                name="telephone"
+                id="telephone"
+                class="block w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="space-y-2">
+                <label
+                  for="password"
+                  class="block text-sm font-medium text-gray-700"
+                  >Contraseña *</label
+                >
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  class="block w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+                  required
+                />
+                <p class="mt-1 text-xs text-gray-500">Mínimo 8 caracteres</p>
+              </div>
+
+              <div class="space-y-2">
+                <label
+                  for="confirm_password"
+                  class="block text-sm font-medium text-gray-700"
+                  >Confirmar Contraseña *</label
+                >
+                <input
+                  type="password"
+                  name="confirm_password"
+                  id="confirm_password"
+                  class="block w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mt-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Rol de Usuario *</label
+              >
+              <div class="flex space-x-4">
+                <div class="flex items-center">
+                  <input
+                    id="role-user"
+                    name="role"
+                    type="radio"
+                    value="user"
+                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
+                    checked
+                  />
+                  <label
+                    for="role-user"
+                    class="ml-2 block text-sm text-gray-700"
+                  >
+                    Usuario
+                  </label>
+                </div>
+                <div class="flex items-center">
+                  <input
+                    id="role-admin"
+                    name="role"
+                    type="radio"
+                    value="admin"
+                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300"
+                  />
+                  <label
+                    for="role-admin"
+                    class="ml-2 block text-sm text-gray-700"
+                  >
+                    Administrador
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3">
+              <div class="flex items-center">
+                <input
+                  id="active"
+                  name="active"
+                  type="checkbox"
+                  class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                  checked
+                />
+                <label for="active" class="ml-2 block text-sm text-gray-700">
+                  Usuario activo
+                </label>
+              </div>
+            </div>
+
+            <div class="pt-1 text-xs text-gray-500">* Campo obligatorio</div>
+          </form>
         </div>
-
-        <div>
-          <label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
-          <input
-            type="text"
-            name="lastname"
-            id="lastname"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
-        </div>
-
-        <div>
-          <label for="telephone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-          <input
-            type="text"
-            name="telephone"
-            id="telephone"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
-          />
-        </div>
-
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
-        </div>
-
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        <div
+          class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3 rounded-b-lg"
         >
-          Crear Cuenta
-        </button>
-      </form>
+          <button
+            type="button"
+            class="px-4 py-2 border-2 border-gray-200 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            form="create-user-form"
+            class="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+          >
+            Crear Usuario
+          </button>
+        </div>
+      </div>
     </div>
+    {% endblock %}
   </body>
 </html>

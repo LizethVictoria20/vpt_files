@@ -24,7 +24,16 @@ class NewUser(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Crear usuario')
-    
+
+class ProfileForm(FlaskForm):
+    nombre = StringField('Nombre', validators=[DataRequired()])
+    apellido = StringField('Apellido', validators=[DataRequired()])
+    email = StringField('Correo', validators=[DataRequired()])
+    telefono = StringField('Teléfono')
+    old_password = PasswordField('Contraseña Actual')
+    new_password = PasswordField('Nueva Contraseña')
+    submit = SubmitField('Guardar Cambios')
+
 class NewFolderForm(FlaskForm):
     name = StringField('Nombre de la carpeta', validators=[DataRequired()])
     description = TextAreaField('Descripción (opcional)')

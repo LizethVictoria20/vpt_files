@@ -6,7 +6,7 @@ from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
 from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
 from myapp.models import DriveFile, DriveFolder, User
-from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser
+from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm
 
 main_bp = Blueprint('main', __name__)
 admin_permission = Permission(RoleNeed('admin'))
@@ -39,8 +39,16 @@ def profile():
     from app import db
     from myapp.models import User
     user = User.query.get(current_user.id)
-    print(user)
-    return render_template('profile.html', user=user)
+    form = ProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        current_user.name = form.nombre.data
+        current_user.lastname = form.apellido.data
+        current_user.email = form.email.data
+        current_user.telephone = form.telefono.data
+        db.session.commit()
+        flash('Perfil actualizado con éxito', 'success')
+        return redirect(url_for('main.profile'))
+    return render_template('profile.html', form=form, user=current_user)
 
 @main_bp.route('/logout')
 @login_required
@@ -50,6 +58,7 @@ def logout():
     return redirect(url_for('main.login'))
 
 @main_bp.route('/register', methods=['GET', 'POST'])
+@login_required
 def register():
     from app import db
     new_user = NewUser()

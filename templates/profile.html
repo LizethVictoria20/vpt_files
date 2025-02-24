@@ -44,42 +44,33 @@
     </style>
   </head>
   <body class="bg-gray-100">
-    <!-- Contenedor principal -->
     <div class="min-h-screen flex flex-col bg-gray-50">
         {% include 'base.html' %} {% block content %}
-
-      <!-- Contenido principal -->
       <main class="flex-grow py-12">
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
-          <!-- Encabezado de sección -->
           <div class="mb-8">
             <h1 class="text-2xl font-bold text-gray-900">Mi Perfil</h1>
-            <p class="text-gray-600 mt-1">Gestiona tu información personal y preferencias</p>
+            <p class="text-gray-600 mt-1">Gestiona tu información personal</p>
           </div>
           
-          <!-- Tarjeta de perfil principal -->
           <div class="bg-white shadow-lg rounded-xl border border-gray-100 overflow-hidden">
-            <!-- Cabecera con diseño más sutil -->
-            <div class="bg-white border-b border-gray-100 px-6 py-8 flex justify-between items-center">
+            <div class="bg-white border-b border-gray-100 px-6 py-6 flex justify-between items-center">
               <div>
                 <h2 class="text-2xl font-bold text-gray-900">
-                  <!-- Nombre dinámico de usuario -->
                  {{ current_user.username}}
                 </h2>
                 <p class="text-gray-500 mt-1">Usuario desde Enero 2025</p>
               </div>
               
-              <!-- Avatar (Iniciales) con estilo más sutil -->
               <div class="flex-shrink-0">
-                <div class="h-24 w-24 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-600 text-3xl font-bold shadow-sm">
-                  JP
+                <div class="h-16 w-16 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-600 text-3xl font-bold shadow-sm">
+                  {{ user.name[0]|upper if user.name else '' }}
+                  {{ user.lastname[0]|upper if user.lastname else '' }}
                 </div>
               </div>
             </div>
             
-            <!-- Contenido de la tarjeta -->
             <div class="p-6">
-              <!-- Correo destacado -->
               <div class="flex items-center mb-6 pb-4 border-b border-gray-100">
                 <div class="p-2 rounded-md mr-4">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
@@ -93,7 +84,6 @@
                 </div>
               </div>
 
-              <!-- Bloque de información en textos con iconos -->
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="flex items-start">
                   <div class="p-2 rounded-md mr-3 mt-1">
@@ -103,7 +93,7 @@
                   </div>
                   <div>
                     <h3 class="text-sm font-medium text-gray-500 mb-1">Nombre</h3>
-                    <p class="text-base text-gray-900">{{ user.username }}</p>
+                    <p class="text-base text-gray-900">{{ user.name }}</p>
                   </div>
                 </div>
                 
@@ -115,19 +105,19 @@
                   </div>
                   <div>
                     <h3 class="text-sm font-medium text-gray-500 mb-1">Apellido</h3>
-                    <p class="text-base text-gray-900">Pérez</p>
+                    <p class="text-base text-gray-900">{{ user.lastname }}</p>
                   </div>
                 </div>
                 
                 <div class="flex items-start">
                   <div class="p-2 rounded-md mr-3 mt-1">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                     </svg>
                   </div>
                   <div>
-                    <h3 class="text-sm font-medium text-gray-500 mb-1">Teléfono</h3>
-                    <p class="text-base text-gray-900">+52 555 1234567</p>
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Nombre de usuario</h3>
+                    <p class="text-base text-gray-900">{{ user.username }}</p>
                   </div>
                 </div>
                 
@@ -138,13 +128,12 @@
                     </svg>
                   </div>
                   <div>
-                    <h3 class="text-sm font-medium text-gray-500 mb-1">Último acceso</h3>
-                    <p class="text-base text-gray-900">24 Feb 2025, 10:30 AM</p>
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Teléfono</h3>
+                    <p class="text-base text-gray-900">{{ user.telephone}}</p>
                   </div>
                 </div>
               </div>
               
-              <!-- Sección de acciones -->
               <div class="mt-8 flex justify-between items-center">
                 <button
                   type="button"
@@ -163,7 +152,7 @@
       </main>
     </div>
 
-    <!-- Modal de Edición (oculto por defecto) -->
+    <!-- Modal de Edición -->
     <div
     id="modalOverlay"
     class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 hidden"
@@ -172,12 +161,10 @@
       id="modalContent"
       class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl mx-4 modal-enter relative"
     >
-      <!-- Encabezado con título -->
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-bold text-gray-900">
           Editar información del perfil
         </h2>
-        <!-- Botón de cierre (X) -->
         <button 
           type="button" 
           class="text-gray-400 hover:text-gray-600 transition-colors"
@@ -190,9 +177,8 @@
         </button>
       </div>
 
-      <!-- Formulario para editar la información -->
-      <form action="#" method="POST" class="space-y-4">
-        <!-- Información personal en dos columnas -->
+      <form action="{{ url_for('main.profile') }}" method="POST" class="space-y-4">
+        {{ form.csrf_token }}
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-2">
             <label
@@ -205,7 +191,8 @@
               id="nombreInput"
               name="nombre"
               class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
-              placeholder="Juan"
+              placeholder="{{ user.name }}"
+              value="{{ user.name }}"
             />
           </div>
 
@@ -220,7 +207,8 @@
               id="apellidoInput"
               name="apellido"
               class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
-              placeholder="Pérez"
+              placeholder="{{ user.lastname }}"
+              value="{{ user.lastname }}"
             />
           </div>
 
@@ -235,7 +223,8 @@
               id="emailInput"
               name="email"
               class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
-              placeholder="usuario@correo.com"
+              placeholder="{{ user.email }}"
+              value="{{ user.email }}"
             />
           </div>
 
@@ -250,12 +239,12 @@
               id="telefonoInput"
               name="telefono"
               class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
-              placeholder="+52 555 1234567"
+              placeholder="{{ user.telephone }}"
+              value="{{ user.telephone }}"
             />
           </div>
         </div>
 
-        <!-- Sección cambiar contraseña -->
         <div class="pt-2">
           <div class="flex items-center mb-3">
             <h3 class="text-base font-bold text-gray-900">
@@ -275,6 +264,7 @@
                 id="oldPassword"
                 name="old_password"
                 class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+                placeholder="••••••••"
               />
             </div>
             <div class="space-y-2">
@@ -293,7 +283,6 @@
           </div>
         </div>
 
-        <!-- Botones de acción del modal -->
         <div class="pt-4 flex items-center justify-end space-x-4">
           <button
             type="button"
@@ -316,28 +305,22 @@
 
 
     <script>
-      // Abre el modal
       function openModal() {
         const overlay = document.getElementById("modalOverlay");
         const content = document.getElementById("modalContent");
 
         overlay.classList.remove("hidden");
-        // Remueve la animación de salida (si existía)
         content.classList.remove("modal-leave");
-        // Agrega la animación de entrada
         content.classList.add("modal-enter");
       }
 
-      // Cierra el modal
       function closeModal() {
         const overlay = document.getElementById("modalOverlay");
         const content = document.getElementById("modalContent");
 
-        // Agrega animación de salida
         content.classList.remove("modal-enter");
         content.classList.add("modal-leave");
 
-        // Espera que termine la animación para ocultar
         content.addEventListener("animationend", () => {
           if (content.classList.contains("modal-leave")) {
             overlay.classList.add("hidden");
@@ -345,10 +328,7 @@
         }, { once: true });
       }
 
-      // Ejemplo de guardar cambios (puedes adaptarlo a tu backend)
       function saveChanges() {
-        // Aquí iría tu lógica para guardar vía fetch/AJAX o simplemente submit del form
-        // Por ahora, lo dejamos como un console.log
         console.log("Guardando cambios del formulario...");
       }
     </script>

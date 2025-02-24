@@ -6,7 +6,7 @@ from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
 from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
 from myapp.models import DriveFile, DriveFolder, User
-from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm
+from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser
 
 main_bp = Blueprint('main', __name__)
 admin_permission = Permission(RoleNeed('admin'))
@@ -49,7 +49,40 @@ def logout():
     session.pop('_flashes', None)
     return redirect(url_for('main.login'))
 
+@main_bp.route('/register', methods=['GET', 'POST'])
+def register():
+    from app import db
+    new_user = NewUser()
+    if request.method == 'POST':
+        username = request.form.get('username')
+        name = request.form.get('name')
+        lastname = request.form.get('lastname')
+        telephone = request.form.get('telephone')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if not (username and name and lastname and telephone and email and password):
+            flash("Todos los campos son obligatorios", "warning")
+            return redirect(url_for('main.register'))
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            flash("Este usuario o email ya está en uso", "danger")
+            return redirect(url_for('main.register'))
+        new_user = User(
+            username=username,
+            name=name,
+            lastname=lastname,
+            telephone=telephone,
+            email=email
+        )
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Usuario registrado exitosamente", "success")
+        return redirect(url_for('main.login'))
 
+    return render_template('register.html', new_user=new_user)
+
+        
 @main_bp.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():

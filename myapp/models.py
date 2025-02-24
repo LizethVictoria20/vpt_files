@@ -1,8 +1,6 @@
 from datetime import datetime
-import bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-
 
 db = SQLAlchemy()
 
@@ -21,6 +19,9 @@ class UserRole(db.Model):
 class User(db.Model, UserMixin):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(64), nullable=False)
+  name = db.Column(db.String(64), nullable=True)
+  lastname = db.Column(db.String(64), nullable=True)
+  telephone = db.Column(db.String(64), nullable=True)
   email = db.Column(db.String(64), nullable=False)
   password_hash = db.Column(db.String(128), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -30,9 +31,11 @@ class User(db.Model, UserMixin):
     db.UniqueConstraint('email', name='uq_user_email'),
   )
   def set_password(self, password):
+    from app import bcrypt
     self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
   def check_password(self, password):
+    from app import bcrypt
     return bcrypt.check_password_hash(self.password_hash, password)
 
 class DriveFolder(db.Model):

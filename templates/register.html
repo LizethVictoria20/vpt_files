@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registro de Usuario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
+      <h1 class="text-xl font-bold mb-4">Registro de Usuario</h1>
+
+      <!-- Formulario que envia a /register con método POST -->
+      <form action="{{ url_for('main.register') }}" method="POST" class="space-y-4">
+        {{ new_user.csrf_token }}
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="lastname" class="block text-sm font-medium text-gray-700">Apellido</label>
+          <input
+            type="text"
+            name="lastname"
+            id="lastname"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="telephone" class="block text-sm font-medium text-gray-700">Teléfono</label>
+          <input
+            type="text"
+            name="telephone"
+            id="telephone"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-blue-300"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          Crear Cuenta
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

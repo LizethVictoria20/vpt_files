@@ -33,6 +33,14 @@ def login():
 
     return render_template('login.html', form=form)
 
+@main_bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    from app import db
+    from myapp.models import User
+    user = User.query.get(current_user.id)
+    print(user)
+    return render_template('profile.html', user=user)
 
 @main_bp.route('/logout')
 @login_required

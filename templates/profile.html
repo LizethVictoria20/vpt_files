@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Perfil de Usuario</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente 'Inter' -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Animación simple para el modal */
+      .modal-enter {
+    animation: modal-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  .modal-leave {
+    animation: modal-out 0.2s ease-in forwards;
+  }
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes modal-out {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Contenedor principal -->
+    <div class="min-h-screen flex flex-col bg-gray-50">
+        {% include 'base.html' %} {% block content %}
+
+      <!-- Contenido principal -->
+      <main class="flex-grow py-12">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+          <!-- Encabezado de sección -->
+          <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Mi Perfil</h1>
+            <p class="text-gray-600 mt-1">Gestiona tu información personal y preferencias</p>
+          </div>
+          
+          <!-- Tarjeta de perfil principal -->
+          <div class="bg-white shadow-lg rounded-xl border border-gray-100 overflow-hidden">
+            <!-- Cabecera con diseño más sutil -->
+            <div class="bg-white border-b border-gray-100 px-6 py-8 flex justify-between items-center">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900">
+                  <!-- Nombre dinámico de usuario -->
+                 {{ current_user.username}}
+                </h2>
+                <p class="text-gray-500 mt-1">Usuario desde Enero 2025</p>
+              </div>
+              
+              <!-- Avatar (Iniciales) con estilo más sutil -->
+              <div class="flex-shrink-0">
+                <div class="h-24 w-24 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-600 text-3xl font-bold shadow-sm">
+                  JP
+                </div>
+              </div>
+            </div>
+            
+            <!-- Contenido de la tarjeta -->
+            <div class="p-6">
+              <!-- Correo destacado -->
+              <div class="flex items-center mb-6 pb-4 border-b border-gray-100">
+                <div class="p-2 rounded-md mr-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-medium text-gray-500">Correo electrónico principal</h3>
+                  <p class="text-base text-gray-900">{{ user.email }}</p>
+                </div>
+              </div>
+
+              <!-- Bloque de información en textos con iconos -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex items-start">
+                  <div class="p-2 rounded-md mr-3 mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Nombre</h3>
+                    <p class="text-base text-gray-900">{{ user.username }}</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="p-2 rounded-md mr-3 mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Apellido</h3>
+                    <p class="text-base text-gray-900">Pérez</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="p-2 rounded-md mr-3 mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Teléfono</h3>
+                    <p class="text-base text-gray-900">+52 555 1234567</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <div class="p-2 rounded-md mr-3 mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-medium text-gray-500 mb-1">Último acceso</h3>
+                    <p class="text-base text-gray-900">24 Feb 2025, 10:30 AM</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Sección de acciones -->
+              <div class="mt-8 flex justify-between items-center">
+                <button
+                  type="button"
+                  class="py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out flex items-center"
+                  onclick="openModal()"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  Modificar información
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal de Edición (oculto por defecto) -->
+    <div
+    id="modalOverlay"
+    class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 hidden"
+  >
+    <div
+      id="modalContent"
+      class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl mx-4 modal-enter relative"
+    >
+      <!-- Encabezado con título -->
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold text-gray-900">
+          Editar información del perfil
+        </h2>
+        <!-- Botón de cierre (X) -->
+        <button 
+          type="button" 
+          class="text-gray-400 hover:text-gray-600 transition-colors"
+          onclick="closeModal()"
+          aria-label="Cerrar"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Formulario para editar la información -->
+      <form action="#" method="POST" class="space-y-4">
+        <!-- Información personal en dos columnas -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label
+              for="nombreInput"
+              class="block text-sm font-medium text-gray-700"
+              >Nombre</label
+            >
+            <input
+              type="text"
+              id="nombreInput"
+              name="nombre"
+              class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              placeholder="Juan"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label
+              for="apellidoInput"
+              class="block text-sm font-medium text-gray-700"
+              >Apellido</label
+            >
+            <input
+              type="text"
+              id="apellidoInput"
+              name="apellido"
+              class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              placeholder="Pérez"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label
+              for="emailInput"
+              class="block text-sm font-medium text-gray-700"
+              >Correo electrónico</label
+            >
+            <input
+              type="email"
+              id="emailInput"
+              name="email"
+              class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              placeholder="usuario@correo.com"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label
+              for="telefonoInput"
+              class="block text-sm font-medium text-gray-700"
+              >Teléfono</label
+            >
+            <input
+              type="text"
+              id="telefonoInput"
+              name="telefono"
+              class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              placeholder="+52 555 1234567"
+            />
+          </div>
+        </div>
+
+        <!-- Sección cambiar contraseña -->
+        <div class="pt-2">
+          <div class="flex items-center mb-3">
+            <h3 class="text-base font-bold text-gray-900">
+              Cambiar Contraseña
+            </h3>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label
+                for="oldPassword"
+                class="block text-sm font-medium text-gray-700"
+                >Contraseña Actual</label
+              >
+              <input
+                type="password"
+                id="oldPassword"
+                name="old_password"
+                class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              />
+            </div>
+            <div class="space-y-2">
+              <label
+                for="newPassword"
+                class="block text-sm font-medium text-gray-700"
+                >Nueva Contraseña</label
+              >
+              <input
+                type="password"
+                id="newPassword"
+                name="new_password"
+                class="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción del modal -->
+        <div class="pt-4 flex items-center justify-end space-x-4">
+          <button
+            type="button"
+            class="px-4 py-2 border-2 border-gray-200 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 ease-in-out"
+            onclick="closeModal()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="px-6 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+            onclick="saveChanges()"
+          >
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+    <script>
+      // Abre el modal
+      function openModal() {
+        const overlay = document.getElementById("modalOverlay");
+        const content = document.getElementById("modalContent");
+
+        overlay.classList.remove("hidden");
+        // Remueve la animación de salida (si existía)
+        content.classList.remove("modal-leave");
+        // Agrega la animación de entrada
+        content.classList.add("modal-enter");
+      }
+
+      // Cierra el modal
+      function closeModal() {
+        const overlay = document.getElementById("modalOverlay");
+        const content = document.getElementById("modalContent");
+
+        // Agrega animación de salida
+        content.classList.remove("modal-enter");
+        content.classList.add("modal-leave");
+
+        // Espera que termine la animación para ocultar
+        content.addEventListener("animationend", () => {
+          if (content.classList.contains("modal-leave")) {
+            overlay.classList.add("hidden");
+          }
+        }, { once: true });
+      }
+
+      // Ejemplo de guardar cambios (puedes adaptarlo a tu backend)
+      function saveChanges() {
+        // Aquí iría tu lógica para guardar vía fetch/AJAX o simplemente submit del form
+        // Por ahora, lo dejamos como un console.log
+        console.log("Guardando cambios del formulario...");
+      }
+    </script>
+        {% endblock %}
+
+  </body>
+</html>

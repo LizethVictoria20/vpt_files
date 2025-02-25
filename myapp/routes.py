@@ -5,7 +5,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
 from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
-from myapp.models import DriveFile, DriveFolder, User
+from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
 from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm
 
 main_bp = Blueprint('main', __name__)
@@ -41,6 +41,7 @@ def profile():
     from app import db
     from myapp.models import User
     user = User.query.get(current_user.id)
+    all_users = User.query.all()
     form = ProfileForm(obj=current_user)
     if form.validate_on_submit():
         current_user.name = form.nombre.data
@@ -50,7 +51,7 @@ def profile():
         db.session.commit()
         flash('Perfil actualizado con éxito', 'success')
         return redirect(url_for('main.profile'))
-    return render_template('profile.html', form=form, user=current_user)
+    return render_template('profile.html', form=form, user=current_user, all_users=all_users)
 
 @main_bp.route('/logout')
 @login_required
@@ -72,9 +73,12 @@ def register():
         telephone = request.form.get('telephone')
         email = request.form.get('email')
         password = request.form.get('password')
+        role_input = request.form.get('role')
+
         if not (username and name and lastname and telephone and email and password):
             flash("Todos los campos son obligatorios", "warning")
             return redirect(url_for('main.register'))
+
         existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
         if existing_user:
             flash("Este usuario o email ya está en uso", "danger")
@@ -87,10 +91,16 @@ def register():
             email=email
         )
         new_user.set_password(password)
+        role_obj = Roles.query.filter_by(slug=role_input).first()
+        if not role_obj:
+            flash("No se encontró el rol solicitado", "danger")
+            return redirect(url_for('main.register'))
+        new_user.roles.append(role_obj)
+      
         db.session.add(new_user)
         db.session.commit()
         flash("Usuario registrado exitosamente", "success")
-        return redirect(url_for('main.login'))
+        return redirect(url_for('main.profile'))
 
     return render_template('register.html', new_user=new_user)
 

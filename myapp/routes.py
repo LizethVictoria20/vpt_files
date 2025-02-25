@@ -33,6 +33,8 @@ def login():
 
     return render_template('login.html', form=form)
 
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -57,6 +59,7 @@ def logout():
     session.pop('_flashes', None)
     return redirect(url_for('main.login'))
 
+@admin_permission.require(http_exception=403)
 @main_bp.route('/register', methods=['GET', 'POST'])
 @login_required
 def register():
@@ -91,19 +94,23 @@ def register():
 
     return render_template('register.html', new_user=new_user)
 
-        
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)      
 @main_bp.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
     return render_template('dashboard.html')
 
-
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/import', methods=['GET'])
 @login_required
 def mostrar_import_form():
     form = ImportForm()
     return render_template("import.html", form=form,)
 
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/crear_carpeta', methods=['GET', 'POST'])
 @login_required
 def crear_carpeta():
@@ -131,7 +138,8 @@ def crear_carpeta():
 
     return render_template('crear_carpeta.html', form=form)
 
-
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/carpetas', methods=['GET', 'POST'])
 @login_required
 def listar_carpetas():
@@ -139,6 +147,8 @@ def listar_carpetas():
     delete_form = DeleteForm()
     return render_template('listar_carpetas.html', carpetas=carpetas, delete_form=delete_form)
 
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/carpeta/<int:folder_id>', methods=['GET', 'POST'])
 @login_required
 def ver_carpeta(folder_id):
@@ -224,6 +234,8 @@ def ver_carpeta(folder_id):
 #         flash(f"Se han importado {len(files)} archivos.", "success")
 #     return redirect(url_for('main.listar_archivos'))
 
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/descargar/<int:file_id>', methods=['GET'])
 @login_required
 def descargar_archivo(file_id):
@@ -243,6 +255,8 @@ def descargar_archivo(file_id):
         mimetype=archivo.mimetype or 'application/octet-stream'
     )
 
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/eliminar_file/<int:file_id>', methods=['POST'])
 @login_required
 def eliminar_archivo(file_id):
@@ -255,6 +269,8 @@ def eliminar_archivo(file_id):
     flash(f"Archivo '{archivo.filename}' eliminado de la base de datos", "success")
     return redirect(url_for('main.listar_carpetas'))
 
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/eliminar_folder/<int:folder_id>', methods=['POST'])
 @login_required
 def eliminar_carpeta(folder_id):
@@ -274,6 +290,8 @@ def eliminar_carpeta(folder_id):
 
 #     return render_template('archivos_list.html', archivos=archivos, delete_form=delete_form)
 
+@admin_permission.require(http_exception=403)
+@user_permission.require(http_exception=403)
 @main_bp.route('/descargar_carpeta/<int:folder_id>', methods=['GET'])
 @login_required
 def descargar_carpeta(folder_id):

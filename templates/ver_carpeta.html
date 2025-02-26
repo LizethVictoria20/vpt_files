@@ -227,6 +227,11 @@
                               </svg>
                               Seleccionar archivo
                             </button>
+                            <p class="mt-2 text-sm text-gray-700 font-bold">Archivos seleccionados:</p>
+                            <div
+                              id="selectedFileNameContainer"
+                              class="mt-2 text-sm text-gray-700"
+                            ></div>
                           </div>
                         </div>
 
@@ -399,6 +404,17 @@
         form.action = deleteUrl;
         form.submit();
       }
+      document
+        .getElementById("file-upload")
+        .addEventListener("change", function (e) {
+          const files = e.target.files;
+          let fileNames = [];
+          for (let i = 0; i < files.length; i++) {
+            fileNames.push(files[i].name);
+          }
+          document.getElementById("selectedFileNameContainer").textContent =
+            fileNames.join(", ");
+        });
     </script>
     {% endblock %}
   </body>

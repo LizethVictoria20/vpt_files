@@ -309,10 +309,10 @@
                   </a>
                 </div>
 
+                <!-- User List Container -->
                 <div
                   class="max-h-[300px] overflow-y-auto divide-y divide-gray-100"
                 >
-                  <!-- Usuario (repetir para cada usuario) -->
                   {% for u in all_users %}
                   <div>
                     <button
@@ -417,7 +417,6 @@
                           </div>
                           <div>
                             {% for r in u.roles %}
-
                             <h3 class="text-sm font-medium text-gray-500 mb-1">
                               Rol
                             </h3>
@@ -478,30 +477,56 @@
                           </div>
                         </div>
 
-                        <div class="flex items-start">
-                          <div class="p-2 mr-3">
+                        <div class="flex items-start justify-between">
+                          <!-- Date Info -->
+                          <div class="flex items-start">
+                            <div class="p-2 mr-3">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-4 w-4 text-red-600"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                  clip-rule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <h3
+                                class="text-sm font-medium text-gray-500 mb-1"
+                              >
+                                Fecha de registro
+                              </h3>
+                              <p class="text-sm text-gray-900">
+                                {{ u.created_at.strftime('%d %B %Y') if
+                                u.created_at else '' }}
+                              </p>
+                            </div>
+                          </div>
+
+                          <!-- Delete Button -->
+                          <button
+                            type="button"
+                            class="text-red-600 hover:text-red-700 transition-colors duration-150 inline-flex items-center"
+                            onclick="openDeleteModal(`{{ url_for('main.delete_user', user_id=u.id) }}`, `{{ u.name }} {{ u.lastname }}`)"
+                          >
                             <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="h-4 w-4 text-red-600"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
+                              class="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
                             >
                               <path
-                                fill-rule="evenodd"
-                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                clip-rule="evenodd"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                               />
                             </svg>
-                          </div>
-                          <div>
-                            <h3 class="text-sm font-medium text-gray-500 mb-1">
-                              Fecha de registro
-                            </h3>
-                            <p class="text-sm text-gray-900">
-                              {{ u.created_at.strftime('%d %B %Y') if
-                              u.created_at else '' }}
-                            </p>
-                          </div>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -679,6 +704,36 @@
         </div>
       </div>
 
+      <!-- Modal de confirmación para eliminación -->
+      <div
+        id="deleteModal"
+        class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center z-50 hidden"
+      >
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-4">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">
+            Confirmar eliminación
+          </h2>
+          <p id="deleteModalMessage" class="text-gray-700 mb-4"></p>
+          <form id="deleteForm" method="POST" style="display: inline">
+            {{ form.csrf_token }}
+            <button
+              type="button"
+              onclick="confirmDelete()"
+              class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Sí, eliminar
+            </button>
+          </form>
+          <button
+            type="button"
+            onclick="closeDeleteModal()"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 mt-4"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+
       <!-- Pie de página -->
       <footer class="bg-white border-t border-gray-200 py-4 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -732,6 +787,26 @@
 
       function saveChanges() {
         console.log("Guardando cambios del formulario...");
+      }
+      let deleteUrl = "";
+
+      function openDeleteModal(fullDeleteUrl, username) {
+        deleteUrl = fullDeleteUrl;
+        document.getElementById(
+          "deleteModalMessage"
+        ).textContent = `¿Estás seguro de eliminar al usuario "${username}"?`;
+
+        document.getElementById("deleteModal").classList.remove("hidden");
+      }
+
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.add("hidden");
+      }
+
+      function confirmDelete() {
+        const form = document.getElementById("deleteForm");
+        form.action = deleteUrl; 
+        form.submit();
       }
     </script>
     {% endblock %}

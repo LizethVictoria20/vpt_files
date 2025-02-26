@@ -104,6 +104,18 @@ def register():
 
     return render_template('register.html', new_user=new_user)
 
+@main_bp.route('/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def delete_user(user_id):
+    from app import db
+    user_to_delete = User.query.get_or_404(user_id)
+    db.session.delete(user_to_delete)
+    db.session.commit()
+    
+    flash(f"Usuario '{user_to_delete.username}' eliminado", "success")
+    return redirect(url_for('main.profile'))
+
+
 @admin_permission.require(http_exception=403)
 @user_permission.require(http_exception=403)      
 @main_bp.route('/dashboard', methods=['GET'])

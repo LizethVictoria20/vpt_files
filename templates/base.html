@@ -21,8 +21,6 @@
 
             <!-- Navegación Principal -->
             <nav class="md:flex items-center space-x-6">
-              {% if current_user.is_authenticated %} {% if
-              current_user.roles[0].id == 1 %}
               <a
                 href="{{ url_for('main.crear_carpeta') }}"
                 class="{% if request.endpoint == 'main.crear_carpeta' %} text-red-600 text-sm font-medium border-b-2 border-red-600 {% else %} text-gray-700 hover:text-gray-900 text-sm font-medium border-b-2 border-transparent hover:border-gray-200 {% endif %} h-16 flex items-center transition-colors duration-150"
@@ -48,27 +46,6 @@
               >
                 Perfil
               </a>
-              {% else %}
-              <a
-                href="{{ url_for('main.crear_carpeta') }}"
-                class="{% if request.endpoint == 'main.crear_carpeta' %} text-red-600 text-sm font-medium border-b-2 border-red-600 {% else %} text-gray-700 hover:text-gray-900 text-sm font-medium border-b-2 border-transparent hover:border-gray-200 {% endif %} h-16 flex items-center transition-colors duration-150"
-              >
-                Crear registro
-              </a>
-
-              <a
-                href="{{ url_for('main.listar_carpetas') }}"
-                class="{% if request.endpoint == 'main.listar_carpetas' %} text-red-600 text-sm font-medium border-b-2 border-red-600 {% else %} text-gray-700 hover:text-gray-900 text-sm font-medium border-b-2 border-transparent hover:border-gray-200 {% endif %} h-16 flex items-center transition-colors duration-150"
-              >
-                Reportes
-              </a>
-              <a
-                href="{{ url_for('main.profile') }}"
-                class="text-gray-700 hover:text-gray-900 text-sm font-medium border-b-2 border-transparent hover:border-gray-200 h-16 flex items-center transition-colors duration-150"
-              >
-                Perfil
-              </a>
-              {% endif %} {% endif %}
             </nav>
           </div>
 

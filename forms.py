@@ -33,6 +33,15 @@ class ProfileForm(FlaskForm):
     old_password = PasswordField('Contraseña Actual')
     new_password = PasswordField('Nueva Contraseña')
     submit = SubmitField('Guardar Cambios')
+    
+class CreateUserForm(FlaskForm):
+    username = StringField('Nombre Usuario', validators=[DataRequired()])
+    name = StringField('Nombre', validators=[DataRequired()])
+    lastname = StringField('Apellido', validators=[DataRequired()])
+    email = StringField('Correo', validators=[DataRequired()])
+    password = PasswordField('Contraseña', validators=[DataRequired()])
+    confirm_password = PasswordField('Repita la contraseña', validators=[DataRequired()])
+    submit = SubmitField('Crear perfil')
 
 class NewFolderForm(FlaskForm):
     name = StringField('Nombre de la carpeta', validators=[DataRequired()])

@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
 from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
-from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole, UserClient
+from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
 from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm
 
 main_bp = Blueprint('main', __name__)
@@ -112,29 +112,32 @@ def crear_cliente():
     form = CreateUserForm()
     if request.method == 'POST':
         # Recogemos datos del formulario
-        nombre_usuario = request.form.get('nombre_usuario')
-        nombre = request.form.get('nombre')
-        apellido = request.form.get('apellido')
-        correo = request.form.get('correo')
+        username = request.form.get('username')
+        name = request.form.get('name')
+        lastname = request.form.get('lastname')
+        email = request.form.get('email')
         password = request.form.get('password')
-
-        # Verificar si ya existe el usuario o el correo
-        usuario_existente = UserClient.query.filter(
-            (UserClient.nombre_usuario == nombre_usuario) | (UserClient.correo == correo)
+        usuario_existente = User.query.filter(
+            (User.username == username) | (User.email == email)
         ).first()
         if usuario_existente:
             flash("El usuario o el correo ya existen. Prueba con otros.", "error")
             return redirect(url_for('main.crear_cliente'))
 
-        # Crear la instancia del nuevo usuario
-        nuevo_usuario = UserClient(
-            nombre_usuario=nombre_usuario,
-            nombre=nombre,
-            apellido=apellido,
-            correo=correo
+        nuevo_usuario = User(
+            username=username,
+            name=name,
+            lastname=lastname,
+            email=email,
         )
         # Asignar la contraseña usando bcrypt
         nuevo_usuario.set_password(password)
+        rol_cliente = Roles.query.filter_by(slug='cliente').first()
+        if not rol_cliente:
+            rol_cliente = Roles(name='Cliente', slug='cliente')
+            db.session.add(rol_cliente)
+            db.session.commit()
+        nuevo_usuario.roles.append(rol_cliente)
 
         # Guardar en la base de datos
         db.session.add(nuevo_usuario)
@@ -144,9 +147,6 @@ def crear_cliente():
         return redirect(url_for('main.login'))
 
     return render_template('crear_cliente.html', form=form)
-
-
-
 
 
 @main_bp.route('/delete_user/<int:user_id>', methods=['POST'])

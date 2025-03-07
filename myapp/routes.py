@@ -111,7 +111,6 @@ def crear_cliente():
     from app import db
     form = CreateUserForm()
     if request.method == 'POST':
-        # Recogemos datos del formulario
         username = request.form.get('username')
         name = request.form.get('name')
         lastname = request.form.get('lastname')
@@ -128,22 +127,53 @@ def crear_cliente():
             username=username,
             name=name,
             lastname=lastname,
-            email=email,
+            email=email
         )
-        # Asignar la contraseña usando bcrypt
         nuevo_usuario.set_password(password)
+        db.session.add(nuevo_usuario)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error creando usuario: {e}", "error")
+            return redirect(url_for('main.crear_cliente'))
+
         rol_cliente = Roles.query.filter_by(slug='cliente').first()
         if not rol_cliente:
             rol_cliente = Roles(name='Cliente', slug='cliente')
             db.session.add(rol_cliente)
             db.session.commit()
         nuevo_usuario.roles.append(rol_cliente)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error asignando rol: {e}", "error")
+            return redirect(url_for('main.crear_cliente'))
 
-        # Guardar en la base de datos
-        db.session.add(nuevo_usuario)
-        db.session.commit()
+        folder_name = f"{name} {lastname}" if lastname else name
+        try:
+            folder_drive_id = crear_carpeta_drive(folder_name)
+        except Exception as e:
+            flash(f"Error creando carpeta en Drive: {e}", "error")
+            return redirect(url_for('main.crear_cliente'))
 
-        flash("Usuario creado exitosamente.", "success")
+        print("DEBUG: Registrando carpeta en la tabla DriveFolder...")
+        nueva_carpeta_db = DriveFolder(
+            user_id=nuevo_usuario.id,
+            drive_id=folder_drive_id,
+            name=folder_name,
+            description="Carpeta del cliente"
+        )
+        db.session.add(nueva_carpeta_db)
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error creando carpeta en la BD: {e}", "error")
+            return redirect(url_for('main.crear_cliente'))
+
+        flash("Usuario creado exitosamente. Carpeta en Drive generada.", "success")
         return redirect(url_for('main.login'))
 
     return render_template('crear_cliente.html', form=form)

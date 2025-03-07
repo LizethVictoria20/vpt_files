@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Carpeta: {{ folder.name }}</h1>
+    <p>Drive ID: {{ folder.drive_id }}</p>
+
+    <h2>Archivos en la carpeta</h2>
+    <ul>
+    {% for file in archivos %}
+        <li>{{ file.filename }}</li>
+    {% endfor %}
+    </ul>
+
+    <hr>
+    <!-- Botón o enlace para subir archivos -->
+    <a href="#">
+      Subir Archivo
+    </a>
+</body>
+</html>

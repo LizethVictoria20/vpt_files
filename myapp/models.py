@@ -4,6 +4,11 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
+user_folders = db.Table('user_folders',
+  db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+  db.Column('folder_id', db.Integer, db.ForeignKey('drive_folders.id'), primary_key=True)
+)
+
 class Roles(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer(), primary_key=True)
@@ -26,6 +31,8 @@ class User(db.Model, UserMixin):
   password_hash = db.Column(db.String(128), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
   roles = db.relationship("Roles", secondary="user_roles", back_populates="users")
+  folders = db.relationship("DriveFolder", backref="user", lazy=True)
+
   __table_args__ = (
     db.UniqueConstraint('username', name='uq_user_username'),
     db.UniqueConstraint('email', name='uq_user_email'),
@@ -41,12 +48,13 @@ class User(db.Model, UserMixin):
 class DriveFolder(db.Model):
     __tablename__ = 'drive_folders'
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), name='fk_drivefolders_user_id')
     drive_id = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     files = db.relationship('DriveFile', backref='folder', lazy=True)
-    
+
     def __repr__(self):
         return f"<DriveFolder name={self.name}, drive_id={self.drive_id}>"
 

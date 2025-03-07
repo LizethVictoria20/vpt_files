@@ -6,7 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <title>ImportSystem - Acceso</title>
+    <title>ImportSystem - Registro</title>
     <style>
       body {
         font-family: 'Plus Jakarta Sans', sans-serif;
@@ -31,27 +31,37 @@
         
         <div class="h-full flex flex-col justify-center p-12">
           <div class="max-w-md">
-            <h1 class="text-4xl font-bold mb-6">Gestión de importaciones simplificada</h1>
-            <p class="text-slate-300 text-lg mb-8">La plataforma integral que unifica todos tus procesos aduaneros en un solo lugar.</p>
+            <h1 class="text-4xl font-bold mb-6">Únete a nuestra plataforma</h1>
+            <p class="text-slate-300 text-lg mb-8">Crea tu cuenta y comienza a gestionar tus procesos de importación de manera eficiente y segura.</p>
             
             <div class="space-y-6 mt-12">
               <div class="flex items-start">
                 <div class="mt-1">
-                  <i class="fas fa-check-circle text-red-400 text-xl"></i>
+                  <i class="fas fa-chart-line text-red-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
-                  <h3 class="font-semibold text-xl">Eficiencia garantizada</h3>
-                  <p class="text-slate-300 mt-1">Reducción del tiempo de procesamiento hasta en un 60%</p>
+                  <h3 class="font-semibold text-xl">Control total</h3>
+                  <p class="text-slate-300 mt-1">Monitorea tus envíos y procesos aduaneros en tiempo real</p>
                 </div>
               </div>
               
               <div class="flex items-start">
                 <div class="mt-1">
-                  <i class="fas fa-lock text-red-400 text-xl"></i>
+                  <i class="fas fa-file-invoice text-red-400 text-xl"></i>
                 </div>
                 <div class="ml-4">
-                  <h3 class="font-semibold text-xl">Seguridad avanzada</h3>
-                  <p class="text-slate-300 mt-1">Protección de datos con los más altos estándares del mercado</p>
+                  <h3 class="font-semibold text-xl">Documentación digital</h3>
+                  <p class="text-slate-300 mt-1">Olvídate del papeleo y gestiona todo desde un solo lugar</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="mt-1">
+                  <i class="fas fa-headset text-red-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-semibold text-xl">Soporte especializado</h3>
+                  <p class="text-slate-300 mt-1">Asistencia personalizada por parte de expertos en comercio exterior</p>
                 </div>
               </div>
             </div>
@@ -72,45 +82,84 @@
           </button>
         </div>
         
-        <div class="flex items-center justify-center px-6 py-12 lg:py-0 lg:h-screen">
-          <div class="w-full max-w-md">
-            <div class="lg:mt-0 mb-10">
-              <h2 class="text-3xl font-bold text-slate-900">Bienvenido</h2>
-              <p class="text-slate-600 mt-2">Ingresa tus credenciales para acceder</p>
+        <div class="flex items-center justify-center px-6 py-8 lg:py-0 lg:h-screen overflow-auto">
+          <div class="w-full max-w-md my-8 lg:my-0">
+            <div class="lg:mt-0 mb-8">
+              <h2 class="text-3xl font-bold text-slate-900">Crea tu cuenta</h2>
+              <p class="text-slate-600 mt-2">Únete a miles de empresas que optimizan sus importaciones</p>
             </div>
             
             <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
-              <form method="POST" action="{{ url_for('main.login') }}">
+              <form method="POST" action="{{ url_for('main.crear_cliente') }}">
                 {{ form.hidden_tag() }}
                 
                 <div class="mb-6">
-                  <label for="username" class="block text-sm font-medium text-slate-700 mb-2">Usuario</label>
+                  <label for="nombre_usuario" class="block text-sm font-medium text-slate-700 mb-2">Nombre de Usuario</label>
                   <input
                     type="text"
-                    id="username"
-                    name="username"
+                    id="nombre_usuario"
+                    name="nombre_usuario"
                     class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                    placeholder="usuario@empresa.com"
+                    placeholder="usuario123"
+                    required
                   />
                 </div>
                 
-                <div class="mb-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <label for="password" class="block text-sm font-medium text-slate-700">Contraseña</label>
-                    <a href="#" class="text-xs text-red-500 hover:text-red-600">¿Olvidaste tu contraseña?</a>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label for="nombre" class="block text-sm font-medium text-slate-700 mb-2">Nombre</label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      name="nombre"
+                      class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
+                      placeholder="Juan"
+                    />
                   </div>
+                  
+                  <div>
+                    <label for="apellido" class="block text-sm font-medium text-slate-700 mb-2">Apellido</label>
+                    <input
+                      type="text"
+                      id="apellido"
+                      name="apellido"
+                      class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
+                      placeholder="Pérez"
+                    />
+                  </div>
+                </div>
+                
+                <div class="mb-6">
+                  <label for="correo" class="block text-sm font-medium text-slate-700 mb-2">Correo Electrónico</label>
+                  <input
+                    type="email"
+                    id="correo"
+                    name="correo"
+                    class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
+                    placeholder="ejemplo@empresa.com"
+                    required
+                  />
+                  <p class="mt-1 text-xs text-slate-500">Recibirás un correo de confirmación</p>
+                </div>
+                
+                <div class="mb-6">
+                  <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
                   <input
                     type="password"
                     id="password"
                     name="password"
                     class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
                     placeholder="••••••••"
+                    required
                   />
+                  <p class="mt-1 text-xs text-slate-500">Mínimo 8 caracteres, incluye mayúsculas y números</p>
                 </div>
                 
                 <div class="flex items-center mb-6">
-                  <input type="checkbox" id="remember" class="w-4 h-4 text-red-500 border-slate-300 rounded focus:ring-red-500" />
-                  <label for="remember" class="ml-2 text-sm text-slate-600">Mantener sesión activa</label>
+                  <input type="checkbox" id="terms" name="terms" class="w-4 h-4 text-red-500 border-slate-300 rounded focus:ring-red-500" required />
+                  <label for="terms" class="ml-2 text-sm text-slate-600">
+                    Acepto los <a href="#" class="text-red-500 hover:underline">términos y condiciones</a>
+                  </label>
                 </div>
                 
                 <div class="mb-4">
@@ -118,7 +167,7 @@
                     type="submit"
                     class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   >
-                    Iniciar sesión
+                    Crear Cuenta
                   </button>
                 </div>
               </form>
@@ -126,8 +175,8 @@
             
             <div class="text-center mt-6">
               <p class="text-sm text-slate-600">
-                ¿No tienes una cuenta? 
-                <a href="{{ url_for('main.crear_cliente') }}" class="text-red-500 font-medium hover:text-red-600">Regístrate</a>
+                ¿Ya tienes una cuenta? 
+                <a href="{{ url_for('main.login') }}" class="text-red-500 font-medium hover:text-red-600">Iniciar sesión</a>
               </p>
             </div>
             

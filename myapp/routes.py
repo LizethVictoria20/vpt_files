@@ -1,14 +1,16 @@
 import os
 from io import BytesIO
 from zipfile import ZipFile
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
 from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
-from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
-from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm
+from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole, UserClient
+from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm
 
 main_bp = Blueprint('main', __name__)
+login_manager = LoginManager()
+login_manager.init_app(main_bp)
 admin_permission = Permission(RoleNeed('admin'))
 user_permission = Permission(RoleNeed('user'))
 
@@ -38,8 +40,8 @@ def login():
 @main_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    from app import db
     from myapp.models import User
+    from app import db
     user = User.query.get(current_user.id)
     all_users = User.query.all()
     form = ProfileForm(obj=current_user)
@@ -60,9 +62,8 @@ def logout():
     session.pop('_flashes', None)
     return redirect(url_for('main.login'))
 
-@admin_permission.require(http_exception=403)
+# Esta funcion puede crear usuarios con roles
 @main_bp.route('/register', methods=['GET', 'POST'])
-@login_required
 def register():
     from app import db
     new_user = NewUser()
@@ -100,9 +101,53 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash("Usuario registrado exitosamente", "success")
-        return redirect(url_for('main.profile'))
+        return redirect(url_for('main.carpetas'))
 
     return render_template('register.html', new_user=new_user)
+
+# Funcion donde se crean los usuarios clientes
+@main_bp.route('/crear-cliente', methods=['GET', 'POST'])
+def crear_cliente():
+    from app import db
+    form = CreateUserForm()
+    if request.method == 'POST':
+        # Recogemos datos del formulario
+        nombre_usuario = request.form.get('nombre_usuario')
+        nombre = request.form.get('nombre')
+        apellido = request.form.get('apellido')
+        correo = request.form.get('correo')
+        password = request.form.get('password')
+
+        # Verificar si ya existe el usuario o el correo
+        usuario_existente = UserClient.query.filter(
+            (UserClient.nombre_usuario == nombre_usuario) | (UserClient.correo == correo)
+        ).first()
+        if usuario_existente:
+            flash("El usuario o el correo ya existen. Prueba con otros.", "error")
+            return redirect(url_for('main.crear_cliente'))
+
+        # Crear la instancia del nuevo usuario
+        nuevo_usuario = UserClient(
+            nombre_usuario=nombre_usuario,
+            nombre=nombre,
+            apellido=apellido,
+            correo=correo
+        )
+        # Asignar la contraseña usando bcrypt
+        nuevo_usuario.set_password(password)
+
+        # Guardar en la base de datos
+        db.session.add(nuevo_usuario)
+        db.session.commit()
+
+        flash("Usuario creado exitosamente.", "success")
+        return redirect(url_for('main.login'))
+
+    return render_template('crear_cliente.html', form=form)
+
+
+
+
 
 @main_bp.route('/delete_user/<int:user_id>', methods=['POST'])
 @login_required

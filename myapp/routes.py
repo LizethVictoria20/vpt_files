@@ -4,7 +4,13 @@ from zipfile import ZipFile
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, abort, flash, render_template, request, redirect, send_file, session, url_for
-from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
+from myapp.dropbox_utils import (
+    crear_carpeta_dropbox,
+    subir_a_dropbox,
+    descargar_desde_dropbox,
+    compartir_carpeta_dropbox,
+    USER_EMAIL
+)
 from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
 from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm
 
@@ -113,6 +119,7 @@ def register():
 # Funcion donde se crean los usuarios clientes
 @main_bp.route('/crear-cliente', methods=['GET', 'POST'])
 def crear_cliente():
+    print("DEBUG: Entrando en crear cliente")
     from app import db
     form = CreateUserForm()
     if request.method == 'POST':
@@ -157,19 +164,23 @@ def crear_cliente():
             return redirect(url_for('main.crear_cliente'))
 
         folder_name = f"{name} {lastname}" if lastname else name
+        print("DEBUG: Folder name")
+
         try:
-            folder_drive_id = crear_carpeta_drive(folder_name)
+            print("DEBUG: Creando carpeta en Dropbox con nombre =", folder_name)
+            dropbox_folder_path = crear_carpeta_dropbox(folder_name)
         except Exception as e:
-            flash(f"Error creando carpeta en Drive: {e}", "error")
+            print("Error creando carpeta en Drive: {e}")
             return redirect(url_for('main.crear_cliente'))
 
         print("DEBUG: Registrando carpeta en la tabla DriveFolder...")
         nueva_carpeta_db = DriveFolder(
             user_id=nuevo_usuario.id,
-            drive_id=folder_drive_id,
+            drive_id=dropbox_folder_path,
             name=folder_name,
             description="Carpeta del cliente"
         )
+        print("DEBUG: Se creo la nueva carpeta")
         db.session.add(nueva_carpeta_db)
         try:
             db.session.commit()
@@ -199,10 +210,10 @@ def subir_archivo(folder_id):
             flash("No seleccionaste ningún archivo", "error")
             return redirect(request.url)
 
-        drive_file_id = subir_a_drive(file_obj, parent_id=folder.drive_id)
+        dropbox_file_path = subir_a_dropbox(file_obj, folder.drive_id)
         
         new_file = DriveFile(
-            drive_id=drive_file_id,
+            drive_id=dropbox_file_path,
             filename=file_obj.filename,
             folder_id=folder.id
         )
@@ -252,7 +263,7 @@ def crear_carpeta():
         folder_name = form.name.data
         folder_description = form.description.data
 
-        drive_id = crear_carpeta_drive(folder_name)
+        drive_id = crear_carpeta_dropbox(folder_name)
 
 
         nueva_carpeta = DriveFolder(
@@ -263,7 +274,7 @@ def crear_carpeta():
         db.session.add(nueva_carpeta)
         db.session.commit()
         user_email = USER_EMAIL
-        compartir_carpeta_con_usuario(drive_id, user_email)
+        compartir_carpeta_dropbox(drive_id, user_email)
         
         flash(f"Carpeta '{folder_name}' creada y compartida con {user_email} exitosamente.", "success")
         return redirect(url_for('main.ver_carpeta', folder_id=nueva_carpeta.id))
@@ -299,12 +310,7 @@ def ver_carpeta(folder_id):
 def descargar_archivo(file_id):
     archivo = DriveFile.query.get_or_404(file_id)
 
-    fh = descargar_desde_drive(
-        drive_id=archivo.drive_id,
-        filename=archivo.filename,
-        mimetype=archivo.mimetype,
-        cred_path=SERVICE_ACCOUNT_PATH
-    )
+    fh = descargar_desde_dropbox(archivo.drive_id)
 
     return send_file(
         fh,
@@ -366,11 +372,10 @@ def descargar_carpeta(folder_id):
     memory_file = BytesIO()
     with ZipFile(memory_file, 'w') as zipf:
         for archivo in archivos:
-            fh = descargar_desde_drive(
+            fh = descargar_desde_dropbox(
                 drive_id=archivo.drive_id,
                 filename=archivo.filename,
                 mimetype=archivo.mimetype,
-                cred_path=SERVICE_ACCOUNT_PATH
             )
             
             file_data = fh.read()

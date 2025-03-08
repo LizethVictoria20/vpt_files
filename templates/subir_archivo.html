@@ -1,0 +1,18 @@
+<!-- templates/subir_archivo.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subir Archivo</title>
+</head>
+<body>
+    <h1>Subir archivo a {{ folder.name }}</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="file">Seleccionar archivo:</label><br>
+        <input type="file" name="file" id="file" required><br><br>
+        
+        <button type="submit">Subir</button>
+    </form>
+    
+    <a href="{{ url_for('main.ver_carpeta', folder_id=folder.id) }}">Volver a carpeta</a>
+</body>
+</html>

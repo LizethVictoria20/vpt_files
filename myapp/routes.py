@@ -3,7 +3,7 @@ from io import BytesIO
 from zipfile import ZipFile
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
-from flask import Blueprint, flash, render_template, request, redirect, send_file, session, url_for
+from flask import Blueprint, abort, flash, render_template, request, redirect, send_file, session, url_for
 from myapp.import_drive import SERVICE_ACCOUNT_PATH, USER_EMAIL, compartir_carpeta_con_usuario, crear_carpeta_drive, subir_a_drive, descargar_desde_drive
 from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
 from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm
@@ -27,8 +27,13 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
-            flash('Inicio de sesión exitoso', 'success')
-            return redirect(url_for('main.listar_carpetas'))
+            folder = DriveFolder.query.filter_by(user_id=user.id).first()
+            if folder:
+                return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
+            else:
+                # Manejo: si no tiene carpeta, redirigir a otra parte o crearla
+                flash("No tienes carpeta asociada. Contacta al administrador.", "warning")
+                return redirect(url_for('main.dashboard'))
         else:
             flash('Nombre de usuario o contraseña incorrectos', 'danger')
             return redirect(url_for('main.login'))
@@ -178,6 +183,36 @@ def crear_cliente():
 
     return render_template('crear_cliente.html', form=form)
 
+@main_bp.route('/carpeta/<int:folder_id>/upload', methods=['GET', 'POST'])
+@login_required
+def subir_archivo(folder_id):
+    from app import db
+    folder = DriveFolder.query.get_or_404(folder_id)
+
+    if folder.user_id != current_user.id:
+        abort(403)
+
+    if request.method == 'POST':
+        file_obj = request.files.get('file')
+        
+        if not file_obj or file_obj.filename == '':
+            flash("No seleccionaste ningún archivo", "error")
+            return redirect(request.url)
+
+        drive_file_id = subir_a_drive(file_obj, parent_id=folder.drive_id)
+        
+        new_file = DriveFile(
+            drive_id=drive_file_id,
+            filename=file_obj.filename,
+            folder_id=folder.id
+        )
+        db.session.add(new_file)
+        db.session.commit()
+
+        flash("Archivo subido exitosamente", "success")
+        return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
+
+    return render_template('subir_archivo.html', folder=folder)
 
 @main_bp.route('/delete_user/<int:user_id>', methods=['POST'])
 @login_required
@@ -244,92 +279,18 @@ def listar_carpetas():
     delete_form = DeleteForm()
     return render_template('listar_carpetas.html', carpetas=carpetas, delete_form=delete_form)
 
-@admin_permission.require(http_exception=403)
-@user_permission.require(http_exception=403)
-@main_bp.route('/carpeta/<int:folder_id>', methods=['GET', 'POST'])
+@main_bp.route('/carpeta/<int:folder_id>')
 @login_required
 def ver_carpeta(folder_id):
-    from myapp.models import db
-    delete_form = DeleteForm()
-    carpeta = DriveFolder.query.get_or_404(folder_id)
-
-    form = ImportForm()
+    from flask import abort
+    folder = DriveFolder.query.get_or_404(folder_id)
     
-    if form.validate_on_submit():
-        files = request.files.getlist('archivos')
-        if not files or files[0].filename == '':
-            flash("No se han seleccionado archivos", "error")
-            return redirect(url_for('main.ver_carpeta', folder_id=folder_id))
+    # Verifica que el folder pertenezca al usuario logueado
+    if folder.user_id != current_user.id:
+        abort(403)  # Prohibido si no es su carpeta
 
-        descripcion = request.form.get('descripcion')
-        etiquetas = request.form.get('etiquetas')
-
-        for file in files:
-            if file.filename:
-                drive_id = subir_a_drive(file, carpeta.drive_id)
-
-                new_file = DriveFile(
-                    drive_id=drive_id,
-                    filename=file.filename,
-                    mimetype=file.mimetype,
-                    folder_id=carpeta.id,
-                    description=descripcion,
-                    etiquetas=etiquetas
-                )
-                db.session.add(new_file)
-        db.session.commit()
-        flash(f"Se han subido {len(files)} archivo(s) a la carpeta {carpeta.name}.", "success")
-        return redirect(url_for('main.ver_carpeta', folder_id=folder_id))
-
-    archivos = DriveFile.query.filter_by(folder_id=folder_id).all()
-    return render_template('ver_carpeta.html', 
-                           carpeta=carpeta, 
-                           archivos=archivos, 
-                           form=form, 
-                           delete_form=delete_form)
-
-# @main_bp.route('/import', methods=['POST'])
-# @login_required
-# def procesar_import_form():
-#     from app import db
-#     print("¡Entrando a procesar_import_form!")
-#     form = ImportForm()
-#     if form.validate_on_submit():
-#         files = request.files.getlist('archivos')
-#         if not files or len(files) == 0 or files[0].filename == '':
-#             flash("No se han seleccionado archivos", "error")
-#             return redirect(url_for('main.mostrar_import_form'))
-
-#         descripcion = request.form.get('descripcion')
-#         etiquetas = request.form.get('etiquetas')
-
-#         ALLOWED_EXTENSIONS = {'csv', 'xls', 'xlsx', 'json', 'xml'}
-
-#         for file in files:
-#             filename = file.filename
-#             if not filename:
-#                 flash("Uno de los archivos no tiene nombre.", "error")
-#                 continue
-
-#             ext = filename.rsplit('.', 1)[-1].lower()
-#             if ext not in ALLOWED_EXTENSIONS:
-#                 flash(f"Archivo {filename} - Tipo de archivo no soportado", "error")
-#                 continue
-
-#             drive_id = subir_a_drive(file)
-
-#             new_file = DriveFile(
-#                 drive_id=drive_id,
-#                 filename=filename,
-#                 mimetype=file.mimetype,
-#                 description=descripcion,
-#                 etiquetas=etiquetas
-#             )
-#             db.session.add(new_file)
-
-#         db.session.commit() 
-#         flash(f"Se han importado {len(files)} archivos.", "success")
-#     return redirect(url_for('main.listar_archivos'))
+    # Renderiza una plantilla que muestre info de la carpeta y un link para subir
+    return render_template('ver_carpeta.html', folder=folder)
 
 @admin_permission.require(http_exception=403)
 @user_permission.require(http_exception=403)

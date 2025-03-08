@@ -13,3 +13,4 @@ flask-wtf
 google-api-python-client 
 google-auth 
 google-auth-oauthlib
+dropbox==11.36.0

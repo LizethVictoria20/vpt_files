@@ -16,6 +16,9 @@ class ImportForm(FlaskForm):
 class DeleteForm(FlaskForm):
     pass
 
+class GeneralForm(FlaskForm):
+    pass
+
 class NewUser(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])

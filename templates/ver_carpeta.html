@@ -64,193 +64,141 @@
               >
 
               <!-- Modal content -->
-              <div
-                class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-              >
+              <div class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <!-- Header del modal con título y botón de cierre -->
-                <div
-                  class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
-                >
-                  <h3
-                    class="text-xl font-bold text-gray-900 flex items-center"
-                    id="modal-title"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-red-600 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                      />
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                  <h3 class="text-xl font-bold text-gray-900 flex items-center" id="modal-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                     Importar archivo
                   </h3>
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-500 focus:outline-none"
-                    onclick="document.getElementById('importModal').classList.add('hidden')"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
+                  <button type="button" class="text-gray-400 hover:text-gray-500 focus:outline-none" onclick="document.getElementById('importModal').classList.add('hidden')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
-
+                
                 <!-- Contenido principal del modal -->
                 <div class="px-6 py-5">
                   <!-- Área de arrastrar y soltar (drag & drop) -->
-                  <form
-                    method="POST"
-                    id="importForm"
-                    enctype="multipart/form-data"
-                    action="{{ url_for('main.subir_archivo', folder_id=folder.id) }}"
-                  >
+                  <form method="POST" 
+                        id="importForm"
+                        enctype="multipart/form-data" 
+                        action="{{ url_for('main.subir_archivo', folder_id=folder.id) }}">
+                    
                     {{ form.hidden_tag() }}
-
-                    <div
-                      class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg py-8 px-4 text-center transition-all duration-200"
-                      id="dropZone"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="mx-auto h-12 w-12 text-gray-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        />
+                    
+                    <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg py-8 px-4 text-center transition-all duration-200" id="dropZone">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
-
+                      
                       <div class="mt-3">
-                        <input
-                          type="file"
-                          name="file"
-                          id="file"
-                          required
-                          class="hidden"
-                          onchange="updateFileName(this)"
-                        />
-
+                        <input type="file" 
+                                name="file" 
+                                id="file" 
+                                required 
+                                class="hidden" 
+                                onchange="updateFileName(this)">
+                        
                         <p class="text-sm font-medium text-gray-700">
-                          <span id="fileNameDisplay" class="block mb-1"
-                            >Selecciona un archivo para importar</span
-                          >
-                          <span class="text-xs text-gray-500"
-                            >o arrastra y suelta aquí</span
-                          >
+                          <span id="fileNameDisplay" class="block mb-1">Selecciona un archivo para importar</span>
+                          <span class="text-xs text-gray-500">o arrastra y suelta aquí</span>
                         </p>
-
-                        <button
-                          type="button"
-                          class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                          onclick="document.getElementById('file').click()"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4 mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
-                            />
+                        
+                        <button type="button" 
+                                class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                onclick="document.getElementById('file').click()">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
                           </svg>
                           Examinar archivos
                         </button>
                       </div>
                     </div>
-
+                    
                     <!-- Información sobre formatos aceptados -->
                     <div class="mt-4 flex items-start">
                       <div class="flex-shrink-0">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-blue-500"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
                       <div class="ml-3">
                         <p class="text-xs text-gray-500">
-                          Formatos aceptados:
-                          <span class="font-medium"
-                            >PDF, XLS, XLSX, CSV, DOC, DOCX</span
-                          >
-                          <br />Tamaño máximo de archivo:
-                          <span class="font-medium">10MB</span>
+                          Formatos aceptados: <span class="font-medium">PDF, XLS, XLSX, CSV, DOC, DOCX</span>
+                          <br>Tamaño máximo de archivo: <span class="font-medium">10MB</span>
                         </p>
+                      </div>
+                    </div>
+                    
+                            <!-- Etiqueta del archivo - Siempre visible -->
+                    <div class="mt-4 border-t border-gray-100 pt-4">
+                      <div class="bg-red-50 rounded-lg p-4 border-l-4 border-red-500 relative">
+                        <div class="absolute -top-3 -left-1 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                          Importante
+                        </div>
+                        <label for="fileLabel" class="block text-base font-bold text-gray-800 mb-2 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                          </svg>
+                          Etiqueta del archivo
+                        </label>
+                        <p class="text-xs text-gray-600 mb-3">Selecciona una categoría para organizar y encontrar fácilmente este documento en el futuro</p>
+                        <select id="fileLabel" name="fileLabel" class="block w-full pl-3 pr-10 py-3 text-base border-2 border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-white shadow-sm">
+                          <option value="">-- Seleccionar etiqueta --</option>
+                          <optgroup label="Documentos personales">
+                            <option value="passport">Pasaporte</option>
+                            <option value="id_card">Documento de identidad</option>
+                            <option value="drivers_license">Licencia de conducir</option>
+                            <option value="residence_permit">Permiso de residencia</option>
+                            <option value="birth_certificate">Certificado de nacimiento</option>
+                          </optgroup>
+                          <optgroup label="Documentos financieros">
+                            <option value="invoice">Factura</option>
+                            <option value="receipt">Recibo de pago</option>
+                            <option value="bank_statement">Estado de cuenta bancario</option>
+                            <option value="tax_document">Documento fiscal</option>
+                            <option value="payslip">Nómina</option>
+                          </optgroup>
+                          <optgroup label="Documentos legales">
+                            <option value="contract">Contrato</option>
+                            <option value="power_of_attorney">Poder notarial</option>
+                            <option value="legal_certificate">Certificado legal</option>
+                          </optgroup>
+                          <optgroup label="Otros documentos">
+                            <option value="medical">Documento médico</option>
+                            <option value="educational">Documento educativo</option>
+                            <option value="property">Documento de propiedad</option>
+                            <option value="technical">Documento técnico</option>
+                            <option value="other">Otro</option>
+                          </optgroup>
+                        </select>
                       </div>
                     </div>
                   </form>
                 </div>
+                
                 <!-- Footer con botones de acción -->
-                <div
-                  class="px-6 py-4 bg-gray-50 flex flex-col-reverse sm:flex-row sm:justify-end space-y-reverse space-y-3 sm:space-y-0 sm:space-x-3"
-                >
-                  <button
-                    type="button"
-                    class="sm:order-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    onclick="document.getElementById('importModal').classList.add('hidden')"
-                  >
+                <div class="px-6 py-4 bg-gray-50 flex flex-col-reverse sm:flex-row sm:justify-end space-y-reverse space-y-3 sm:space-y-0 sm:space-x-3">
+                  <button type="button" 
+                          class="sm:order-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          onclick="document.getElementById('importModal').classList.add('hidden')">
                     Cancelar
                   </button>
-                  <button
-                    type="submit"
-                    form="importForm"
-                    class="sm:order-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-1.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-                      />
+                  <button type="submit" 
+                          form="importForm"
+                          class="sm:order-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                     Importar archivo
                   </button>
                 </div>
               </div>
+              
             </div>
           </div>
         </div>

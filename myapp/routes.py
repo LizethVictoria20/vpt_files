@@ -1,5 +1,6 @@
 import os
 from io import BytesIO
+import dropbox
 from zipfile import ZipFile
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
@@ -12,7 +13,7 @@ from myapp.dropbox_utils import (
     USER_EMAIL
 )
 from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
-from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm
+from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm, GeneralForm
 
 main_bp = Blueprint('main', __name__)
 login_manager = LoginManager()
@@ -194,7 +195,7 @@ def crear_cliente():
 
     return render_template('crear_cliente.html', form=form)
 
-@main_bp.route('/carpeta/<int:folder_id>/upload', methods=['GET', 'POST'])
+@main_bp.route('/carpeta/<int:folder_id>/upload', methods=['POST'])
 @login_required
 def subir_archivo(folder_id):
     from app import db
@@ -223,7 +224,6 @@ def subir_archivo(folder_id):
         flash("Archivo subido exitosamente", "success")
         return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
 
-    return render_template('subir_archivo.html', folder=folder)
 
 @main_bp.route('/delete_user/<int:user_id>', methods=['POST'])
 @login_required
@@ -294,6 +294,7 @@ def listar_carpetas():
 @login_required
 def ver_carpeta(folder_id):
     from flask import abort
+    form = GeneralForm()
     folder = DriveFolder.query.get_or_404(folder_id)
     
     # Verifica que el folder pertenezca al usuario logueado
@@ -301,7 +302,7 @@ def ver_carpeta(folder_id):
         abort(403)  # Prohibido si no es su carpeta
 
     # Renderiza una plantilla que muestre info de la carpeta y un link para subir
-    return render_template('ver_carpeta.html', folder=folder)
+    return render_template('ver_carpeta.html', folder=folder, form=form)
 
 @admin_permission.require(http_exception=403)
 @user_permission.require(http_exception=403)

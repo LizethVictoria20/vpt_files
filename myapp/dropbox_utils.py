@@ -1,16 +1,24 @@
 # dropbox_utils.py
 
 import os
+import time
 import dropbox
 from dropbox.files import WriteMode, FolderMetadata, FileMetadata
+from dropbox.oauth import DropboxOAuth2Flow
 
 DROPBOX_ACCESS_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
 USER_EMAIL = os.getenv('USER_EMAIL_SERVICE')
+DROPBOX_APP_KEY = os.getenv('DROPBOX_APP_KEY')
+DROPBOX_APP_SECRET = os.getenv('DROPBOX_APP_SECRET')
+DROPBOX_REFRESH_TOKEN = os.getenv('DROPBOX_REFRESH_TOKEN')
+
 
 def _get_dbx():
-    if not DROPBOX_ACCESS_TOKEN:
-        raise ValueError("No se encontró la variable de entorno DROPBOX_ACCESS_TOKEN.")
-    dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+    dbx = dropbox.Dropbox(
+        oauth2_refresh_token=DROPBOX_REFRESH_TOKEN,
+        app_key=DROPBOX_APP_KEY,
+        app_secret=DROPBOX_APP_SECRET,
+    )
     return dbx
 
 def crear_carpeta_dropbox(folder_path: str) -> str:

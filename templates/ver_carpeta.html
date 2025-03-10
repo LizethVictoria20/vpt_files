@@ -150,32 +150,33 @@
                         <select id="fileLabel" name="fileLabel" class="block w-full pl-3 pr-10 py-3 text-base border-2 border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-white shadow-sm">
                           <option value="">-- Seleccionar etiqueta --</option>
                           <optgroup label="Documentos personales">
-                            <option value="passport">Pasaporte</option>
-                            <option value="id_card">Documento de identidad</option>
-                            <option value="drivers_license">Licencia de conducir</option>
-                            <option value="residence_permit">Permiso de residencia</option>
-                            <option value="birth_certificate">Certificado de nacimiento</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                            <option value="Documento de identidad">Documento de identidad</option>
+                            <option value="Licencia de conducir">Licencia de conducir</option>
+                            <option value="Permiso de residencia">Permiso de residencia</option>
+                            <option value="Certificado de nacimiento">Certificado de nacimiento</option>
                           </optgroup>
                           <optgroup label="Documentos financieros">
-                            <option value="invoice">Factura</option>
-                            <option value="receipt">Recibo de pago</option>
-                            <option value="bank_statement">Estado de cuenta bancario</option>
-                            <option value="tax_document">Documento fiscal</option>
-                            <option value="payslip">Nómina</option>
+                            <option value="Facturas">Factura</option>
+                            <option value="Recibos de pago">Recibo de pago</option>
+                            <option value="Estados de cuenta">Estado de cuenta bancario</option>
+                            <option value="Documento fiscal">Documento fiscal</option>
+                            <option value="Nomina">Nómina</option>
                           </optgroup>
                           <optgroup label="Documentos legales">
-                            <option value="contract">Contrato</option>
-                            <option value="power_of_attorney">Poder notarial</option>
-                            <option value="legal_certificate">Certificado legal</option>
+                            <option value="Contrato">Contrato</option>
+                            <option value="Poder notarial">Poder notarial</option>
+                            <option value="Certificado legal">Certificado legal</option>
                           </optgroup>
                           <optgroup label="Otros documentos">
-                            <option value="medical">Documento médico</option>
-                            <option value="educational">Documento educativo</option>
-                            <option value="property">Documento de propiedad</option>
-                            <option value="technical">Documento técnico</option>
-                            <option value="other">Otro</option>
+                            <option value="Documento medio">Documento médico</option>
+                            <option value="Documento educativo">Documento educativo</option>
+                            <option value="Documento de propiedad">Documento de propiedad</option>
+                            <option value="Documento tecnico">Documento técnico</option>
+                            <option value="Otros">Otro</option>
                           </optgroup>
                         </select>
+                        <input type="hidden" id="groupLabel" name="groupLabel" value="">
                       </div>
                     </div>
                   </form>
@@ -343,7 +344,15 @@
         </div>
       </div>
     </div>
-
+    <script>
+      document.getElementById('fileLabel').addEventListener('change', function() {
+        const select = this;
+        // El optgroup de la opción elegida
+        const optGroupLabel = select.selectedOptions[0].parentNode.label; 
+        document.getElementById('groupLabel').value = optGroupLabel;
+      });
+    </script>
+    
     <script>
       // Funciones para manejar la eliminación de archivos
       let fileIdToDelete;

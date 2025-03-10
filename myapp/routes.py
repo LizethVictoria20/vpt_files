@@ -212,6 +212,10 @@ def subir_archivo(folder_id):
     if folder.user_id != current_user.id:
         abort(403)
 
+    file_obj = request.files.get('file')
+    file_label = request.form.get('fileLabel')      
+    group_label = request.form.get('groupLabel')
+
     if request.method == 'POST':
         file_obj = request.files.get('file')
         
@@ -219,12 +223,33 @@ def subir_archivo(folder_id):
             flash("No seleccionaste ningún archivo", "error")
             return redirect(request.url)
 
-        dropbox_file_path = subir_a_dropbox(file_obj, folder.drive_id)
+        if not group_label:
+            flash("No se pudo determinar la categoría (optgroup)", "error")
+            return redirect(request.url)
         
+        subfolder_path = f"{folder.drive_id}/{group_label}/{file_label}"  
+        try:
+            crear_carpeta_dropbox(subfolder_path)
+        except dropbox.exceptions.ApiError as e:
+            # si la subcarpeta ya existe, ignora la colisión
+            if "path/conflict/folder" in str(e):
+                print("Subcarpeta ya existía, continuamos.")
+            else:
+                flash(f"Error creando subcarpeta: {e}", "error")
+                return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
+
+        dropbox_file_path = f"{subfolder_path}/{file_obj.filename}"
+        try:
+            subir_a_dropbox(file_obj, subfolder_path) 
+        except Exception as e:
+            flash(f"Error subiendo archivo: {e}", "error")
+            return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
+            
         new_file = DriveFile(
             drive_id=dropbox_file_path,
             filename=file_obj.filename,
-            folder_id=folder.id
+            folder_id=folder.id,
+            etiquetas=file_label  
         )
         db.session.add(new_file)
         db.session.commit()

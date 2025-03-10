@@ -34,6 +34,9 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
+            is_admin = any(role.slug == 'admin' for role in user.roles)
+            if is_admin:
+                return redirect(url_for('main.listar_carpetas'))
             folder = DriveFolder.query.filter_by(user_id=user.id).first()
             if folder:
                 return redirect(url_for('main.ver_carpeta', folder_id=folder.id))

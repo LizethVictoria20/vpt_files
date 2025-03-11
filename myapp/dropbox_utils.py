@@ -22,19 +22,14 @@ def _get_dbx():
     return dbx
 
 def crear_carpeta_dropbox(folder_path: str) -> str:
-    print("DEBUG: Entrando a crear_carpeta_dropbox con folder_path=", folder_path)
-    print("DEBUG: Token:", DROPBOX_ACCESS_TOKEN)
     dbx = _get_dbx()
     try:
         if not folder_path.startswith('/'):
             folder_path = '/' + folder_path
 
         res = dbx.files_create_folder_v2(folder_path)
-        print(f"DEBUG: Carpeta creada con metadata={res}")
-        print(f"[dropbox_utils] Carpeta creada: {res.metadata.name} (id: {res.metadata.id})")
         return folder_path
     except dropbox.exceptions.ApiError as e:
-        print(f"DEBUG: Error creando carpeta: {e}")
         raise e
 
 def subir_a_dropbox(file_obj, dropbox_folder_path: str) -> str:

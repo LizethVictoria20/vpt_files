@@ -12,6 +12,7 @@ from myapp.dropbox_utils import (
     subir_a_dropbox,
     descargar_desde_dropbox,
     compartir_carpeta_dropbox,
+    eliminar_de_dropbox,
     USER_EMAIL
 )
 from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
@@ -363,6 +364,7 @@ def eliminar_archivo(file_id):
     from app import db
     archivo = DriveFile.query.get_or_404(file_id)
     folder_id = archivo.folder_id
+    eliminar_de_dropbox(archivo.drive_id)
 
     db.session.delete(archivo)
     db.session.commit()

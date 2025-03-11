@@ -71,6 +71,17 @@ def descargar_desde_dropbox(dropbox_file_path: str) -> bytes:
         print(f"[dropbox_utils] Error descargando archivo: {e}")
         raise e
 
+def eliminar_de_dropbox(dropbox_file_path: str):
+    dbx = _get_dbx()
+
+    try:
+        res = dbx.files_delete_v2(dropbox_file_path)
+        print(f"[dropbox_utils] Eliminado en Dropbox: {dropbox_file_path}")
+        return True
+    except dropbox.exceptions.ApiError as e:
+        print(f"[dropbox_utils] Error eliminando archivo/carpeta: {e}")
+        raise e
+
 def compartir_carpeta_dropbox(folder_path: str) -> str:
     dbx = _get_dbx()
     if not folder_path.startswith('/'):

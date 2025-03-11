@@ -2,6 +2,7 @@
 
 import os
 import time
+import uuid
 import dropbox
 from dropbox.files import WriteMode, FolderMetadata, FileMetadata
 from dropbox.oauth import DropboxOAuth2Flow
@@ -37,22 +38,24 @@ def subir_a_dropbox(file_obj, dropbox_folder_path: str) -> str:
     if not dropbox_folder_path.startswith('/'):
         dropbox_folder_path = '/' + dropbox_folder_path
 
-    filename = file_obj.filename
-    dropbox_file_path = f"{dropbox_folder_path}/{filename}"
+    original_name = file_obj.filename
+    name, ext = os.path.splitext(original_name)
+    unique_name = f"{name}_{uuid.uuid4().hex}{ext}"
 
+    final_path = f"{dropbox_folder_path}/{unique_name}"
+
+    # Leer bytes
     file_bytes = file_obj.read()
-    file_obj.seek(0) 
+    file_obj.seek(0)
 
     try:
-        res = dbx.files_upload(
-            file_bytes,
-            dropbox_file_path,
-            mode=WriteMode('add')
-        )
-        print(f"[dropbox_utils] Archivo subido: {res.name} en {res.path_lower}")
-        return dropbox_file_path
+        res = dbx.files_upload(file_bytes, final_path, mode=WriteMode('add'))
+        print(f"[dropbox_utils] Subido: {res.name} en {res.path_lower}")
+
+        return res.path_lower
+
     except dropbox.exceptions.ApiError as e:
-        print(f"[dropbox_utils] Error subiendo archivo a Dropbox: {e}")
+        print(f"[dropbox_utils] Error subiendo archivo: {e}")
         raise e
 
 def descargar_desde_dropbox(dropbox_file_path: str) -> bytes:

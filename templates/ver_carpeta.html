@@ -15,7 +15,7 @@
       body {
         font-family: "Inter", sans-serif;
       }
-      .rotate--90 {
+      .-rotate--90 {
         transform: rotate(-90deg);
         transition: transform 0.2s ease-in-out;
       }
@@ -373,108 +373,251 @@
           </h2>
         </div>
         {% if folder.files %}
-        <div class="folder-structure">
-          {% for group_lbl, subdict in by_group.items() %}
-            {% set group_index = loop.index %}
-            <div class="group-folder mb-4">
-              <!-- Grupo principal desplegable -->
-              <div class="group-header bg-gray-100 p-3 rounded-t-lg flex items-center cursor-pointer shadow-sm" onclick="toggleGroup('group_{{ group_index }}')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-600 transform transition-transform" id="group_icon_{{ group_index }}" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
-                <h2 class="text-lg font-bold">{{ group_lbl }}</h2>
-                <span class="ml-auto text-xs text-gray-500 bg-gray-200 rounded-full px-2 py-1">
-                  {% set total_files = namespace(count=0) %}
-                  {% for file_lbl, files in subdict.items() %}
-                    {% set total_files.count = total_files.count + files|length %}
-                  {% endfor %}
-                  {{ total_files.count }} {{ 'archivo' if total_files.count == 1 else 'archivos' }}
-                </span>
-              </div>
-              
-              <!-- Contenedor de subcarpetas (inicialmente visible) -->
-              <div class="group-content pl-4 border-l-2 border-gray-200 ml-3" id="group_{{ group_index }}">
-                {% for file_lbl, files in subdict.items() %}
-                  <div class="label-folder mt-2 mb-2">
-                    <!-- Subcarpeta desplegable -->
-                    <div class="label-header flex items-center p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100" onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-600 transform transition-transform" id="label_icon_{{ group_index }}_{{ loop.index }}" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                      </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <h3 class="text-md font-semibold">{{ file_lbl }}</h3>
-                      <span class="ml-auto text-xs text-gray-500">{{ files|length }} {{ 'archivo' if files|length == 1 else 'archivos' }}</span>
-                    </div>
-                    
-                    <!-- Lista de archivos (inicialmente visible) -->
-                    <div class="label-files ml-8 mt-1" id="label_{{ group_index }}_{{ loop.index }}">
-                      <ul class="border-l border-gray-200 pl-3">
-                        {% for f in files %}
-                          <li class="flex items-center py-1 group hover:bg-gray-50 rounded px-2">
-                            {% set file_extension = f.filename.split('.')[-1]|lower %}
-                            
-                            <!-- Icono basado en la extensión del archivo -->
-                            {% if file_extension in ['pdf'] %}
-                              <svg class="h-4 w-4 text-red-500 mr-2" fill="currentColor" viewBox="0 0 384 512">
-                                <path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48zm250.2-143.7c-12.2-12-47-8.7-64.4-6.5-17.2-10.5-28.7-25-36.8-46.3 3.9-16.1 10.1-40.6 5.4-56-4.2-26.2-37.8-23.6-42.6-5.9-4.4 16.1-.4 38.5 7 67.1-10 23.9-24.9 56-35.4 74.4-20 10.3-47 26.2-51 46.2-3.3 15.8 26 55.2 76.1-31.2 22.4-7.4 46.8-16.5 68.4-20.1 18.9 10.2 41 17 55.8 17 25.5 0 28-28.2 17.5-38.7zm-198.1 77.8c5.1-13.7 24.5-29.5 30.4-35-19 30.3-30.4 35.7-30.4 35zm81.6-190.6c7.4 0 6.7 32.1 1.8 40.8-4.4-13.9-4.3-40.8-1.8-40.8zm-24.4 136.6c9.7-16.9 18-37 24.7-54.7 8.3 15.1 18.9 27.2 30.1 35.5-20.8 4.3-38.9 13.1-54.8 19.2zm131.6-5s-5 6-37.3-7.8c35.1-2.6 40.9 5.4 37.3 7.8z"/>
-                              </svg>
-                            {% elif file_extension in ['doc', 'docx'] %}
-                              <svg class="h-4 w-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 384 512">
-                                <path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm57.1 120H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm0 96H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"/>
-                              </svg>
-                            {% elif file_extension in ['xls', 'xlsx', 'csv'] %}
-                              <svg class="h-4 w-4 text-green-600 mr-2" fill="currentColor" viewBox="0 0 384 512">
-                                <path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5L160 336l-60.1-93.5c-5.1-8 .6-18.5 10.1-18.5h34.9c4.4 0 8.5 2.4 10.6 6.3 21.2 38.9 33.2 58 33.2 58 3.3-7.9 36.5-74.3 36.5-74.3 2.1-3.9 6.2-6.3 10.6-6.3H270c9.5-.1 15.2 10.4 10.1 18.5zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"/>
-                              </svg>
-                            {% elif file_extension in ['jpg', 'jpeg', 'png', 'gif'] %}
-                              <svg class="h-4 w-4 text-purple-500 mr-2" fill="currentColor" viewBox="0 0 384 512">
-                                <path d="M384 121.941V128H256V0h6.059a24 24 0 0 1 16.97 7.029l97.941 97.941a24.002 24.002 0 0 1 7.03 16.971zM248 160c-13.2 0-24-10.8-24-24V0H24C10.745 0 0 10.745 0 24v464c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24V160H248zm-135.455 16c26.51 0 48 21.49 48 48s-21.49 48-48 48-48-21.49-48-48 21.491-48 48-48zm208 240h-256l.485-48.485L104.545 328c4.686-4.686 11.799-4.686 16.485 0L160.545 368 264.06 264.485c4.686-4.686 12.284-4.686 16.971 0L320.545 304v112z"/>
-                              </svg>
-                            {% else %}
-                              <svg class="h-4 w-4 text-gray-400 mr-2" fill="currentColor" viewBox="0 0 384 512">
-                                <path d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"/>
-                              </svg>
-                            {% endif %}
-                            
-                            <a href="{{ url_for('main.descargar_archivo', file_id=f.id) }}" class="text-sm text-gray-700 hover:text-red-600">
-                              {{ f.filename }}
-                            </a>
-                            
-                            <!-- Fecha de subida y tamaño -->
-                            <span class="text-xs text-gray-500 ml-auto"></span>
-                            
-                            <!-- Acciones (visibles al hacer hover) -->
-                            <div class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
-                              <a href="{{ url_for('main.descargar_archivo', file_id=f.id) }}" class="text-gray-500 hover:text-blue-600" title="Descargar">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                              </a>
-                              <a href="{{ url_for('main.eliminar_archivo', file_id=f.id) }}" class="text-gray-500 hover:text-red-600" title="Eliminar" onclick="return confirm('¿Estás seguro de que deseas eliminar este archivo?');">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </a>
-                            </div>
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
+        <div class=" p-4">
+          {% for group_lbl, subdict in by_group.items() %} {% set group_index =
+          loop.index %}
+          <div class="group-folder mb-4">
+            <!-- Grupo principal desplegable -->
+            <div
+              class="group-header bg-gray-100 p-3 rounded-t-lg flex items-center cursor-pointer shadow-sm"
+              onclick="toggleGroup('group_{{ group_index }}')"
+            >
+              <!-- Ícono flecha (Chevron) -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2 text-red-600 transform transition-transform duration-200"
+                id="group_icon_{{ group_index }}"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <!-- Flecha apuntando abajo por defecto (Tailwind rotate classes se aplican dinámicamente) -->
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586
+                      l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0
+                      l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+
+              <!-- Ícono de carpeta -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-2 text-red-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9
+                           a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                />
+              </svg>
+
+              <h2 class="text-lg font-bold">{{ group_lbl }}</h2>
+              <span
+                class="ml-auto text-xs text-gray-500 bg-gray-200 rounded-full px-2 py-1"
+              >
+                {% set total_files = namespace(count=0) %} {% for file_lbl,
+                files in subdict.items() %} {% set total_files.count =
+                total_files.count + files|length %} {% endfor %} {{
+                total_files.count }} {{ 'archivo' if total_files.count == 1 else
+                'archivos' }}
+              </span>
             </div>
+
+            <!-- Contenedor de subcarpetas -->
+            <div
+              class="group-content pl-4 border-l-2 border-gray-200 ml-3"
+              id="group_{{ group_index }}"
+            >
+              {% for file_lbl, files in subdict.items() %}
+              <div class="label-folder mt-2 mb-2">
+                <!-- Subcarpeta desplegable -->
+                <div
+                  class="label-header flex items-center p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')"
+                >
+                  <!-- Ícono flecha subcarpeta -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-2 text-gray-600 transform transition-transform duration-200"
+                    id="label_icon_{{ group_index }}_{{ loop.index }}"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586
+                                 l3.293-3.293a1 1 0 111.414 1.414l-4 4
+                                 a1 1 0 01-1.414 0l-4-4a1 1
+                                 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+
+                  <!-- Ícono subcarpeta -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-2 text-red-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9
+                              a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                    />
+                  </svg>
+
+                  <h3 class="text-md font-semibold">{{ file_lbl }}</h3>
+                  <span class="ml-auto text-xs text-gray-500">
+                    {{ files|length }} {{ 'archivo' if files|length == 1 else
+                    'archivos' }}
+                  </span>
+                </div>
+
+                <!-- Lista de archivos -->
+                <div
+                  class="label-files ml-8 mt-1"
+                  id="label_{{ group_index }}_{{ loop.index }}"
+                >
+                  <!-- Tus archivos: -->
+                  <ul class="border-l border-gray-200 pl-3">
+                    {% for f in files %}
+                    <li
+                      class="flex items-center py-1 group hover:bg-gray-50 rounded px-2"
+                    >
+                      {% set file_extension = f.filename.split('.')[-1]|lower %}
+
+                      <!-- Icono basado en la extensión del archivo -->
+                      {% if file_extension in ['pdf'] %}
+                      <svg
+                        class="h-4 w-4 text-red-500 mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48zm250.2-143.7c-12.2-12-47-8.7-64.4-6.5-17.2-10.5-28.7-25-36.8-46.3 3.9-16.1 10.1-40.6 5.4-56-4.2-26.2-37.8-23.6-42.6-5.9-4.4 16.1-.4 38.5 7 67.1-10 23.9-24.9 56-35.4 74.4-20 10.3-47 26.2-51 46.2-3.3 15.8 26 55.2 76.1-31.2 22.4-7.4 46.8-16.5 68.4-20.1 18.9 10.2 41 17 55.8 17 25.5 0 28-28.2 17.5-38.7zm-198.1 77.8c5.1-13.7 24.5-29.5 30.4-35-19 30.3-30.4 35.7-30.4 35zm81.6-190.6c7.4 0 6.7 32.1 1.8 40.8-4.4-13.9-4.3-40.8-1.8-40.8zm-24.4 136.6c9.7-16.9 18-37 24.7-54.7 8.3 15.1 18.9 27.2 30.1 35.5-20.8 4.3-38.9 13.1-54.8 19.2zm131.6-5s-5 6-37.3-7.8c35.1-2.6 40.9 5.4 37.3 7.8z"
+                        />
+                      </svg>
+                      {% elif file_extension in ['doc', 'docx'] %}
+                      <svg
+                        class="h-4 w-4 text-blue-600 mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm57.1 120H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm0 96H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+                        />
+                      </svg>
+                      {% elif file_extension in ['xls', 'xlsx', 'csv'] %}
+                      <svg
+                        class="h-4 w-4 text-green-600 mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5L160 336l-60.1-93.5c-5.1-8 .6-18.5 10.1-18.5h34.9c4.4 0 8.5 2.4 10.6 6.3 21.2 38.9 33.2 58 33.2 58 3.3-7.9 36.5-74.3 36.5-74.3 2.1-3.9 6.2-6.3 10.6-6.3H270c9.5-.1 15.2 10.4 10.1 18.5zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+                        />
+                      </svg>
+                      {% elif file_extension in ['jpg', 'jpeg', 'png', 'gif'] %}
+                      <svg
+                        class="h-4 w-4 text-purple-500 mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M384 121.941V128H256V0h6.059a24 24 0 0 1 16.97 7.029l97.941 97.941a24.002 24.002 0 0 1 7.03 16.971zM248 160c-13.2 0-24-10.8-24-24V0H24C10.745 0 0 10.745 0 24v464c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24V160H248zm-135.455 16c26.51 0 48 21.49 48 48s-21.49 48-48 48-48-21.49-48-48 21.491-48 48-48zm208 240h-256l.485-48.485L104.545 328c4.686-4.686 11.799-4.686 16.485 0L160.545 368 264.06 264.485c4.686-4.686 12.284-4.686 16.971 0L320.545 304v112z"
+                        />
+                      </svg>
+                      {% else %}
+                      <svg
+                        class="h-4 w-4 text-gray-400 mr-2"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"
+                        />
+                      </svg>
+                      {% endif %}
+
+                      <a
+                        href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
+                        class="text-sm text-gray-700 hover:text-red-600"
+                      >
+                        {{ f.filename }}
+                      </a>
+
+                      <!-- Fecha de subida y tamaño -->
+                      <span class="text-xs text-gray-500 ml-auto"></span>
+
+                      <!-- Acciones (visibles al hacer hover) -->
+                      <div
+                        class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1"
+                      >
+                        <a
+                          href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
+                          class="text-gray-500 hover:text-blue-600"
+                          title="Descargar"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                            />
+                          </svg>
+                        </a>
+                        <a
+                          href="{{ url_for('main.eliminar_archivo', file_id=f.id) }}"
+                          class="text-gray-500 hover:text-red-600"
+                          title="Eliminar"
+                          onclick="return confirm('¿Estás seguro de que deseas eliminar este archivo?');"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </a>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
           {% endfor %}
         </div>
-        
-        
-      {% else %}
-  
+
+        {% else %}
+
         <div class="px-6 py-10 text-center">
           <div
             class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 text-gray-400 mb-4"
@@ -485,35 +628,6 @@
           <p class="text-xs text-gray-500 mt-1">Sube archivos para comenzar</p>
         </div>
         {% endif %}
-      </div>
-
-      <!-- Acciones adicionales -->
-      <div class="mt-6">
-        <div class="bg-white shadow-md rounded-lg border border-gray-100 p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Acciones</h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a
-              href="#"
-              class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <i class="fas fa-share-alt text-gray-600 mr-3"></i>
-              <span class="text-sm text-gray-700">Compartir carpeta</span>
-            </a>
-            <a
-              href="#"
-              class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              <i class="fas fa-edit text-gray-600 mr-3"></i>
-              <span class="text-sm text-gray-700">Editar detalles</span>
-            </a>
-            <button
-              class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-200 transition-colors"
-            >
-              <i class="fas fa-trash-alt text-gray-600 mr-3"></i>
-              <span class="text-sm text-gray-700">Eliminar carpeta</span>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -597,48 +711,57 @@
         }
       }
     </script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const group = document.getElementById('group_1');
-    group.style.display = 'none';
-    // girar icono
-    const icon = document.getElementById('group_icon_1');
-    icon.classList.add('rotate--90');
-  })
-  function toggleGroup(groupId) {
-    const groupContent = document.getElementById(groupId);
-    // groupId = "group_1" => index = "1"
-    const indexPart = groupId.split('_')[1];
-    const groupIcon = document.getElementById('group_icon_' + indexPart);
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const groupContents = document.querySelectorAll('[id^="group_"]');
+        groupContents.forEach((el) => {
+          el.style.display = "none";
+          const idx = el.id.split("_")[1];
+          const icon = document.getElementById("group_icon_" + idx);
+          if (icon) icon.classList.add("-rotate-90"); // Tailwind: -rotate-90
+        });
 
-    if (groupContent.style.display === 'none') {
-      // Abrir
-      groupContent.style.display = 'block';
-      groupIcon.classList.remove('rotate--90');
-    } else {
-      // Cerrar
-      groupContent.style.display = 'none';
-      groupIcon.classList.add('rotate--90');
-    }
-  }
-  
-  function toggleLabel(labelId) {
-    const labelContent = document.getElementById(labelId);
-    // labelId = "label_1_2"
-    const index = labelId.replace('label_', ''); // "1_2"
-    const labelIcon = document.getElementById('label_icon_' + index);
+        const labelContents = document.querySelectorAll('[id^="label_"]');
+        labelContents.forEach((el) => {
+          el.style.display = "none";
+          // Rotar flecha -90°:
+          const idx = el.id.replace("label_", "");
+          const icon = document.getElementById("label_icon_" + idx);
+          if (icon) icon.classList.add("-rotate-90");
+        });
+      });
 
-    if (labelContent.style.display === 'none') {
-      // Abrir
-      labelContent.style.display = 'block';
-      labelIcon.classList.remove('rotate--90');
-    } else {
-      // Cerrar
-      labelContent.style.display = 'none';
-      labelIcon.classList.add('rotate--90');
-    }
-  }
-</script>
+      // Toggle de grupo principal
+      function toggleGroup(groupId) {
+        const groupContent = document.getElementById(groupId);
+        const idx = groupId.split("_")[1];
+        const icon = document.getElementById("group_icon_" + idx);
 
+        if (groupContent.style.display === "none") {
+          // abrir
+          groupContent.style.display = "block";
+          icon?.classList.remove("-rotate-90");
+        } else {
+          // cerrar
+          groupContent.style.display = "none";
+          icon?.classList.add("-rotate-90");
+        }
+      }
+
+      // Toggle de subcarpeta
+      function toggleLabel(labelId) {
+        const labelContent = document.getElementById(labelId);
+        const idx = labelId.replace("label_", "");
+        const icon = document.getElementById("label_icon_" + idx);
+
+        if (labelContent.style.display === "none") {
+          labelContent.style.display = "block";
+          icon?.classList.remove("-rotate-90");
+        } else {
+          labelContent.style.display = "none";
+          icon?.classList.add("-rotate-90");
+        }
+      }
+    </script>
   </body>
 </html>

@@ -70,6 +70,7 @@ class DriveFile(db.Model):
   etiquetas = db.Column(db.String(255), nullable=True)
   uploaded_at = db.Column(db.DateTime, server_default=db.func.now())
   folder_id = db.Column(db.Integer, db.ForeignKey('drive_folders.id'))
+  group_label = db.Column(db.String(100), nullable=True)
 
   def __repr__(self):
     return f"<DriveFile filename={self.filename} drive_id={self.drive_id}>"

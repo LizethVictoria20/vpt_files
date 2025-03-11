@@ -366,17 +366,17 @@ def descargar_archivo(file_id):
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)
-@main_bp.route('/eliminar_file/<int:file_id>', methods=['POST'])
+@main_bp.route('/eliminar_file/<int:file_id>', methods=['POST', 'GET'])
 @login_required
 def eliminar_archivo(file_id):
     from app import db
     archivo = DriveFile.query.get_or_404(file_id)
+    folder_id = archivo.folder_id
 
     db.session.delete(archivo)
     db.session.commit()
 
-    flash(f"Archivo '{archivo.filename}' eliminado de la base de datos", "success")
-    return redirect(url_for('main.listar_carpetas'))
+    return redirect(url_for('main.ver_carpeta', folder_id=folder_id))
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)

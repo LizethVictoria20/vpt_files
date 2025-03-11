@@ -373,7 +373,7 @@
           </h2>
         </div>
         {% if folder.files %}
-        <div class=" p-4">
+        <div class="p-4">
           {% for group_lbl, subdict in by_group.items() %} {% set group_index =
           loop.index %}
           <div class="group-folder mb-4">
@@ -560,9 +560,7 @@
                       <span class="text-xs text-gray-500 ml-auto"></span>
 
                       <!-- Acciones (visibles al hacer hover) -->
-                      <div
-                        class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1"
-                      >
+                      <div class="ml-2 transition-opacity flex space-x-1">
                         <a
                           href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
                           class="text-gray-500 hover:text-blue-600"
@@ -584,11 +582,11 @@
                           </svg>
                         </a>
                         <a
-                          href="{{ url_for('main.eliminar_archivo', file_id=f.id) }}"
+                          href="javascript:void(0);"
                           class="text-gray-500 hover:text-red-600"
                           title="Eliminar"
-                          onclick="return confirm('¿Estás seguro de que deseas eliminar este archivo?');"
-                        >
+                          onclick="openDeleteModal('{{ f.id }}')"
+                          >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-4 w-4"
@@ -631,9 +629,9 @@
       </div>
     </div>
 
-    <!-- Modal de confirmación para eliminar archivo (oculto por defecto) -->
+    <!-- Modal de confirmación de eliminación (inicialmente oculto con 'hidden') -->
     <div
-      id="deleteModal"
+      id="deleteConfirmModal"
       class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50"
     >
       <div class="bg-white rounded-lg max-w-md w-full p-6">
@@ -648,20 +646,23 @@
         </div>
         <div class="flex justify-end space-x-3 mt-6">
           <button
+            type="button"
+            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
             onclick="closeDeleteModal()"
-            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
           >
             Cancelar
           </button>
           <button
+            type="button"
             id="confirmDeleteBtn"
-            class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none"
           >
             Eliminar
           </button>
         </div>
       </div>
     </div>
+
     <script>
       document
         .getElementById("fileLabel")
@@ -763,5 +764,28 @@
         }
       }
     </script>
+    <!-- Modal de eliminacion de arcivo -->
+    <script>
+      function openDeleteModal(fileId) {
+        fileIdToDelete = fileId;
+        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+      }
+    
+      // Cerrar modal sin hacer nada
+      function closeDeleteModal() {
+        fileIdToDelete = null;
+        document.getElementById('deleteConfirmModal').classList.add('hidden');
+      }
+    
+      // Al hacer clic en el botón "Eliminar" dentro del modal
+      document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        if (fileIdToDelete) {
+          // Redirige a la ruta de eliminación que usabas
+          window.location.href = "/eliminar_file/" + fileIdToDelete;
+        }
+      });
+    </script>
+    
+     
   </body>
 </html>

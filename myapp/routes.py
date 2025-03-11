@@ -1,3 +1,4 @@
+from collections import defaultdict
 from operator import or_
 import os
 from io import BytesIO
@@ -250,7 +251,8 @@ def subir_archivo(folder_id):
             drive_id=dropbox_file_path,
             filename=file_obj.filename,
             folder_id=folder.id,
-            etiquetas=file_label  
+            etiquetas=file_label,
+            group_label=group_label  
         )
         db.session.add(new_file)
         db.session.commit()
@@ -334,12 +336,17 @@ def ver_carpeta(folder_id):
     form = GeneralForm()
     folder = DriveFolder.query.get_or_404(folder_id)
     
-    # Verifica que el folder pertenezca al usuario logueado
     if folder.user_id != current_user.id:
-        abort(403)  # Prohibido si no es su carpeta
+        abort(403)
 
-    # Renderiza una plantilla que muestre info de la carpeta y un link para subir
-    return render_template('ver_carpeta.html', folder=folder, form=form)
+    archivos = DriveFile.query.filter_by(folder_id=folder.id).all()
+    by_group = defaultdict(lambda: defaultdict(list))
+    for f in archivos:
+        g = f.group_label or "Sin categoría" 
+        lbl = f.etiquetas or "Sin etiqueta" 
+        by_group[g][lbl].append(f)
+
+    return render_template('ver_carpeta.html', folder=folder, form=form, by_group=by_group)
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)

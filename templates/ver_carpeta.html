@@ -15,6 +15,10 @@
       body {
         font-family: "Inter", sans-serif;
       }
+      .rotate--90 {
+        transform: rotate(-90deg);
+        transition: transform 0.2s ease-in-out;
+      }
     </style>
   </head>
   <body class="bg-gray-50">
@@ -378,7 +382,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-600 transform transition-transform" id="group_icon_{{ group_index }}" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                 </svg>
                 <h2 class="text-lg font-bold">{{ group_lbl }}</h2>
@@ -468,33 +472,7 @@
           {% endfor %}
         </div>
         
-        <script>
-          function toggleGroup(groupId) {
-            const groupContent = document.getElementById(groupId);
-            const groupIcon = document.getElementById('group_icon_' + groupId.split('_')[1]);
-            
-            if (groupContent.style.display === 'none') {
-              groupContent.style.display = 'block';
-              groupIcon.classList.remove('rotate-[-90deg]');
-            } else {
-              groupContent.style.display = 'none';
-              groupIcon.classList.add('rotate-[-90deg]');
-            }
-          }
-          
-          function toggleLabel(labelId) {
-            const labelContent = document.getElementById(labelId);
-            const labelIcon = document.getElementById('label_icon_' + labelId.replace('label_', ''));
-            
-            if (labelContent.style.display === 'none') {
-              labelContent.style.display = 'block';
-              labelIcon.classList.remove('rotate-[-90deg]');
-            } else {
-              labelContent.style.display = 'none';
-              labelIcon.classList.add('rotate-[-90deg]');
-            }
-          }
-        </script>
+        
       {% else %}
   
         <div class="px-6 py-10 text-center">
@@ -619,5 +597,48 @@
         }
       }
     </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const group = document.getElementById('group_1');
+    group.style.display = 'none';
+    // girar icono
+    const icon = document.getElementById('group_icon_1');
+    icon.classList.add('rotate--90');
+  })
+  function toggleGroup(groupId) {
+    const groupContent = document.getElementById(groupId);
+    // groupId = "group_1" => index = "1"
+    const indexPart = groupId.split('_')[1];
+    const groupIcon = document.getElementById('group_icon_' + indexPart);
+
+    if (groupContent.style.display === 'none') {
+      // Abrir
+      groupContent.style.display = 'block';
+      groupIcon.classList.remove('rotate--90');
+    } else {
+      // Cerrar
+      groupContent.style.display = 'none';
+      groupIcon.classList.add('rotate--90');
+    }
+  }
+  
+  function toggleLabel(labelId) {
+    const labelContent = document.getElementById(labelId);
+    // labelId = "label_1_2"
+    const index = labelId.replace('label_', ''); // "1_2"
+    const labelIcon = document.getElementById('label_icon_' + index);
+
+    if (labelContent.style.display === 'none') {
+      // Abrir
+      labelContent.style.display = 'block';
+      labelIcon.classList.remove('rotate--90');
+    } else {
+      // Cerrar
+      labelContent.style.display = 'none';
+      labelIcon.classList.add('rotate--90');
+    }
+  }
+</script>
+
   </body>
 </html>

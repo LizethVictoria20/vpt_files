@@ -24,8 +24,7 @@
   <body class="bg-gray-50">
     {% include 'base.html' %}
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Header con información de carpeta -->
+    <div class="max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div
         class="flex flex-col md:flex-row md:items-center md:justify-between mb-6"
       >
@@ -42,7 +41,7 @@
           >
             Importar archivos
           </button>
-          <!-- Modal (oculto por defecto) -->
+          <!-- Modal para importar archivos -->
           <div
             id="importModal"
             class="hidden fixed inset-0 z-50 overflow-y-auto"
@@ -53,25 +52,20 @@
             <div
               class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
             >
-              <!-- Overlay de fondo oscuro -->
               <div
                 class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
                 aria-hidden="true"
                 onclick="document.getElementById('importModal').classList.add('hidden')"
               ></div>
 
-              <!-- Centrado vertical trick -->
               <span
                 class="hidden sm:inline-block sm:align-middle sm:h-screen"
                 aria-hidden="true"
                 >&#8203;</span
               >
-
-              <!-- Modal content -->
               <div
                 class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
               >
-                <!-- Header del modal con título y botón de cierre -->
                 <div
                   class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
                 >
@@ -117,9 +111,7 @@
                   </button>
                 </div>
 
-                <!-- Contenido principal del modal -->
                 <div class="px-6 py-5">
-                  <!-- Área de arrastrar y soltar (drag & drop) -->
                   <form
                     method="POST"
                     id="importForm"
@@ -220,7 +212,6 @@
                       </div>
                     </div>
 
-                    <!-- Etiqueta del archivo - Siempre visible -->
                     <div class="mt-4 border-t border-gray-100 pt-4">
                       <div
                         class="bg-red-50 rounded-lg p-4 border-l-4 border-red-500 relative"
@@ -298,7 +289,7 @@
                             </option>
                           </optgroup>
                           <optgroup label="Otros documentos">
-                            <option value="Documento medio">
+                            <option value="Documento medico">
                               Documento médico
                             </option>
                             <option value="Documento educativo">
@@ -324,7 +315,6 @@
                   </form>
                 </div>
 
-                <!-- Footer con botones de acción -->
                 <div
                   class="px-6 py-4 bg-gray-50 flex flex-col-reverse sm:flex-row sm:justify-end space-y-reverse space-y-3 sm:space-y-0 sm:space-x-3"
                 >
@@ -377,7 +367,6 @@
           {% for group_lbl, subdict in by_group.items() %} {% set group_index =
           loop.index %}
           <div class="group-folder mb-4">
-            <!-- Grupo principal desplegable -->
             <div
               class="group-header bg-gray-100 p-3 rounded-t-lg flex items-center cursor-pointer shadow-sm"
               onclick="toggleGroup('group_{{ group_index }}')"
@@ -429,14 +418,12 @@
               </span>
             </div>
 
-            <!-- Contenedor de subcarpetas -->
             <div
               class="group-content pl-4 border-l-2 border-gray-200 ml-3"
               id="group_{{ group_index }}"
             >
               {% for file_lbl, files in subdict.items() %}
               <div class="label-folder mt-2 mb-2">
-                <!-- Subcarpeta desplegable -->
                 <div
                   class="label-header flex items-center p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
                   onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')"
@@ -458,8 +445,6 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-
-                  <!-- Ícono subcarpeta -->
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="h-4 w-4 mr-2 text-red-600"
@@ -488,7 +473,6 @@
                   class="label-files ml-8 mt-1"
                   id="label_{{ group_index }}_{{ loop.index }}"
                 >
-                  <!-- Tus archivos: -->
                   <ul class="border-l border-gray-200 pl-3">
                     {% for f in files %}
                     <li
@@ -496,7 +480,6 @@
                     >
                       {% set file_extension = f.filename.split('.')[-1]|lower %}
 
-                      <!-- Icono basado en la extensión del archivo -->
                       {% if file_extension in ['pdf'] %}
                       <svg
                         class="h-4 w-4 text-red-500 mr-2"
@@ -556,10 +539,8 @@
                         {{ f.filename }}
                       </a>
 
-                      <!-- Fecha de subida y tamaño -->
                       <span class="text-xs text-gray-500 ml-auto"></span>
 
-                      <!-- Acciones (visibles al hacer hover) -->
                       <div class="ml-2 transition-opacity flex space-x-1">
                         <a
                           href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
@@ -629,7 +610,7 @@
       </div>
     </div>
 
-    <!-- Modal de confirmación de eliminación (inicialmente oculto con 'hidden') -->
+    <!-- Modal de confirmación de eliminación -->
     <div
       id="deleteConfirmModal"
       class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50"
@@ -668,14 +649,12 @@
         .getElementById("fileLabel")
         .addEventListener("change", function () {
           const select = this;
-          // El optgroup de la opción elegida
           const optGroupLabel = select.selectedOptions[0].parentNode.label;
           document.getElementById("groupLabel").value = optGroupLabel;
         });
     </script>
 
     <script>
-      // Funciones para manejar la eliminación de archivos
       let fileIdToDelete;
 
       function confirmDelete(fileId) {
@@ -690,7 +669,6 @@
       document
         .getElementById("confirmDeleteBtn")
         .addEventListener("click", function () {
-          // Redireccionar a la ruta de eliminación
           window.location.href =
             "{{ url_for('main.eliminar_archivo', file_id=0) }}".replace(
               "0",
@@ -719,7 +697,7 @@
           el.style.display = "none";
           const idx = el.id.split("_")[1];
           const icon = document.getElementById("group_icon_" + idx);
-          if (icon) icon.classList.add("-rotate-90"); // Tailwind: -rotate-90
+          if (icon) icon.classList.add("-rotate-90");
         });
 
         const labelContents = document.querySelectorAll('[id^="label_"]');
@@ -732,24 +710,20 @@
         });
       });
 
-      // Toggle de grupo principal
       function toggleGroup(groupId) {
         const groupContent = document.getElementById(groupId);
         const idx = groupId.split("_")[1];
         const icon = document.getElementById("group_icon_" + idx);
 
         if (groupContent.style.display === "none") {
-          // abrir
           groupContent.style.display = "block";
           icon?.classList.remove("-rotate-90");
         } else {
-          // cerrar
           groupContent.style.display = "none";
           icon?.classList.add("-rotate-90");
         }
       }
 
-      // Toggle de subcarpeta
       function toggleLabel(labelId) {
         const labelContent = document.getElementById(labelId);
         const idx = labelId.replace("label_", "");
@@ -764,28 +738,20 @@
         }
       }
     </script>
-    <!-- Modal de eliminacion de arcivo -->
     <script>
       function openDeleteModal(fileId) {
         fileIdToDelete = fileId;
         document.getElementById('deleteConfirmModal').classList.remove('hidden');
       }
-    
-      // Cerrar modal sin hacer nada
       function closeDeleteModal() {
         fileIdToDelete = null;
         document.getElementById('deleteConfirmModal').classList.add('hidden');
       }
-    
-      // Al hacer clic en el botón "Eliminar" dentro del modal
       document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
         if (fileIdToDelete) {
-          // Redirige a la ruta de eliminación que usabas
           window.location.href = "/eliminar_file/" + fileIdToDelete;
         }
       });
     </script>
-    
-     
   </body>
 </html>

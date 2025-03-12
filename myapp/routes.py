@@ -71,7 +71,7 @@ def profile():
         db.session.commit()
         flash('Perfil actualizado con éxito', 'success')
         return redirect(url_for('main.profile'))
-    return render_template('profile.html', form=form, user=current_user, all_users=all_users)
+    return render_template('profile-cliente.html', form=form, user=current_user, all_users=all_users)
 
 @main_bp.route('/logout')
 @login_required

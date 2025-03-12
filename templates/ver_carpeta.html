@@ -32,7 +32,45 @@
           <h1 class="text-3xl font-bold text-gray-900">{{ folder.name }}</h1>
           <p class="text-sm text-gray-500 mt-1">ID: {{ folder.drive_id }}</p>
         </div>
-
+      </div>
+      <div class="flex flex-row justify-between items-center">
+        <!-- Barra de búsqueda -->
+        <div class="mt-6">
+          <label
+            for="searchInput"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Búsqueda
+          </label>
+          <div class="relative w-lg">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="searchInput"
+              name="searchInput"
+              placeholder="Escribe el nombre del archivo..."
+              class="block w-[22rem] pl-10 pr-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+            />
+          </div>
+        </div>
+        <!-- Importar archivos -->
         <div class="mt-4 md:mt-0">
           <button
             type="button"
@@ -352,6 +390,7 @@
           </div>
         </div>
       </div>
+      <div id="liveResults" class="mt-3 mb-3 space-y-2"></div>
 
       <!-- Contenido de la carpeta -->
       <div
@@ -479,7 +518,6 @@
                       class="flex items-center py-1 group hover:bg-gray-50 rounded px-2"
                     >
                       {% set file_extension = f.filename.split('.')[-1]|lower %}
-
                       {% if file_extension in ['pdf'] %}
                       <svg
                         class="h-4 w-4 text-red-500 mr-2"
@@ -567,7 +605,7 @@
                           class="text-gray-500 hover:text-red-600"
                           title="Eliminar"
                           onclick="openDeleteModal('{{ f.id }}')"
-                          >
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-4 w-4"
@@ -741,17 +779,93 @@
     <script>
       function openDeleteModal(fileId) {
         fileIdToDelete = fileId;
-        document.getElementById('deleteConfirmModal').classList.remove('hidden');
+        document
+          .getElementById("deleteConfirmModal")
+          .classList.remove("hidden");
       }
       function closeDeleteModal() {
         fileIdToDelete = null;
-        document.getElementById('deleteConfirmModal').classList.add('hidden');
+        document.getElementById("deleteConfirmModal").classList.add("hidden");
       }
-      document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
-        if (fileIdToDelete) {
-          window.location.href = "/eliminar_file/" + fileIdToDelete;
+      document
+        .getElementById("confirmDeleteBtn")
+        .addEventListener("click", function () {
+          if (fileIdToDelete) {
+            window.location.href = "/eliminar_file/" + fileIdToDelete;
+          }
+        });
+    </script>
+    <script>
+      const searchInput = document.getElementById("searchInput");
+      const liveResults = document.getElementById("liveResults");
+
+      searchInput.addEventListener("keyup", async function () {
+        const query = searchInput.value.trim();
+
+        if (!query) {
+          liveResults.innerHTML = "";
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `/buscar_archivos_json?q=${encodeURIComponent(query)}`
+          );
+          const data = await response.json();
+
+          renderResults(data);
+        } catch (error) {
+          console.error("Error al buscar archivos:", error);
         }
       });
+
+      function renderResults(files) {
+        liveResults.innerHTML = "";
+
+        if (files.length === 0) {
+          liveResults.innerHTML = `
+            <p class="text-sm text-gray-500">Sin coincidencias.</p>
+          `;
+          return;
+        }
+
+        let html = "";
+        files.forEach((file) => {
+          html += `
+            <div class="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                  <div class="flex-shrink-0">
+                    <div class="h-10 w-10 bg-red-50 rounded-full flex items-center justify-center text-red-600">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <p class="text-base font-medium text-gray-900">${file.filename}</p>
+                    <div class="flex items-center mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                      </svg>
+                      <p class="text-xs text-gray-500">Carpeta: ${file.drive_id}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <a href="/carpeta/${file.folder_id}" class="px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-150 flex items-center">
+                  <span>Ver carpeta</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          `;
+        });
+
+        liveResults.innerHTML = html;
+      }
     </script>
   </body>
 </html>

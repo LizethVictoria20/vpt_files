@@ -6,7 +6,7 @@ import dropbox
 from zipfile import ZipFile
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
-from flask import Blueprint, abort, flash, render_template, request, redirect, send_file, session, url_for
+from flask import Blueprint, abort, flash, jsonify, render_template, request, redirect, send_file, session, url_for
 from myapp.dropbox_utils import (
     crear_carpeta_dropbox,
     subir_a_dropbox,
@@ -426,3 +426,27 @@ def descargar_carpeta(folder_id):
         download_name=f"{carpeta.name}.zip",
         mimetype="application/zip"
     )
+    
+@main_bp.route('/buscar_archivos_json')
+@login_required
+def buscar_archivos_json():
+    from app import db
+    q = request.args.get('q', '').strip()
+
+    files_query = DriveFile.query.join(DriveFolder).filter(
+        DriveFolder.user_id == current_user.id
+    )
+
+    if q:
+        files_query = files_query.filter(DriveFile.filename.ilike(f"%{q}%"))
+
+    files = files_query.all()
+    data = []
+    for f in files:
+        print(f.drive_id)
+        data.append({
+            'id': f.id,
+            'filename': f.filename,
+            'drive_id': f.drive_id
+        })
+    return jsonify(data)

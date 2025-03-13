@@ -634,13 +634,26 @@
                           {{ f.filename }}
                         </h3>
                       </div>
-                      <button
-                        class="text-blue-600 hover:underline"
-                        onclick="openPreviewModal(`{{ f.id }}`, `{{ f.filename.split('.')[-1]|lower }}`)"
-                      >
-                        Ver
-                      </button>
                       <div class="flex space-x-1">
+                        <a
+                          class="inline-flex items-center px-2 py-1 text-sm text-gray-500 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors duration-150"
+                          onclick="openPreviewModal(`{{ f.id }}`, `{{ f.filename.split('.')[-1]|lower }}`)"
+                          title="Visualizar documento"
+                        >
+                          <svg
+                            class="h-4 w-4 mr-1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                          </svg>
+                        </a>
                         <a
                           href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
                           class="p-1.5 rounded-full hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors duration-150"

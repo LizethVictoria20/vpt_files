@@ -447,6 +447,9 @@ def buscar_archivos_json():
         data.append({
             'id': f.id,
             'filename': f.filename,
-            'drive_id': f.drive_id
+            'drive_id': f.drive_id,
+            'etiquetas': f.etiquetas,
+            'group_label': f.group_label,
+            'folder_id': f.folder_id,
         })
     return jsonify(data)

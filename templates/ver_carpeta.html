@@ -33,16 +33,11 @@
           <p class="text-sm text-gray-500 mt-1">ID: {{ folder.drive_id }}</p>
         </div>
       </div>
-      <div class="flex flex-row justify-between items-center">
-        <!-- Barra de búsqueda -->
-        <div class="mt-6">
-          <label
-            for="searchInput"
-            class="block text-sm font-medium text-gray-700 mb-2"
-          >
-            Búsqueda
-          </label>
-          <div class="relative w-lg">
+      <div
+        class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100 shadow-sm"
+      >
+        <div class="w-full md:w-auto md:flex-grow md:max-w-xl">
+          <div class="relative">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
@@ -65,55 +60,126 @@
               type="text"
               id="searchInput"
               name="searchInput"
-              placeholder="Escribe el nombre del archivo..."
-              class="block w-[22rem] pl-10 pr-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm"
+              placeholder="Buscar archivos por nombre..."
+              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-sm"
+              aria-label="Búsqueda de archivos"
             />
           </div>
+          <p class="text-xs text-gray-500 mt-1 ml-1">
+            Busca documentos en esta carpeta
+          </p>
         </div>
-        <!-- Importar archivos -->
-        <div class="mt-4 md:mt-0">
+
+        <div class="w-full md:w-auto md:flex-shrink-0">
           <button
             type="button"
             onclick="document.getElementById('importModal').classList.remove('hidden')"
-            class="flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+            class="w-full md:w-auto flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+              />
+            </svg>
             Importar archivos
           </button>
-          <!-- Modal para importar archivos -->
+        </div>
+
+        <!-- Modal para importar archivos (sin cambios en funcionalidad) -->
+        <div
+          id="importModal"
+          class="hidden fixed inset-0 z-50 overflow-y-auto"
+          aria-labelledby="modal-title"
+          role="dialog"
+          aria-modal="true"
+        >
           <div
-            id="importModal"
-            class="hidden fixed inset-0 z-50 overflow-y-auto"
-            aria-labelledby="modal-title"
-            role="dialog"
-            aria-modal="true"
+            class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
           >
             <div
-              class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              aria-hidden="true"
+              onclick="document.getElementById('importModal').classList.add('hidden')"
+            ></div>
+
+            <span
+              class="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+              >&#8203;</span
+            >
+            <div
+              class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
             >
               <div
-                class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-                aria-hidden="true"
-                onclick="document.getElementById('importModal').classList.add('hidden')"
-              ></div>
-
-              <span
-                class="hidden sm:inline-block sm:align-middle sm:h-screen"
-                aria-hidden="true"
-                >&#8203;</span
+                class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
               >
-              <div
-                class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-              >
-                <div
-                  class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
+                <h3
+                  class="text-xl font-bold text-gray-900 flex items-center"
+                  id="modal-title"
                 >
-                  <h3
-                    class="text-xl font-bold text-gray-900 flex items-center"
-                    id="modal-title"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-red-600 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                    />
+                  </svg>
+                  Importar archivo
+                </h3>
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-gray-500 focus:outline-none"
+                  onclick="document.getElementById('importModal').classList.add('hidden')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="px-6 py-5">
+                <form
+                  method="POST"
+                  id="importForm"
+                  enctype="multipart/form-data"
+                  action="{{ url_for('main.subir_archivo', folder_id=folder.id) }}"
+                >
+                  {{ form.hidden_tag() }}
+
+                  <div
+                    class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg py-8 px-4 text-center transition-all duration-200"
+                    id="dropZone"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-red-600 mr-2"
+                      class="mx-auto h-12 w-12 text-gray-400"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -122,110 +188,37 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                       />
                     </svg>
-                    Importar archivo
-                  </h3>
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-500 focus:outline-none"
-                    onclick="document.getElementById('importModal').classList.add('hidden')"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
+
+                    <div class="mt-3">
+                      <input
+                        type="file"
+                        name="file"
+                        id="file"
+                        required
+                        class="hidden"
+                        onchange="updateFileName(this)"
                       />
-                    </svg>
-                  </button>
-                </div>
 
-                <div class="px-6 py-5">
-                  <form
-                    method="POST"
-                    id="importForm"
-                    enctype="multipart/form-data"
-                    action="{{ url_for('main.subir_archivo', folder_id=folder.id) }}"
-                  >
-                    {{ form.hidden_tag() }}
-
-                    <div
-                      class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg py-8 px-4 text-center transition-all duration-200"
-                      id="dropZone"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="mx-auto h-12 w-12 text-gray-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                        />
-                      </svg>
-
-                      <div class="mt-3">
-                        <input
-                          type="file"
-                          name="file"
-                          id="file"
-                          required
-                          class="hidden"
-                          onchange="updateFileName(this)"
-                        />
-
-                        <p class="text-sm font-medium text-gray-700">
-                          <span id="fileNameDisplay" class="block mb-1"
-                            >Selecciona un archivo para importar</span
-                          >
-                          <span class="text-xs text-gray-500"
-                            >o arrastra y suelta aquí</span
-                          >
-                        </p>
-
-                        <button
-                          type="button"
-                          class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                          onclick="document.getElementById('file').click()"
+                      <p class="text-sm font-medium text-gray-700">
+                        <span id="fileNameDisplay" class="block mb-1"
+                          >Selecciona un archivo para importar</span
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4 mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
-                            />
-                          </svg>
-                          Examinar archivos
-                        </button>
-                      </div>
-                    </div>
+                        <span class="text-xs text-gray-500"
+                          >o arrastra y suelta aquí</span
+                        >
+                      </p>
 
-                    <!-- Información sobre formatos aceptados -->
-                    <div class="mt-4 flex items-start">
-                      <div class="flex-shrink-0">
+                      <button
+                        type="button"
+                        class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        onclick="document.getElementById('file').click()"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-blue-500"
+                          class="h-4 w-4 mr-1"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -234,157 +227,175 @@
                             stroke-linecap="round"
                             stroke-linejoin="round"
                             stroke-width="2"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
                           />
                         </svg>
-                      </div>
-                      <div class="ml-3">
-                        <p class="text-xs text-gray-500">
-                          Formatos aceptados:
-                          <span class="font-medium"
-                            >PDF, XLS, XLSX, CSV, DOC, DOCX</span
-                          >
-                          <br />Tamaño máximo de archivo:
-                          <span class="font-medium">10MB</span>
-                        </p>
-                      </div>
+                        Examinar archivos
+                      </button>
                     </div>
+                  </div>
 
-                    <div class="mt-4 border-t border-gray-100 pt-4">
-                      <div
-                        class="bg-red-50 rounded-lg p-4 border-l-4 border-red-500 relative"
+                  <div class="mt-4 flex items-start">
+                    <div class="flex-shrink-0">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-blue-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
-                        <div
-                          class="absolute -top-3 -left-1 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm"
-                        >
-                          Importante
-                        </div>
-                        <label
-                          for="fileLabel"
-                          class="block text-base font-bold text-gray-800 mb-2 flex items-center"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 mr-2 text-red-600"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                            />
-                          </svg>
-                          Etiqueta del archivo
-                        </label>
-                        <p class="text-xs text-gray-600 mb-3">
-                          Selecciona una categoría para organizar y encontrar
-                          fácilmente este documento en el futuro
-                        </p>
-                        <select
-                          id="fileLabel"
-                          name="fileLabel"
-                          class="block w-full pl-3 pr-10 py-3 text-base border-2 border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-white shadow-sm"
-                        >
-                          <option value="">-- Seleccionar etiqueta --</option>
-                          <optgroup label="Documentos personales">
-                            <option value="Pasaporte">Pasaporte</option>
-                            <option value="Documento de identidad">
-                              Documento de identidad
-                            </option>
-                            <option value="Licencia de conducir">
-                              Licencia de conducir
-                            </option>
-                            <option value="Permiso de residencia">
-                              Permiso de residencia
-                            </option>
-                            <option value="Certificado de nacimiento">
-                              Certificado de nacimiento
-                            </option>
-                          </optgroup>
-                          <optgroup label="Documentos financieros">
-                            <option value="Facturas">Factura</option>
-                            <option value="Recibos de pago">
-                              Recibo de pago
-                            </option>
-                            <option value="Estados de cuenta">
-                              Estado de cuenta bancario
-                            </option>
-                            <option value="Documento fiscal">
-                              Documento fiscal
-                            </option>
-                            <option value="Nomina">Nómina</option>
-                          </optgroup>
-                          <optgroup label="Documentos legales">
-                            <option value="Contrato">Contrato</option>
-                            <option value="Poder notarial">
-                              Poder notarial
-                            </option>
-                            <option value="Certificado legal">
-                              Certificado legal
-                            </option>
-                          </optgroup>
-                          <optgroup label="Otros documentos">
-                            <option value="Documento medico">
-                              Documento médico
-                            </option>
-                            <option value="Documento educativo">
-                              Documento educativo
-                            </option>
-                            <option value="Documento de propiedad">
-                              Documento de propiedad
-                            </option>
-                            <option value="Documento tecnico">
-                              Documento técnico
-                            </option>
-                            <option value="Otros">Otro</option>
-                          </optgroup>
-                        </select>
-                        <input
-                          type="hidden"
-                          id="groupLabel"
-                          name="groupLabel"
-                          value=""
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
-                      </div>
+                      </svg>
                     </div>
-                  </form>
-                </div>
+                    <div class="ml-3">
+                      <p class="text-xs text-gray-500">
+                        Formatos aceptados:
+                        <span class="font-medium"
+                          >PDF, XLS, XLSX, CSV, DOC, DOCX</span
+                        >
+                        <br />Tamaño máximo de archivo:
+                        <span class="font-medium">10MB</span>
+                      </p>
+                    </div>
+                  </div>
 
-                <div
-                  class="px-6 py-4 bg-gray-50 flex flex-col-reverse sm:flex-row sm:justify-end space-y-reverse space-y-3 sm:space-y-0 sm:space-x-3"
-                >
-                  <button
-                    type="button"
-                    class="sm:order-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    onclick="document.getElementById('importModal').classList.add('hidden')"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    form="importForm"
-                    class="sm:order-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-4 w-4 mr-1.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                  <div class="mt-4 border-t border-gray-100 pt-4">
+                    <div
+                      class="bg-red-50 rounded-lg p-4 border-l-4 border-red-500 relative"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                      <div
+                        class="absolute -top-3 -left-1 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm"
+                      >
+                        Importante
+                      </div>
+                      <label
+                        for="fileLabel"
+                        class="block text-base font-bold text-gray-800 mb-2 flex items-center"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-5 w-5 mr-2 text-red-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                          />
+                        </svg>
+                        Etiqueta del archivo
+                      </label>
+                      <p class="text-xs text-gray-600 mb-3">
+                        Selecciona una categoría para organizar y encontrar
+                        fácilmente este documento en el futuro
+                      </p>
+                      <select
+                        id="fileLabel"
+                        name="fileLabel"
+                        class="block w-full pl-3 pr-10 py-3 text-base border-2 border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-white shadow-sm"
+                      >
+                        <option value="">-- Seleccionar etiqueta --</option>
+                        <optgroup label="Documentos personales">
+                          <option value="Pasaporte">Pasaporte</option>
+                          <option value="Documento de identidad">
+                            Documento de identidad
+                          </option>
+                          <option value="Licencia de conducir">
+                            Licencia de conducir
+                          </option>
+                          <option value="Permiso de residencia">
+                            Permiso de residencia
+                          </option>
+                          <option value="Certificado de nacimiento">
+                            Certificado de nacimiento
+                          </option>
+                        </optgroup>
+                        <optgroup label="Documentos financieros">
+                          <option value="Facturas">Factura</option>
+                          <option value="Recibos de pago">
+                            Recibo de pago
+                          </option>
+                          <option value="Estados de cuenta">
+                            Estado de cuenta bancario
+                          </option>
+                          <option value="Documento fiscal">
+                            Documento fiscal
+                          </option>
+                          <option value="Nomina">Nómina</option>
+                        </optgroup>
+                        <optgroup label="Documentos legales">
+                          <option value="Contrato">Contrato</option>
+                          <option value="Poder notarial">Poder notarial</option>
+                          <option value="Certificado legal">
+                            Certificado legal
+                          </option>
+                        </optgroup>
+                        <optgroup label="Otros documentos">
+                          <option value="Documento medico">
+                            Documento médico
+                          </option>
+                          <option value="Documento educativo">
+                            Documento educativo
+                          </option>
+                          <option value="Documento de propiedad">
+                            Documento de propiedad
+                          </option>
+                          <option value="Documento tecnico">
+                            Documento técnico
+                          </option>
+                          <option value="Otros">Otro</option>
+                        </optgroup>
+                      </select>
+                      <input
+                        type="hidden"
+                        id="groupLabel"
+                        name="groupLabel"
+                        value=""
                       />
-                    </svg>
-                    Importar archivo
-                  </button>
-                </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div
+                class="px-6 py-4 bg-gray-50 flex flex-col-reverse sm:flex-row sm:justify-end space-y-reverse space-y-3 sm:space-y-0 sm:space-x-3"
+              >
+                <button
+                  type="button"
+                  class="sm:order-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  onclick="document.getElementById('importModal').classList.add('hidden')"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  form="importForm"
+                  class="sm:order-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                    />
+                  </svg>
+                  Importar archivo
+                </button>
               </div>
             </div>
           </div>
@@ -394,60 +405,44 @@
 
       <!-- Contenido de la carpeta -->
       <div
-        class="bg-white shadow-md rounded-lg border border-gray-100 overflow-hidden"
+        class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden"
       >
-        <div class="px-6 py-4 border-b border-gray-200">
-          <h2 class="text-xl font-bold text-gray-900">
+        <!-- Encabezado -->
+        <div
+          class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
+        >
+          <h2 class="text-xl font-semibold text-gray-800">
             Archivos en esta carpeta
           </h2>
         </div>
+
         {% if folder.files %}
-        <div class="p-4">
+        <div class="p-6">
           {% for group_lbl, subdict in by_group.items() %} {% set group_index =
           loop.index %}
-          <div class="group-folder mb-4">
+          <div class="mb-6">
+            <!-- Cabecera de grupo mejorada -->
             <div
-              class="group-header bg-gray-100 p-3 rounded-t-lg flex items-center cursor-pointer shadow-sm"
+              class="flex items-center py-3.5 px-3 bg-gray-50 rounded-lg mb-4 cursor-pointer hover:bg-gray-100 transition-colors duration-150"
               onclick="toggleGroup('group_{{ group_index }}')"
             >
-              <!-- Ícono flecha (Chevron) -->
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-red-600 transform transition-transform duration-200"
-                id="group_icon_{{ group_index }}"
-                viewBox="0 0 20 20"
+                class="h-6 w-6 mr-3 text-red-500 flex-shrink-0"
                 fill="currentColor"
-              >
-                <!-- Flecha apuntando abajo por defecto (Tailwind rotate classes se aplican dinámicamente) -->
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586
-                      l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0
-                      l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-
-              <!-- Ícono de carpeta -->
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 mr-2 text-red-600"
-                fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9
-                           a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                  d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
                 />
               </svg>
 
-              <h2 class="text-lg font-bold">{{ group_lbl }}</h2>
+              <h2 class="text-base font-medium text-gray-800 flex-grow">
+                {{ group_lbl }}
+              </h2>
+
+              <!-- Contador de archivos con diseño mejorado -->
               <span
-                class="ml-auto text-xs text-gray-500 bg-gray-200 rounded-full px-2 py-1"
+                class="text-xs px-2.5 py-1 bg-gray-100 rounded-full text-gray-600 mr-2 font-medium"
               >
                 {% set total_files = namespace(count=0) %} {% for file_lbl,
                 files in subdict.items() %} {% set total_files.count =
@@ -458,79 +453,139 @@
             </div>
 
             <div
-              class="group-content pl-4 border-l-2 border-gray-200 ml-3"
               id="group_{{ group_index }}"
+              class="group-content"
+              data-group="{{ group_lbl }}"
             >
-              {% for file_lbl, files in subdict.items() %}
-              <div class="label-folder mt-2 mb-2">
+              <!-- Grid de subcarpetas -->
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4"
+              >
+                {% for file_lbl, files in subdict.items() %}
                 <div
-                  class="label-header flex items-center p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100"
+                  class="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
                   onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')"
+                  data-label="{{ file_lbl }}"
+                  id="subfolder_header_{{ group_index }}_{{ loop.index }}"
                 >
-                  <!-- Ícono flecha subcarpeta -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-2 text-gray-600 transform transition-transform duration-200"
-                    id="label_icon_{{ group_index }}_{{ loop.index }}"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                  <div
+                    class="h-36 flex items-center justify-center p-4 bg-gray-50"
                   >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586
-                                 l3.293-3.293a1 1 0 111.414 1.414l-4 4
-                                 a1 1 0 01-1.414 0l-4-4a1 1
-                                 0 010-1.414z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-2 text-red-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9
-                              a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-                    />
-                  </svg>
+                    <svg
+                      class="h-20 w-20 text-red-500 group-hover:text-red-500 transition-colors duration-200"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+                      />
+                    </svg>
+                  </div>
 
-                  <h3 class="text-md font-semibold">{{ file_lbl }}</h3>
-                  <span class="ml-auto text-xs text-gray-500">
-                    {{ files|length }} {{ 'archivo' if files|length == 1 else
-                    'archivos' }}
-                  </span>
+                  <div
+                    class="px-4 py-3.5 flex justify-between items-center border-t border-gray-100"
+                  >
+                    <div class="truncate">
+                      <h3
+                        class="text-sm font-medium text-gray-800 truncate group-hover:text-red-700 transition-colors duration-200"
+                      >
+                        {{ file_lbl }}
+                      </h3>
+                      <p class="text-xs text-gray-500 mt-1">
+                        {{ files|length }} {{ 'archivo' if files|length == 1
+                        else 'archivos' }}
+                      </p>
+                    </div>
+
+                    <div
+                      class="flex items-center justify-center w-7 h-7 rounded-full bg-gray-50 text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-all"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+
+              {% for file_lbl, files in subdict.items() %}
+              <div
+                id="label_{{ group_index }}_{{ loop.index }}"
+                class="label-content mt-8 mb-10 bg-white p-6 rounded-xl shadow-md border border-gray-200"
+                data-label="{{ file_lbl }}"
+              >
+                <div class="flex items-center mb-5">
+                  <button
+                    onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')"
+                    class="mr-3 p-1.5 rounded-full hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors duration-150"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+                  <svg
+                    class="h-5 w-5 text-red-500 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+                    />
+                  </svg>
+                  <h2 class="text-lg font-medium text-gray-800">
+                    {{ file_lbl }}
+                  </h2>
                 </div>
 
-                <!-- Lista de archivos -->
+                <!-- Grid de archivos -->
                 <div
-                  class="label-files ml-8 mt-1"
-                  id="label_{{ group_index }}_{{ loop.index }}"
+                  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
                 >
-                  <ul class="border-l border-gray-200 pl-3">
-                    {% for f in files %}
-                    <li
-                      class="flex items-center py-1 group hover:bg-gray-50 rounded px-2"
+                  {% for f in files %}
+                  <div
+                    class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-200 group"
+                  >
+                    <div
+                      class="h-28 flex items-center justify-center p-4 bg-gray-50 group-hover:bg-gray-100 transition-colors duration-200"
                     >
                       {% set file_extension = f.filename.split('.')[-1]|lower %}
                       {% if file_extension in ['pdf'] %}
                       <svg
-                        class="h-4 w-4 text-red-500 mr-2"
+                        class="h-16 w-16 text-red-400"
                         fill="currentColor"
                         viewBox="0 0 384 512"
                       >
                         <path
-                          d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48zm250.2-143.7c-12.2-12-47-8.7-64.4-6.5-17.2-10.5-28.7-25-36.8-46.3 3.9-16.1 10.1-40.6 5.4-56-4.2-26.2-37.8-23.6-42.6-5.9-4.4 16.1-.4 38.5 7 67.1-10 23.9-24.9 56-35.4 74.4-20 10.3-47 26.2-51 46.2-3.3 15.8 26 55.2 76.1-31.2 22.4-7.4 46.8-16.5 68.4-20.1 18.9 10.2 41 17 55.8 17 25.5 0 28-28.2 17.5-38.7zm-198.1 77.8c5.1-13.7 24.5-29.5 30.4-35-19 30.3-30.4 35.7-30.4 35zm81.6-190.6c7.4 0 6.7 32.1 1.8 40.8-4.4-13.9-4.3-40.8-1.8-40.8zm-24.4 136.6c9.7-16.9 18-37 24.7-54.7 8.3 15.1 18.9 27.2 30.1 35.5-20.8 4.3-38.9 13.1-54.8 19.2zm131.6-5s-5 6-37.3-7.8c35.1-2.6 40.9 5.4 37.3 7.8z"
+                          d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"
                         />
                       </svg>
+
                       {% elif file_extension in ['doc', 'docx'] %}
                       <svg
-                        class="h-4 w-4 text-blue-600 mr-2"
+                        class="h-16 w-16 text-blue-400"
                         fill="currentColor"
                         viewBox="0 0 384 512"
                       >
@@ -540,7 +595,7 @@
                       </svg>
                       {% elif file_extension in ['xls', 'xlsx', 'csv'] %}
                       <svg
-                        class="h-4 w-4 text-green-600 mr-2"
+                        class="h-16 w-16 text-green-400"
                         fill="currentColor"
                         viewBox="0 0 384 512"
                       >
@@ -550,7 +605,7 @@
                       </svg>
                       {% elif file_extension in ['jpg', 'jpeg', 'png', 'gif'] %}
                       <svg
-                        class="h-4 w-4 text-purple-500 mr-2"
+                        class="h-16 w-16 text-purple-400"
                         fill="currentColor"
                         viewBox="0 0 384 512"
                       >
@@ -560,7 +615,7 @@
                       </svg>
                       {% else %}
                       <svg
-                        class="h-4 w-4 text-gray-400 mr-2"
+                        class="h-16 w-16 text-gray-400"
                         fill="currentColor"
                         viewBox="0 0 384 512"
                       >
@@ -569,20 +624,21 @@
                         />
                       </svg>
                       {% endif %}
+                    </div>
 
-                      <a
-                        href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
-                        class="text-sm text-gray-700 hover:text-red-600"
-                      >
-                        {{ f.filename }}
-                      </a>
+                    <div
+                      class="px-4 py-3 flex justify-between items-center border-t border-gray-100"
+                    >
+                      <div class="truncate">
+                        <h3 class="text-sm font-medium text-gray-800 truncate">
+                          {{ f.filename }}
+                        </h3>
+                      </div>
 
-                      <span class="text-xs text-gray-500 ml-auto"></span>
-
-                      <div class="ml-2 transition-opacity flex space-x-1">
+                      <div class="flex space-x-1">
                         <a
                           href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
-                          class="text-gray-500 hover:text-blue-600"
+                          class="p-1.5 rounded-full hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors duration-150"
                           title="Descargar"
                         >
                           <svg
@@ -600,11 +656,10 @@
                             />
                           </svg>
                         </a>
-                        <a
-                          href="javascript:void(0);"
-                          class="text-gray-500 hover:text-red-600"
-                          title="Eliminar"
+                        <button
                           onclick="openDeleteModal('{{ f.id }}')"
+                          class="p-1.5 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors duration-150"
+                          title="Eliminar"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -620,11 +675,11 @@
                               d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                             />
                           </svg>
-                        </a>
+                        </button>
                       </div>
-                    </li>
-                    {% endfor %}
-                  </ul>
+                    </div>
+                  </div>
+                  {% endfor %}
                 </div>
               </div>
               {% endfor %}
@@ -632,17 +687,73 @@
           </div>
           {% endfor %}
         </div>
-
         {% else %}
-
-        <div class="px-6 py-10 text-center">
+        <!-- Estado de carpeta vacía -->
+        <div class="px-6 py-20 text-center">
           <div
-            class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 text-gray-400 mb-4"
+            class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-50 text-blue-400 mb-6"
           >
-            <i class="fas fa-folder-open text-xl"></i>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-12 w-12"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"
+              />
+            </svg>
           </div>
-          <p class="text-sm text-gray-600">Esta carpeta está vacía</p>
-          <p class="text-xs text-gray-500 mt-1">Sube archivos para comenzar</p>
+          <h3 class="text-xl font-medium text-gray-900 mb-3">
+            Esta carpeta está vacía
+          </h3>
+          <p class="text-base text-gray-600 mb-8 max-w-md mx-auto">
+            Puedes comenzar a subir archivos o crear subcarpetas
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <button
+              class="inline-flex items-center px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
+              </svg>
+              Subir archivo
+            </button>
+            <button
+              class="inline-flex items-center px-5 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2 text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                />
+              </svg>
+              Nueva carpeta
+            </button>
+          </div>
         </div>
         {% endif %}
       </div>
@@ -730,26 +841,98 @@
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const groupContents = document.querySelectorAll('[id^="group_"]');
-        groupContents.forEach((el) => {
-          el.style.display = "none";
-          const idx = el.id.split("_")[1];
+        const groupElements = document.querySelectorAll("[id^='group_']");
+        const labelElements = document.querySelectorAll("[id^='label_']");
+
+        groupElements.forEach((groupEl) => {
+          groupEl.style.display = "none"; 
+          const idx = groupEl.id.split("_")[1];
           const icon = document.getElementById("group_icon_" + idx);
-          if (icon) icon.classList.add("-rotate-90");
+          if (icon) icon.classList.add("-rotate-90"); 
         });
 
-        const labelContents = document.querySelectorAll('[id^="label_"]');
-        labelContents.forEach((el) => {
-          el.style.display = "none";
-          // Rotar flecha -90°:
-          const idx = el.id.replace("label_", "");
-          const icon = document.getElementById("label_icon_" + idx);
-          if (icon) icon.classList.add("-rotate-90");
+        labelElements.forEach((labelEl) => {
+          labelEl.style.display = "none";
+          const parts = labelEl.id.split("_"); 
+          if (parts.length >= 3) {
+            const labelIcon = document.getElementById(
+              `label_icon_${parts[1]}_${parts[2]}`
+            );
+            if (labelIcon) labelIcon.classList.add("-rotate-90");
+          }
         });
+
+        // 2. Leer parámetros de la URL.
+        const params = new URLSearchParams(window.location.search);
+        const openGroup = params.get("openGroup");
+        const openLabel = params.get("openLabel");
+
+        if (openGroup) {
+          const groupToOpen = document.querySelector(
+            `[data-group="${openGroup}"]`
+          );
+          if (groupToOpen) {
+            groupToOpen.style.display = "block";
+            const idx = groupToOpen.id.split("_")[1];
+            const icon = document.getElementById("group_icon_" + idx);
+            if (icon) icon.classList.remove("-rotate-90");
+          }
+        }
+
+        if (openLabel) {
+          const labelToOpen = document.querySelector(
+            `[data-label="${openLabel}"]`
+          );
+          if (labelToOpen) {
+            const parentGroup = labelToOpen.closest(".group-content");
+            if (parentGroup) {
+              parentGroup.style.display = "block";
+              const groupID = parentGroup.id;
+              const groupIdx = groupID.split("_")[1];
+              const iconGroup = document.getElementById(
+                "group_icon_" + groupIdx
+              );
+              if (iconGroup) iconGroup.classList.remove("-rotate-90");
+            }
+            labelToOpen.style.display = "block";
+            const parts = labelToOpen.id.split("_");
+            if (parts.length >= 3) {
+              const labelIcon = document.getElementById(
+                `label_icon_${parts[1]}_${parts[2]}`
+              );
+              if (labelIcon) labelIcon.classList.remove("-rotate-90");
+            }
+            labelToOpen.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }
       });
 
       function toggleGroup(groupId) {
         const groupContent = document.getElementById(groupId);
+        if (!groupContent) return;
+
+        const allGroups = document.querySelectorAll("[id^='group_']");
+        allGroups.forEach((g) => {
+          if (g.id !== groupId) {
+            g.style.display = "none";
+            const gidx = g.id.split("_")[1];
+            const gicon = document.getElementById("group_icon_" + gidx);
+            if (gicon) gicon.classList.add("-rotate-90");
+
+            const allLabels = g.querySelectorAll("[id^='label_']");
+            allLabels.forEach((lbl) => {
+              lbl.style.display = "none";
+              const lparts = lbl.id.split("_");
+              if (lparts.length >= 3) {
+                const licon = document.getElementById(
+                  `label_icon_${lparts[1]}_${lparts[2]}`
+                );
+                if (licon) licon.classList.add("-rotate-90");
+              }
+            });
+          }
+        });
+
         const idx = groupId.split("_")[1];
         const icon = document.getElementById("group_icon_" + idx);
 
@@ -759,20 +942,62 @@
         } else {
           groupContent.style.display = "none";
           icon?.classList.add("-rotate-90");
+
+          const groupLabels = groupContent.querySelectorAll("[id^='label_']");
+          groupLabels.forEach((lbl) => {
+            lbl.style.display = "none";
+            const lparts = lbl.id.split("_");
+            if (lparts.length >= 3) {
+              const licon = document.getElementById(
+                `label_icon_${lparts[1]}_${lparts[2]}`
+              );
+              if (licon) licon.classList.add("-rotate-90");
+            }
+          });
         }
       }
 
       function toggleLabel(labelId) {
         const labelContent = document.getElementById(labelId);
-        const idx = labelId.replace("label_", "");
-        const icon = document.getElementById("label_icon_" + idx);
+        if (!labelContent) return;
 
+        const allLabels = document.querySelectorAll("[id^='label_']");
+        allLabels.forEach((lbl) => {
+          if (lbl.id !== labelId) {
+            lbl.style.display = "none";
+            const parts = lbl.id.split("_");
+            if (parts.length >= 3) {
+              const lblIcon = document.getElementById(
+                `label_icon_${parts[1]}_${parts[2]}`
+              );
+              if (lblIcon) lblIcon.classList.add("-rotate-90");
+            }
+          }
+        });
+
+        const parts = labelId.split("_");
         if (labelContent.style.display === "none") {
           labelContent.style.display = "block";
-          icon?.classList.remove("-rotate-90");
+          const lblIcon = document.getElementById(
+            `label_icon_${parts[1]}_${parts[2]}`
+          );
+          lblIcon?.classList.remove("-rotate-90");
+
+          //scroll para “enfocar” la subcarpeta:
+          setTimeout(() => labelContent.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
         } else {
           labelContent.style.display = "none";
-          icon?.classList.add("-rotate-90");
+          const lblIcon = document.getElementById(
+            `label_icon_${parts[1]}_${parts[2]}`
+          );
+          lblIcon?.classList.add("-rotate-90");
+        }
+      }
+
+      function openDeleteModal(fileId) {
+        if (confirm("¿Estás seguro de que deseas eliminar este archivo?")) {
+          // Aquí iría la redirección o acción para eliminar.
+          window.location.href = "/eliminar_file/" + fileId;
         }
       }
     </script>
@@ -843,17 +1068,21 @@
                     </div>
                   </div>
                   <div>
-                    <p class="text-base font-medium text-gray-900">${file.filename}</p>
+                    <p class="text-base font-medium text-gray-900">${
+                      file.filename
+                    }</p>
                     <div class="flex items-center mt-1">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                       </svg>
-                      <p class="text-xs text-gray-500">Carpeta: ${file.drive_id}</p>
+                      <p class="text-xs text-gray-500">Carpeta: ${
+                        file.drive_id
+                      }</p>
                     </div>
                   </div>
                 </div>
                 
-                <a href="/carpeta/${file.folder_id}" class="px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-150 flex items-center">
+                <a href="/carpeta/${file.folder_id}?openGroup=${encodeURIComponent(file.group_label)}&openLabel=${encodeURIComponent(file.etiquetas)}"
                   <span>Ver carpeta</span>
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />

@@ -99,3 +99,8 @@ def compartir_carpeta_dropbox(folder_path: str) -> str:
                 return links[0].url
         print(f"[dropbox_utils] Error compartiendo carpeta: {e}")
         raise e
+
+def generar_enlace_dropbox_temporal(dropbox_path: str) -> str:
+    dbx = _get_dbx()
+    resp = dbx.files_get_temporary_link(dropbox_path)
+    return resp.link

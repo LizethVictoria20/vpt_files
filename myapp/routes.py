@@ -212,45 +212,58 @@ def crear_cliente():
 def subir_archivo(folder_id):
     from app import db
     folder = DriveFolder.query.get_or_404(folder_id)
-    
     if folder.user_id != current_user.id:
         abort(403)
 
-    file_obj = request.files.get('file')
+    files_list = request.files.getlist('file') 
+
     file_label = request.form.get('fileLabel')
     group_label = request.form.get('groupLabel')
 
-    if not file_obj or file_obj.filename == '':
+    if not files_list or len(files_list) == 0:
         return redirect(request.url)
 
-    if not group_label:
+    if not file_label or not group_label:
         return redirect(request.url)
 
-    subfolder_path = f"{folder.drive_id}/{group_label}/{file_label}"  # <--- folder.drive_id es la carpeta raíz del usuario
+    subfolder_path = f"{folder.drive_id}/{group_label}/{file_label}"
     try:
-        crear_carpeta_dropbox(subfolder_path)  
+        crear_carpeta_dropbox(subfolder_path)
     except dropbox.exceptions.ApiError as e:
-        # si la subcarpeta ya existe, ignore conflict
+        # si la subcarpeta ya existe, ignorar
         if "WriteConflictError('folder'" in str(e):
             print("Subcarpeta ya existía, continuamos.")
         else:
             return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
-    try:
-        final_path_in_dropbox = subir_a_dropbox(file_obj, subfolder_path)
-    except Exception as e:
-        return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
 
-    new_file = DriveFile(
-        drive_id=final_path_in_dropbox,
-        filename=file_obj.filename, 
-        folder_id=folder.id,
-        etiquetas=file_label,
-        group_label=group_label  
-    )
-    db.session.add(new_file)
+    archivos_subidos = 0
+    for f_obj in files_list:
+        if not f_obj or f_obj.filename == '':
+            continue 
+
+        try:
+            final_path_in_dropbox = subir_a_dropbox(f_obj, subfolder_path)
+        except Exception as e:
+            flash(f"Error subiendo {f_obj.filename}: {e}", "error")
+            continue
+
+        new_file = DriveFile(
+            drive_id=final_path_in_dropbox,
+            filename=f_obj.filename,
+            folder_id=folder.id,
+            etiquetas=file_label,
+            group_label=group_label
+        )
+        db.session.add(new_file)
+        archivos_subidos += 1
+
     db.session.commit()
 
-    flash("Archivo subido exitosamente", "success")
+    if archivos_subidos > 0:
+        flash(f"Se subieron {archivos_subidos} archivo(s) exitosamente", "success")
+    else:
+        flash("No se pudo subir ningún archivo (todos eran vacíos o fallaron).", "warning")
+    
     return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
 
 

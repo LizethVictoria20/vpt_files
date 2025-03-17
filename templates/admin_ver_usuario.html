@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Carpeta {{ folder.name }} - Administración</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .-rotate--90 {
+        transform: rotate(-90deg);
+        transition: transform 0.2s ease-in-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    {% include 'base.html' %}
+
+    <!-- Contenedor principal -->
+    <div class="max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Encabezado de la carpeta -->
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between mb-6"
+      >
+        <div>
+          <!-- Nombre de la carpeta -->
+          <h1 class="text-3xl font-bold text-gray-900">{{ folder.name }}</h1>
+          <!-- ID o drive_id -->
+          <p class="text-sm text-gray-500 mt-1">ID: {{ folder.drive_id }}</p>
+        </div>
+      </div>
+
+      <!-- Barra de herramientas (buscar, botón subir, etc.) -->
+      <div
+        class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-100 shadow-sm"
+      >
+        <!-- Buscador -->
+        <div class="w-full md:w-auto md:flex-grow md:max-w-xl">
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="searchInput"
+              name="searchInput"
+              placeholder="Buscar archivos por nombre..."
+              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-sm"
+              aria-label="Búsqueda de archivos"
+            />
+          </div>
+          <p class="text-xs text-gray-500 mt-1 ml-1">
+            Busca documentos en esta carpeta
+          </p>
+        </div>
+
+        <!-- Botón para importar archivos (opcional, si el admin lo permite) -->
+        <div class="w-full md:w-auto md:flex-shrink-0">
+          <button
+            type="button"
+            onclick="document.getElementById('importModal').classList.remove('hidden')"
+            class="w-full md:w-auto flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+              />
+            </svg>
+            Importar archivos
+          </button>
+        </div>
+
+        <!-- Modal para importar archivos -->
+        <div
+          id="importModal"
+          class="hidden fixed inset-0 z-50 overflow-y-auto"
+          aria-labelledby="modal-title"
+          role="dialog"
+          aria-modal="true"
+        ></div>
+      </div>
+
+      <!-- Resultados en vivo de búsqueda (si lo deseas) -->
+      <div id="liveResults" class="mt-3 mb-3 space-y-2"></div>
+
+      <!-- Sección principal con los archivos de la carpeta -->
+      <div
+        class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden"
+      >
+        <!-- Cabecera -->
+        <div
+          class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
+        >
+          <h2 class="text-xl font-semibold text-gray-800">
+            Archivos en esta carpeta
+          </h2>
+        </div>
+
+        <!-- Si la carpeta tiene archivos -->
+        {% if folder.files %}
+        <div class="p-6">
+          {% for group_lbl, subdict in by_group.items() %} {% set group_index =
+          loop.index %}
+          <div class="mb-6">
+            <!-- Cabecera del "grupo" -->
+            <div
+              class="flex items-center py-3.5 px-3 bg-gray-50 rounded-lg mb-4 cursor-pointer hover:bg-gray-100 transition-colors duration-150"
+              onclick="toggleGroup('group_{{ group_index }}')"
+            >
+              <svg
+                class="h-6 w-6 mr-3 text-red-500 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+                />
+              </svg>
+              <h2 class="text-base font-medium text-gray-800 flex-grow">
+                {{ group_lbl }}
+              </h2>
+              <!-- Contador de archivos -->
+              <span
+                class="text-xs px-2.5 py-1 bg-gray-100 rounded-full text-gray-600 mr-2 font-medium"
+              >
+                {% set total_files = namespace(count=0) %} {% for file_lbl,
+                files in subdict.items() %} {% set total_files.count =
+                total_files.count + files|length %} {% endfor %} {{
+                total_files.count }} {{ 'archivo' if total_files.count == 1 else
+                'archivos' }}
+              </span>
+            </div>
+
+            <!-- Contenido del grupo -->
+            <div
+              id="group_{{ group_index }}"
+              class="group-content"
+              data-group="{{ group_lbl }}"
+            >
+              <!-- Subcarpetas (en tu caso, “etiquetas”) en formato grid -->
+              <div
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4"
+              >
+                {% for file_lbl, files in subdict.items() %}
+                <div
+                  class="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
+                  onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')"
+                  data-label="{{ file_lbl }}"
+                  id="subfolder_header_{{ group_index }}_{{ loop.index }}"
+                >
+                  <div
+                    class="h-36 flex items-center justify-center p-4 bg-gray-50"
+                  >
+                    <svg
+                      class="h-20 w-20 text-red-500 group-hover:text-red-500 transition-colors duration-200"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18
+                             c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2
+                             V8c0-1.1-.9-2-2-2
+                             h-8l-2-2z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="px-4 py-3.5 flex justify-between items-center border-t border-gray-100"
+                  >
+                    <div class="truncate">
+                      <h3
+                        class="text-sm font-medium text-gray-800 truncate group-hover:text-red-700 transition-colors duration-200"
+                      >
+                        {{ file_lbl }}
+                      </h3>
+                      <p class="text-xs text-gray-500 mt-1">
+                        {{ files|length }} {{ 'archivo' if files|length == 1
+                        else 'archivos' }}
+                      </p>
+                    </div>
+                    <div
+                      class="flex items-center justify-center w-7 h-7 rounded-full bg-gray-50 text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-all"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+
+              {% for file_lbl, files in subdict.items() %}
+              <!-- Sección desplegable con la lista de archivos -->
+              <div
+                id="label_{{ group_index }}_{{ loop.index }}"
+                class="label-content mt-8 mb-10 bg-white p-6 rounded-xl shadow-md border border-gray-200"
+                data-label="{{ file_lbl }}"
+              >
+                <div class="flex items-center mb-5">
+                  <button
+                    onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')"
+                    class="mr-3 p-1.5 rounded-full hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors duration-150"
+                  >
+                    <!-- Flecha atrás -->
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+                  <svg
+                    class="h-5 w-5 text-red-500 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18
+                           c0 1.1.9 2 2 2
+                           h16c1.1 0 2-.9 2-2
+                           V8c0-1.1-.9-2-2-2
+                           h-8l-2-2z"
+                    />
+                  </svg>
+                  <h2 class="text-lg font-medium text-gray-800">
+                    {{ file_lbl }}
+                  </h2>
+                </div>
+
+                <!-- Grid con los archivos en esta etiqueta -->
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+                >
+                  {% for f in files %}
+                  <div
+                    class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-200 group"
+                  >
+                    <div
+                      class="h-28 flex items-center justify-center p-4 bg-gray-50 group-hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      {% set file_extension = f.filename.split('.')[-1]|lower %}
+                      {% if file_extension in ['pdf'] %}
+                      <svg
+                        class="h-16 w-16 text-red-400"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"
+                        />
+                      </svg>
+
+                      {% elif file_extension in ['doc', 'docx'] %}
+                      <svg
+                        class="h-16 w-16 text-blue-400"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm57.1 120H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm0 96H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+                        />
+                      </svg>
+                      {% elif file_extension in ['xls', 'xlsx', 'csv'] %}
+                      <svg
+                        class="h-16 w-16 text-green-400"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5L160 336l-60.1-93.5c-5.1-8 .6-18.5 10.1-18.5h34.9c4.4 0 8.5 2.4 10.6 6.3 21.2 38.9 33.2 58 33.2 58 3.3-7.9 36.5-74.3 36.5-74.3 2.1-3.9 6.2-6.3 10.6-6.3H270c9.5-.1 15.2 10.4 10.1 18.5zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+                        />
+                      </svg>
+                      {% elif file_extension in ['jpg', 'jpeg', 'png', 'gif'] %}
+                      <svg
+                        class="h-16 w-16 text-purple-400"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M384 121.941V128H256V0h6.059a24 24 0 0 1 16.97 7.029l97.941 97.941a24.002 24.002 0 0 1 7.03 16.971zM248 160c-13.2 0-24-10.8-24-24V0H24C10.745 0 0 10.745 0 24v464c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24V160H248zm-135.455 16c26.51 0 48 21.49 48 48s-21.49 48-48 48-48-21.49-48-48 21.491-48 48-48zm208 240h-256l.485-48.485L104.545 328c4.686-4.686 11.799-4.686 16.485 0L160.545 368 264.06 264.485c4.686-4.686 12.284-4.686 16.971 0L320.545 304v112z"
+                        />
+                      </svg>
+                      {% else %}
+                      <svg
+                        class="h-16 w-16 text-gray-400"
+                        fill="currentColor"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"
+                        />
+                      </svg>
+                      {% endif %}
+                    </div>
+
+                    <div
+                      class="px-4 py-3 flex justify-between items-center border-t border-gray-100"
+                    >
+                      <div class="truncate">
+                        <h3 class="text-sm font-medium text-gray-800 truncate">
+                          {{ f.filename }}
+                        </h3>
+                      </div>
+                      <div class="flex space-x-1">
+                        <a
+                          class="inline-flex items-center px-2 py-1 text-sm text-gray-500 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors duration-150"
+                          onclick="openPreviewModal(`{{ f.id }}`, `{{ f.filename.split('.')[-1]|lower }}`)"
+                          title="Visualizar documento"
+                        >
+                          <svg
+                            class="h-4 w-4 mr-1"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                          </svg>
+                        </a>
+                        <a
+                          href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
+                          class="p-1.5 rounded-full hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors duration-150"
+                          title="Descargar"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                            />
+                          </svg>
+                        </a>
+                        <button
+                          onclick="openDeleteModal('{{ f.id }}')"
+                          class="p-1.5 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors duration-150"
+                          title="Eliminar"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <!-- Si la carpeta no tiene archivos -->
+        <div class="px-6 py-20 text-center">
+          <div
+            class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-50 text-blue-400 mb-6"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-12 w-12"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 19a2 2 0 01-2-2V7
+                   a2 2 0 012-2h4
+                   l2 2h4
+                   a2 2 0 012 2
+                   v1M5 19h14
+                   a2 2 0 002-2
+                   v-5a2 2 0 00-2-2
+                   H9a2 2 0 00-2 2
+                   v5a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium text-gray-900 mb-3">
+            Esta carpeta está vacía
+          </h3>
+          <p class="text-base text-gray-600 mb-8 max-w-md mx-auto">
+            Puedes comenzar a subir archivos o crear subcarpetas
+          </p>
+          <!-- Botones para subir / nueva carpeta, si corresponde -->
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Modal de confirmación de eliminación, etc. -->
+    <div
+      id="deleteConfirmModal"
+      class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50"
+    >
+      <div class="bg-white rounded-lg max-w-md w-full p-6">
+        <div class="text-center mb-4">
+          <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+          <h3 class="text-lg font-medium text-gray-900 mt-2">
+            ¿Eliminar archivo?
+          </h3>
+          <p class="text-sm text-gray-500 mt-1">
+            Esta acción no se puede deshacer
+          </p>
+        </div>
+        <div class="flex justify-end space-x-3 mt-6">
+          <button
+            type="button"
+            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+            onclick="closeDeleteModal()"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            id="confirmDeleteBtn"
+            class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none"
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Modal para vista previa (similar al tuyo) -->
+    <div
+      id="viewerModal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden"
+    >
+      <div
+        class="bg-white w-full max-w-4xl relative rounded shadow-lg p-4 flex flex-col"
+      >
+        <button
+          class="absolute top-2 right-2 text-gray-500 hover:text-red-600"
+          onclick="closePreviewModal()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <div id="viewerContent" class="mt-6 flex-1 overflow-auto">
+          <!-- Cargamos la vista previa aquí -->
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/carpetas_toggles.js') }}"></script>
+  </body>
+</html>

@@ -42,14 +42,14 @@ def login():
             login_user(user)
             is_admin = any(role.slug == 'admin' for role in user.roles)
             if is_admin:
-                return redirect(url_for('main.listar_carpetas'))
+                return redirect(url_for('admin.listar_carpetas'))
             folder = DriveFolder.query.filter_by(user_id=user.id).first()
             if folder:
                 return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
             else:
                 # Manejo: si no tiene carpeta, redirigir a otra parte o crearla
                 flash("No tienes carpeta asociada. Contacta al administrador.", "warning")
-                return redirect(url_for('main.dashboard'))
+                return redirect(url_for('admin.listar_carpetas'))
         else:
             flash('Nombre de usuario o contraseña incorrectos', 'danger')
             return redirect(url_for('main.login'))
@@ -325,15 +325,6 @@ def crear_carpeta():
 
     return render_template('crear_carpeta.html', form=form)
 
-@admin_permission.require(http_exception=403)
-@superadmin_permission.require(http_exception=403)
-@lector_permission.require(http_exception=403)
-@main_bp.route('/carpetas', methods=['GET', 'POST'])
-@login_required
-def listar_carpetas():
-    carpetas = DriveFolder.query.order_by(DriveFolder.created_at.desc()).all()
-    delete_form = DeleteForm()
-    return render_template('listar_carpetas.html', carpetas=carpetas, delete_form=delete_form)
 
 @main_bp.route('/carpeta/<int:folder_id>')
 @login_required
@@ -395,7 +386,7 @@ def eliminar_carpeta(folder_id):
     db.session.delete(carpeta)
     db.session.commit()
     flash(f"Carpeta '{carpeta.name}' eliminada exitosamente.", "success")
-    return redirect(url_for('main.listar_carpetas'))
+    return redirect(url_for('admin.listar_carpetas'))
 
 # @admin_permission.require(http_exception=403)
 # @main_bp.route('/archivos', methods=['GET'])
@@ -419,7 +410,7 @@ def descargar_carpeta(folder_id):
     
     if not archivos:
         flash(f"La carpeta '{carpeta.name}' no tiene archivos o no existe.", "warning")
-        return redirect(url_for('main.listar_carpetas'))
+        return redirect(url_for('admin.listar_carpetas'))
     
     memory_file = BytesIO()
     with ZipFile(memory_file, 'w') as zipf:

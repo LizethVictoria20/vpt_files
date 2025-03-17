@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from myapp.routes import main_bp
+from myapp.admin_routes import admin_bp
 import openai
 from myapp.models import db, User
 from flask_wtf import CSRFProtect
@@ -29,6 +30,7 @@ db.init_app(app)
 
 migrate = Migrate(app, db)
 app.register_blueprint(main_bp)
+app.register_blueprint(admin_bp)
 
 @login_manager.user_loader
 def load_user(user_id):

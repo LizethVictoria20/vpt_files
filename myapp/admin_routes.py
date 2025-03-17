@@ -5,7 +5,7 @@ from flask_principal import Permission, RoleNeed
 from myapp.models import DriveFile, DriveFolder, User
 from forms import DeleteForm
 from myapp.services.preview_files_service import preview_file_logic
-from myapp.services.search_service import buscar_contenido
+from myapp.services.search_service import buscar_archivos, buscar_usuarios
 
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -65,12 +65,12 @@ def admin_ver_carpeta(folder_id):
 def admin_preview_file(file_id):
     return preview_file_logic(file_id)
 
-@admin_bp.route("/buscar_archivos_json")
-@login_required
-@admin_required
-def admin_buscar_archivos_json():
-    q = request.args.get("q", "").strip()
-    result_data = buscar_contenido(q, current_user, is_admin=True)
-    print("DEBUG ADMIN SEARCH =>", result_data)
-
-    return jsonify(result_data)
+@admin_bp.route("/buscar_usuarios_json", methods=["GET"])
+def buscar():
+    q = request.args.get("q", "")
+    files = buscar_archivos(q, current_user, is_admin=True)
+    users = buscar_usuarios(q)
+    return jsonify({
+        "files": files,
+        "users": users
+    })

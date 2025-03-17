@@ -44,12 +44,16 @@ def buscar_usuarios(q):
 
     results = []
     for u in found_users:
+        role_names = [role.name for role in u.roles]
+        folders_count = len(u.folders)
         results.append({
             "id": u.id,
             "username": u.username,
             "email": u.email,
             "name": u.name,
             "lastname": u.lastname,
+            "roles": role_names,
+            "folders_count": folders_count,
         })
 
     return results

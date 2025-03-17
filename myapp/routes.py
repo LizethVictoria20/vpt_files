@@ -18,7 +18,8 @@ from myapp.dropbox_utils import (
 )
 from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
 from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm, GeneralForm
-from myapp.services.preview_files import preview_file_logic
+from myapp.services.preview_files_service import preview_file_logic
+from myapp.services.search_service import buscar_contenido
 
 main_bp = Blueprint('main', __name__)
 login_manager = LoginManager()
@@ -344,7 +345,7 @@ def ver_carpeta(folder_id):
         lbl = f.etiquetas or "Sin etiqueta" 
         by_group[g][lbl].append(f)
 
-    return render_template('ver_carpeta.html', folder=folder, form=form, by_group=by_group)
+    return render_template('ver_carpeta_cliente.html', folder=folder, form=form, by_group=by_group)
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)
@@ -433,32 +434,12 @@ def descargar_carpeta(folder_id):
         mimetype="application/zip"
     )
     
-@main_bp.route('/buscar_archivos_json')
+@main_bp.route("/buscar_archivos_json")
 @login_required
 def buscar_archivos_json():
-    from app import db
-    q = request.args.get('q', '').strip()
-
-    files_query = DriveFile.query.join(DriveFolder).filter(
-        DriveFolder.user_id == current_user.id
-    )
-
-    if q:
-        files_query = files_query.filter(DriveFile.filename.ilike(f"%{q}%"))
-
-    files = files_query.all()
-    data = []
-    for f in files:
-        print(f.drive_id)
-        data.append({
-            'id': f.id,
-            'filename': f.filename,
-            'drive_id': f.drive_id,
-            'etiquetas': f.etiquetas,
-            'group_label': f.group_label,
-            'folder_id': f.folder_id,
-        })
-    return jsonify(data)
+    q = request.args.get("q", "").strip()
+    result_data = buscar_contenido(q, current_user, is_admin=False)
+    return jsonify(result_data["files"])
 
 @main_bp.route("/preview_file/<int:file_id>")
 def preview_file(file_id):

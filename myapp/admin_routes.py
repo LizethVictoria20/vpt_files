@@ -4,7 +4,8 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from flask_principal import Permission, RoleNeed
 from myapp.models import DriveFile, DriveFolder, User
 from forms import DeleteForm
-from myapp.services.preview_files import preview_file_logic
+from myapp.services.preview_files_service import preview_file_logic
+from myapp.services.search_service import buscar_contenido
 
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -49,8 +50,6 @@ def admin_ver_carpeta(folder_id):
 
     by_group = defaultdict(lambda: defaultdict(list))
     for f in archivos:
-        print("FILEEEEES")
-        print(f.filename)
         g = f.group_label or "Sin categoría"
         lbl = f.etiquetas or "Sin etiqueta"
         by_group[g][lbl].append(f)
@@ -65,3 +64,13 @@ def admin_ver_carpeta(folder_id):
 @admin_bp.route("/preview_file/<int:file_id>")
 def admin_preview_file(file_id):
     return preview_file_logic(file_id)
+
+@admin_bp.route("/buscar_archivos_json")
+@login_required
+@admin_required
+def admin_buscar_archivos_json():
+    q = request.args.get("q", "").strip()
+    result_data = buscar_contenido(q, current_user, is_admin=True)
+    print("DEBUG ADMIN SEARCH =>", result_data)
+
+    return jsonify(result_data)

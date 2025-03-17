@@ -19,7 +19,7 @@ from myapp.dropbox_utils import (
 from myapp.models import DriveFile, DriveFolder, User, Roles, UserRole
 from forms import DeleteForm, LoginForm, ImportForm, NewFolderForm, NewUser, ProfileForm, CreateUserForm, GeneralForm
 from myapp.services.preview_files_service import preview_file_logic
-from myapp.services.search_service import buscar_contenido
+from myapp.services.search_service import buscar_archivos
 
 main_bp = Blueprint('main', __name__)
 login_manager = LoginManager()
@@ -438,8 +438,8 @@ def descargar_carpeta(folder_id):
 @login_required
 def buscar_archivos_json():
     q = request.args.get("q", "").strip()
-    result_data = buscar_contenido(q, current_user, is_admin=False)
-    return jsonify(result_data["files"])
+    files = buscar_archivos(q, current_user, is_admin=False)
+    return jsonify(files)
 
 @main_bp.route("/preview_file/<int:file_id>")
 def preview_file(file_id):

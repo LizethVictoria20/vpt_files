@@ -5,138 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <title>ImportSystem - Acceso</title>
-    <style>
-      body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Inmigración OK Abogados - Acceso</title>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                light: '#0095c7',
+                DEFAULT: '#0076a8',
+                dark: '#005685'
+              },
+              accent: {
+                light: '#00a8d4',
+                DEFAULT: '#0088b0',
+                dark: '#00678e'
+              },
+              surface: {
+                light: '#FFFFFF',
+                DEFAULT: '#F0F7FC',
+                dark: '#D9E9F2'
+              }
+            },
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif']
+            }
+          }
+        }
       }
-      
-      .bg-pattern {
-        background-color: #ffffff;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23f9fafb' fill-opacity='1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      }
-    </style>
+    </script>
   </head>
-  <body class="bg-white">
-    <div class="min-h-screen flex flex-col lg:flex-row">
-      <!-- Panel lateral (izquierdo en pantallas grandes) -->
-      <div class="lg:w-5/12 bg-slate-900 text-white relative hidden lg:block">
-        <div class="absolute top-0 left-0 p-8">
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-box text-red-400 text-xl"></i>
-            <span class="font-semibold text-xl">ImportSystem</span>
-          </div>
-        </div>
+  <body class="font-sans bg-surface">
+    <div class="h-screen flex flex-col lg:flex-row overflow-hidden">
+      <!-- Panel lateral izquierdo -->
+      <div class="lg:w-1/2 order-1 relative h-auto lg:h-screen">
+        <!-- Fondo con gradiente de azules más oscuros -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-light via-primary to-primary-dark"></div>
         
-        <div class="h-full flex flex-col justify-center p-12">
-          <div class="max-w-md">
-            <h1 class="text-4xl font-bold mb-6">Gestión de importaciones simplificada</h1>
-            <p class="text-slate-300 text-lg mb-8">La plataforma integral que unifica todos tus procesos aduaneros en un solo lugar.</p>
-            
-            <div class="space-y-6 mt-12">
-              <div class="flex items-start">
-                <div class="mt-1">
-                  <i class="fas fa-check-circle text-red-400 text-xl"></i>
+        <!-- Decoración sutil -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-accent-light/20 rounded-full -translate-y-1/3 translate-x-1/3 blur-2xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-accent/15 rounded-full translate-y-1/3 -translate-x-1/3 blur-3xl"></div>
+        
+        <div class="relative z-10 h-full flex flex-col p-6 lg:p-10">
+          <div class="flex items-center space-x-2 mb-8">
+            <div class="h-14 lg:h-16 rounded-lg p-2">
+              <img src="../static/image/Logo.png" alt="Inmigración OK Abogados" class="h-full object-contain" />
+            </div>
+          </div>
+          
+          <div class="flex-1 flex flex-col justify-center py-6">
+            <div class="max-w-md">
+              <h1 class="text-3xl font-bold text-white mb-4 leading-tight">Expertos en Derecho de Extranjería</h1>
+              <p class="text-white/90 mb-10 text-lg leading-relaxed">Trámites migratorios, permisos de residencia y ciudadanía española.</p>
+              
+              <div class="space-y-6">
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <div class="w-12 h-12 rounded-xl bg-accent-dark/60 flex items-center justify-center">
+                        <i class="fas fa-balance-scale text-white text-lg"></i>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <h3 class="font-semibold text-white text-lg">Asesoría Legal Especializada</h3>
+                      <p class="text-white/80 mt-1">Abogados expertos en todos los procesos migratorios.</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="ml-4">
-                  <h3 class="font-semibold text-xl">Eficiencia garantizada</h3>
-                  <p class="text-slate-300 mt-1">Reducción del tiempo de procesamiento hasta en un 60%</p>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <div class="w-12 h-12 rounded-xl bg-accent-dark/60 flex items-center justify-center">
+                        <i class="fas fa-file-signature text-white text-lg"></i>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <h3 class="font-semibold text-white text-lg">Gestión de Documentos</h3>
+                      <p class="text-white/80 mt-1">Tramitación eficiente de permisos y documentación oficial.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <div class="flex items-start">
-                <div class="mt-1">
-                  <i class="fas fa-lock text-red-400 text-xl"></i>
-                </div>
-                <div class="ml-4">
-                  <h3 class="font-semibold text-xl">Seguridad avanzada</h3>
-                  <p class="text-slate-300 mt-1">Protección de datos con los más altos estándares del mercado</p>
-                </div>
+            </div>
+          </div>
+          
+          <div class="mt-8">
+            <div class="flex justify-between items-center">
+              <div class="flex space-x-4">
+                <a href="#" class="text-white/80 hover:text-white transition-colors">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="#" class="text-white/80 hover:text-white transition-colors">
+                  <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" class="text-white/80 hover:text-white transition-colors">
+                  <i class="fab fa-instagram"></i>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Contenido principal (derecho en pantallas grandes, completo en móviles) -->
-      <div class="lg:w-7/12 min-h-screen bg-pattern">
-        <!-- Navbar solo visible en móvil -->
-        <div class="lg:hidden p-6 flex justify-between items-center">
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-box text-red-500 text-xl"></i>
-            <span class="font-semibold text-xl text-slate-900">ImportSystem</span>
+      <!-- Panel login derecho -->
+      <div class="lg:w-1/2 order-2 h-screen flex items-center justify-center p-4 pt-16 lg:pt-0 lg:p-8 overflow-auto bg-surface-light">
+        <div class="w-full max-w-md">
+          <div class="mb-8">
+            <h2 class="text-3xl font-bold text-primary-dark mb-3">Accede a tu portal</h2>
+            <p class="text-gray-600">Inicia sesión para gestionar tus trámites migratorios</p>
           </div>
-          <button class="p-2 text-slate-800 hover:text-red-500 transition-colors">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
-        
-        <div class="flex items-center justify-center px-6 py-12 lg:py-0 lg:h-screen">
-          <div class="w-full max-w-md">
-            <div class="lg:mt-0 mb-10">
-              <h2 class="text-3xl font-bold text-slate-900">Bienvenido</h2>
-              <p class="text-slate-600 mt-2">Ingresa tus credenciales para acceder</p>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
-              <form method="POST" action="{{ url_for('main.login') }}">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-6">
-                  <label for="username" class="block text-sm font-medium text-slate-700 mb-2">Usuario o Email</label>
+          
+          <div class="bg-white rounded-2xl shadow-lg p-8 border border-surface-dark/10">
+            <form method="POST" action="{{ url_for('main.login') }}">
+              {{ form.hidden_tag() }}
+              
+              <div class="mb-6">
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Usuario o Email</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-user text-gray-400"></i>
+                  </div>
                   <input
                     type="text"
                     id="username"
-                    name="username"
-                    class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                    placeholder="Ingresa tu usuario o correo"
+                    name="username" 
+                    class="pl-12 w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                    placeholder="Ingresa tu usuario o email"
                   />
                 </div>
-                
-                <div class="mb-4">
-                  <div class="flex items-center justify-between mb-2">
-                    <label for="password" class="block text-sm font-medium text-slate-700">Contraseña</label>
-                    <a href="#" class="text-xs text-red-500 hover:text-red-600">¿Olvidaste tu contraseña?</a>
+              </div>
+              
+              <div class="mb-6">
+                <div class="flex justify-between mb-2">
+                  <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                </div>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-gray-400"></i>
                   </div>
                   <input
                     type="password"
                     id="password"
                     name="password"
-                    class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                    placeholder="••••••••"
+                    class="pl-12 w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                    placeholder="Ingresa tu contraseña"
                   />
                 </div>
-                
-                <div class="flex items-center mb-6">
-                  <input type="checkbox" id="remember" class="w-4 h-4 text-red-500 border-slate-300 rounded focus:ring-red-500" />
-                  <label for="remember" class="ml-2 text-sm text-slate-600">Mantener sesión activa</label>
-                </div>
-                
-                <div class="mb-4">
-                  <button
-                    type="submit"
-                    class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  >
-                    Iniciar sesión
-                  </button>
-                </div>
-              </form>
-            </div>
+              </div>
+              
+              <div class="flex items-center mb-8">
+                <input type="checkbox" name="remember" id="remember" class="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent">
+                <label for="remember" class="ml-2 text-gray-600 text-sm">Mantener sesión iniciada</label>
+              </div>
+              
+              <div class="mb-6">
+                <button
+                  type="submit"
+                  class="w-full bg-primary hover:bg-primary-dark py-3.5 px-6 rounded-xl text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center"
+                >
+                  <span>Iniciar sesión</span>
+                  <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </form>
             
-            <div class="text-center mt-6">
-              <p class="text-sm text-slate-600">
+            <div class="text-center mt-8">
+              <p class="text-gray-600">
                 ¿No tienes una cuenta? 
-                <a href="{{ url_for('main.crear_cliente') }}" class="text-red-500 font-medium hover:text-red-600">Regístrate</a>
+                <a href="{{ url_for('main.crear_cliente') }}" class="text-primary font-semibold hover:text-primary-dark">
+                  Registrate
+                </a>
               </p>
             </div>
-            
-            <div class="mt-10 flex justify-center space-x-4 text-xs text-slate-500">
-              <a href="#" class="hover:text-slate-800 transition-colors">Términos</a>
-              <span>&middot;</span>
-              <a href="#" class="hover:text-slate-800 transition-colors">Privacidad</a>
-              <span>&middot;</span>
-              <a href="#" class="hover:text-slate-800 transition-colors">Ayuda</a>
+          </div>
+          
+          <div class="flex justify-center mt-8">
+            <div class="flex space-x-8 text-sm text-gray-500">
+              <a href="#" class="hover:text-primary transition-colors">Términos</a>
+              <a href="#" class="hover:text-primary transition-colors">Privacidad</a>
+              <a href="#" class="hover:text-primary transition-colors">Ayuda</a>
             </div>
           </div>
         </div>

@@ -299,35 +299,6 @@ def mostrar_import_form():
     form = ImportForm()
     return render_template("import.html", form=form,)
 
-@superadmin_permission.require(http_exception=403)
-@admin_permission.require(http_exception=403)
-@main_bp.route('/crear_carpeta', methods=['GET', 'POST'])
-@login_required
-def crear_carpeta():
-    from app import db
-    form = NewFolderForm()
-    if form.validate_on_submit():
-        folder_name = form.name.data
-        folder_description = form.description.data
-
-        drive_id = crear_carpeta_dropbox(folder_name)
-
-
-        nueva_carpeta = DriveFolder(
-            drive_id=drive_id,
-            name=folder_name,
-            description=folder_description
-        )
-        db.session.add(nueva_carpeta)
-        db.session.commit()
-        user_email = USER_EMAIL
-        compartir_carpeta_dropbox(drive_id, user_email)
-        
-        flash(f"Carpeta '{folder_name}' creada y compartida con {user_email} exitosamente.", "success")
-        return redirect(url_for('main.ver_carpeta', folder_id=nueva_carpeta.id))
-
-    return render_template('crear_carpeta.html', form=form)
-
 
 @main_bp.route('/carpeta/<int:folder_id>')
 @login_required

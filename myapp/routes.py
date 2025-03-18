@@ -47,6 +47,11 @@ def login():
             if is_admin:
                 return redirect(url_for('admin.listar_carpetas'))
             folder = DriveFolder.query.filter_by(user_id=user.id).first()
+            is_superadmin = any(role.slug == 'superadmin' for role in user.roles)
+            if is_superadmin:
+                # Redirigir a la página de gestión de permisos si es superadmin
+                return redirect(url_for('superadmin.gestionar_permisos'))
+            
             if folder:
                 return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
             else:
@@ -297,7 +302,7 @@ def dashboard():
 @login_required
 def mostrar_import_form():
     form = ImportForm()
-    return render_template("import.html", form=form,)
+    return render_template("import.html", form=form,) 
 
 
 @main_bp.route('/carpeta/<int:folder_id>')
@@ -428,3 +433,5 @@ def buscar_archivos_json():
 @main_bp.route("/preview_file/<int:file_id>")
 def preview_file(file_id):
     return preview_file_logic(file_id)
+
+

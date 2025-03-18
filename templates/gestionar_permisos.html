@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Permisos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8">Gestión de Permisos</h1>
+
+    <div class="card bg-white shadow-lg rounded-lg p-6 mb-6">
+      <form method="POST" class="space-y-6">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-100">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Usuario</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Roles Actuales</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Asignar Roles</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              {% for user in users %}
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">{{ user.username }}</div>
+                  <div class="text-sm text-gray-500">{{ user.email }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex flex-wrap gap-1">
+                    {% for role in user.roles %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                      {{ role.name }}
+                    </span>
+                    {% endfor %}
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <select name="roles" multiple class="input-base block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-150 ease-in-out shadow-sm">
+                    {% for role in roles %}
+                    <option value="{{ role.id }}" {% if role in user.roles %}selected{% endif %}>
+                      {{ role.name }}
+                    </option>
+                    {% endfor %}
+                  </select>
+                  <p class="form-help mt-1 text-sm text-gray-500">Mantén presionado Ctrl para seleccionar múltiples roles</p>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <button type="submit" name="user_id" value="{{ user.id }}" class="btn-primary w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+                    Actualizar
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+
+    <div class="flex justify-between">
+      <a href="#" class="btn-tertiary text-red-600 hover:text-red-700 font-medium text-sm focus:outline-none focus:underline">
+        ← Volver al panel
+      </a>
+    </div>
+  </div>
+
+  <!-- Alerta de éxito -->
+  {% if get_flashed_messages(category_filter=["success"]) %}
+  <div class="fixed bottom-4 right-4 max-w-sm">
+    {% for message in get_flashed_messages(category_filter=["success"]) %}
+    <div class="alert alert-success bg-green-50 border-green-200 text-green-700 p-4 rounded-lg border mb-2 flex items-center shadow-md">
+      <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+      </svg>
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</body>
+</html>

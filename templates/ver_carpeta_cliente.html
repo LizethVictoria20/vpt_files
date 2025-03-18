@@ -1099,12 +1099,35 @@
         document.getElementById("deleteConfirmModal").classList.add("hidden");
       }
       document
-        .getElementById("confirmDeleteBtn")
-        .addEventListener("click", function () {
-          if (fileIdToDelete) {
-            window.location.href = "/eliminar_file/" + fileIdToDelete;
-          }
+  .getElementById("confirmDeleteBtn")
+  .addEventListener("click", async function () {
+    if (fileIdToDelete) {
+      try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                          document.querySelector('input[name="csrf_token"]')?.value;
+        
+        const response = await fetch(`/eliminar_file/${fileIdToDelete}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ file_id: fileIdToDelete })
         });
+        const data = await response.json();
+        console.log(data);
+        
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          alert("Error al eliminar el archivo");
+        }
+      } catch (error) {
+        console.error("Error al eliminar archivo:", error);
+      }
+      
+      closeDeleteModal();
+    }
+  });
     </script>
     <script>
       const searchInput = document.getElementById("searchInput");

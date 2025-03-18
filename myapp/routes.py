@@ -367,7 +367,7 @@ def descargar_archivo(file_id):
 @admin_permission.require(http_exception=403)
 @client_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)
-@main_bp.route('/eliminar_file/<int:file_id>', methods=['POST'])
+@main_bp.route('/eliminar_file/<int:file_id>', methods=['POST', 'GET'])
 @login_required
 def eliminar_archivo(file_id):
     from app import db

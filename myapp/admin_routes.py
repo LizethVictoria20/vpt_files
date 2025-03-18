@@ -65,6 +65,7 @@ def admin_ver_carpeta(folder_id):
 def admin_preview_file(file_id):
     return preview_file_logic(file_id)
 
+
 @admin_bp.route("/buscar_usuarios_json", methods=["GET"])
 def buscar():
     q = request.args.get("q", "")
@@ -73,4 +74,44 @@ def buscar():
     return jsonify({
         "files": files,
         "users": users
+    })
+    
+
+@admin_bp.route("/buscar_archivos_en_carpeta/<int:folder_id>", methods=["GET"])
+@login_required
+@admin_required
+def buscar_archivos_en_carpeta(folder_id):
+    from collections import defaultdict
+    q = request.args.get("q", "").strip()
+    folder = DriveFolder.query.get_or_404(folder_id)
+    archivos_query = DriveFile.query.filter_by(folder_id=folder.id)
+
+    if q:
+        archivos_query = archivos_query.filter(DriveFile.filename.ilike(f"%{q}%"))
+
+    archivos = archivos_query.all()
+
+    by_group = defaultdict(lambda: defaultdict(list))
+
+    for f in archivos:
+        g = f.group_label or "Sin categoría"
+        lbl = f.etiquetas or "Sin etiqueta"
+
+        by_group[g][lbl].append({
+            "id": f.id,
+            "filename": f.filename,
+            "drive_id": f.drive_id,
+            "etiquetas": f.etiquetas,
+            "group_label": f.group_label,
+            "folder_id": f.folder_id,
+        })
+
+    by_group_json = {}
+    for group_lbl, subdict in by_group.items():
+        by_group_json[group_lbl] = {}
+        for lbl, files_list in subdict.items():
+            by_group_json[group_lbl][lbl] = files_list
+
+    return jsonify({
+        "by_group": by_group_json
     })

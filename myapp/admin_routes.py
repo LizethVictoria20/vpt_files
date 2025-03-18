@@ -81,37 +81,23 @@ def buscar():
 @login_required
 @admin_required
 def buscar_archivos_en_carpeta(folder_id):
-    from collections import defaultdict
     q = request.args.get("q", "").strip()
     folder = DriveFolder.query.get_or_404(folder_id)
-    archivos_query = DriveFile.query.filter_by(folder_id=folder.id)
+    files_query = DriveFile.query.filter_by(folder_id=folder.id)
 
     if q:
-        archivos_query = archivos_query.filter(DriveFile.filename.ilike(f"%{q}%"))
+        files_query = files_query.filter(DriveFile.filename.ilike(f"%{q}%"))
+    archivos = files_query.all()
 
-    archivos = archivos_query.all()
-
-    by_group = defaultdict(lambda: defaultdict(list))
-
+    results = []
     for f in archivos:
-        g = f.group_label or "Sin categoría"
-        lbl = f.etiquetas or "Sin etiqueta"
-
-        by_group[g][lbl].append({
+        results.append({
             "id": f.id,
             "filename": f.filename,
-            "drive_id": f.drive_id,
-            "etiquetas": f.etiquetas,
-            "group_label": f.group_label,
             "folder_id": f.folder_id,
+            "group_label": f.group_label,
+            "etiquetas": f.etiquetas
         })
 
-    by_group_json = {}
-    for group_lbl, subdict in by_group.items():
-        by_group_json[group_lbl] = {}
-        for lbl, files_list in subdict.items():
-            by_group_json[group_lbl][lbl] = files_list
+    return jsonify({"files": results})
 
-    return jsonify({
-        "by_group": by_group_json
-    })

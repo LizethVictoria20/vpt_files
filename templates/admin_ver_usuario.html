@@ -598,200 +598,60 @@
       }
     </script>
     <script>
+      let originalHTML = "";
+      document.addEventListener("DOMContentLoaded", () => {
+        const filesContainer = document.getElementById("filesContainer");
+        originalHTML = filesContainer.innerHTML;
+      });
       const searchInput = document.getElementById("searchInput");
       const filesContainer = document.getElementById("filesContainer");
-      const folderId = {{ folder.id }};
+      const folderId = {{ folder.id }}; // inyectado por Jinja
 
       searchInput.addEventListener("keyup", async function() {
-        const query = searchInput.value.trim();
+        const q = searchInput.value.trim();
+
+        if (!q) {
+          filesContainer.innerHTML = originalHTML;
+          return;
+        }
 
         try {
-          const response = await fetch(`/admin/buscar_archivos_en_carpeta/${folderId}?q=${encodeURIComponent(query)}`);
-          const data = await response.json();  
-          renderByGroup(data.by_group);
+          const resp = await fetch(`/admin/buscar_archivos_en_carpeta/${folderId}?q=${encodeURIComponent(q)}`);
+          const data = await resp.json();
+          renderFlatFiles(data.files);
         } catch (err) {
-          console.error("Error en la búsqueda de archivos:", err);
+          console.error("Error buscando archivos:", err);
         }
       });
 
-      function renderByGroup(byGroup) {
+      function renderFlatFiles(files) {
         filesContainer.innerHTML = "";
 
-        if (!byGroup || Object.keys(byGroup).length === 0) {
+        if (!files || files.length === 0) {
           filesContainer.innerHTML = `
-            <div class="px-6 py-10 text-center">
-              <h3 class="text-xl font-medium text-gray-900 mb-3">Sin resultados</h3>
-              <p class="text-sm text-gray-500">No se encontraron archivos que coincidan.</p>
-            </div>
+            <p class="text-center py-6 text-gray-500">
+              Sin resultados
+            </p>
           `;
           return;
         }
-        let html = "";
-        let groupIndex = 0;
-        for (const group_lbl in byGroup) {
-          groupIndex++;
-          const subdict = byGroup[group_lbl];
 
-          // Contar total de archivos
-          let totalCount = 0;
-          for (const lbl in subdict) {
-            totalCount += subdict[lbl].length;
-          }
-
+        let html = `<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">`;
+        files.forEach((f) => {
+          const ext = f.filename.split(".").pop().toLowerCase();
+          const iconHTML = getIconForExtension(ext);
           html += `
-          <div class="mb-6">
-            <div class="flex items-center py-3.5 px-3 bg-gray-50 rounded-lg mb-4 cursor-pointer hover:bg-gray-100 transition-colors duration-150"
-                 onclick="toggleGroup('group_${groupIndex}')">
-              <svg class="h-6 w-6 mr-3 text-red-500 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-              </svg>
-              <h2 class="text-base font-medium text-gray-800 flex-grow">
-                ${group_lbl}
-              </h2>
-              <span class="text-xs px-2.5 py-1 bg-gray-100 rounded-full text-gray-600 mr-2 font-medium">
-                ${totalCount} ${totalCount === 1 ? "archivo" : "archivos"}
-              </span>
-            </div>
-            <div id="group_${groupIndex}" class="group-content" data-group="${group_lbl}" style="display:none;">
-              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mt-4">
-          `;
-
-          let labelIndex = 0;
-          for (const file_lbl in subdict) {
-            labelIndex++;
-            const filesArr = subdict[file_lbl];
-
-            // Tarjetita subcarpeta
-            html += `
-              <div class="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
-                   onclick="toggleLabel('label_${groupIndex}_${labelIndex}')"
-                   data-label="${file_lbl}"
-                   id="subfolder_header_${groupIndex}_${labelIndex}">
-                <div class="h-36 flex items-center justify-center p-4 bg-gray-50">
-                  <svg class="h-20 w-20 text-red-500 group-hover:text-red-500 transition-colors duration-200" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                  </svg>
-                </div>
-                <div class="px-4 py-3.5 flex justify-between items-center border-t border-gray-100">
-                  <div class="truncate">
-                    <h3 class="text-sm font-medium text-gray-800 truncate group-hover:text-red-700 transition-colors duration-200">
-                      ${file_lbl}
-                    </h3>
-                    <p class="text-xs text-gray-500 mt-1">
-                      ${filesArr.length} ${filesArr.length === 1 ? "archivo" : "archivos"}
-                    </p>
-                  </div>
-                  <div class="flex items-center justify-center w-7 h-7 rounded-full bg-gray-50 text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                  </div>
-                </div>
+            <div class="bg-white border ...">
+              <div class="h-28 ...">${iconHTML}</div>
+              <div class="px-4 py-3 ...">
+                <h3 class="text-sm ...">${f.filename}</h3>
+                <!-- Botones (Descargar, Preview, etc.) -->
               </div>
-            `;
-          }
+            </div>
+          `;
+        });
+        html += `</div>`;
 
-          html += `</div>`; 
-
-          labelIndex = 0;
-          for (const file_lbl in subdict) {
-            labelIndex++;
-            const filesArr = subdict[file_lbl];
-
-            html += `
-              <div id="label_${groupIndex}_${labelIndex}" class="label-content mt-8 mb-10 bg-white p-6 rounded-xl shadow-md border border-gray-200" data-label="${file_lbl}" style="display:none;">
-                <div class="flex items-center mb-5">
-                  <button onclick="toggleLabel('label_${groupIndex}_${labelIndex}')"
-                          class="mr-3 p-1.5 rounded-full hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors duration-150">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                  </button>
-                  <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                  </svg>
-                  <h2 class="text-lg font-medium text-gray-800">${file_lbl}</h2>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            `;
-
-            for (const f of filesArr) {
-              const extension = f.filename.split(".").pop().toLowerCase();
-              const iconHTML = getIconForExtension(extension);
-              html += `
-                <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-200 group">
-                  <div class="h-28 flex items-center justify-center p-4 bg-gray-50 group-hover:bg-gray-100 transition-colors duration-200">
-                    ${iconHTML}                  
-                  </div>
-                  <div class="px-4 py-3 flex justify-between items-center border-t border-gray-100">
-                    <div class="truncate">
-                      <h3 class="text-sm font-medium text-gray-800 truncate">
-                        ${f.filename}
-                      </h3>
-                    </div>
-                    <div class="flex space-x-1">
-                      <!-- Botones preview, descargar, eliminar -->
-                      <a class="inline-flex items-center px-2 py-1 text-sm text-gray-500 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors duration-150"
-                         onclick="openPreviewModal('${f.id}', '${extension}')"
-                         title="Visualizar documento">
-                        <svg
-                          class="h-4 w-4 mr-1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="11" cy="11" r="8" />
-                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                      </a>
-                      <a href="/descargar/${f.id}" onclick="event.stopPropagation()"  class="p-1.5 rounded-full hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors duration-150"
-                         title="Descargar">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                          />
-                        </svg>
-                      </a>
-                      <button onclick="openDeleteModal('${f.id}')"
-                        class="p-1.5 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors duration-150"
-                        title="Eliminar">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }
-            html += `</div></div>`;
-          }
-          html += `</div>`;
-        }
         filesContainer.innerHTML = html;
       }
     </script>

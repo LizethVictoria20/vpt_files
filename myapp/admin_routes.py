@@ -2,6 +2,7 @@ from collections import defaultdict
 from flask import Blueprint, Response, abort, flash, jsonify, render_template, request, redirect, send_file, session, url_for
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
+from myapp.dropbox_utils import _get_dbx
 from myapp.models import DriveFile, DriveFolder, User
 from forms import DeleteForm
 from myapp.services.preview_files_service import preview_file_logic
@@ -101,3 +102,22 @@ def buscar_archivos_en_carpeta(folder_id):
 
     return jsonify({"files": results})
 
+
+@admin_permission.require(http_exception=403)
+@admin_bp.route('/eliminar_file/<int:file_id>', methods=['POST'])
+@login_required
+def eliminar_archivo(file_id):
+    from app import db
+    archivo = DriveFile.query.get_or_404(file_id)
+
+    try:
+        dbx = _get_dbx()
+        dbx.files_delete_v2(archivo.drive_id)
+        folder_id = archivo.folder.id 
+        db.session.delete(archivo)
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Archivo eliminado correctamente", "folder_id": folder_id})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": f"Error al eliminar archivo: {str(e)}"}), 500

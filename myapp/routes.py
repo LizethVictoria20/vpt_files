@@ -8,6 +8,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from flask_principal import Permission, RoleNeed
 from flask import Blueprint, Response, abort, flash, jsonify, render_template, request, redirect, send_file, session, url_for
 from myapp.dropbox_utils import (
+    _get_dbx,
     crear_carpeta_dropbox,
     generar_enlace_dropbox_temporal,
     subir_a_dropbox,
@@ -364,19 +365,31 @@ def descargar_archivo(file_id):
     )
 
 @admin_permission.require(http_exception=403)
+@client_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)
-@main_bp.route('/eliminar_file/<int:file_id>', methods=['POST', 'GET'])
+@main_bp.route('/eliminar_file/<int:file_id>', methods=['POST'])
 @login_required
 def eliminar_archivo(file_id):
     from app import db
     archivo = DriveFile.query.get_or_404(file_id)
-    folder_id = archivo.folder_id
-    eliminar_de_dropbox(archivo.drive_id)
 
-    db.session.delete(archivo)
-    db.session.commit()
+    if archivo.folder.user_id != current_user.id:
+        abort(403)
 
-    return redirect(url_for('main.ver_carpeta', folder_id=folder_id))
+    try:
+        dbx = _get_dbx()
+        dbx.files_delete_v2(archivo.drive_id)
+
+        db.session.delete(archivo)
+        db.session.commit()
+
+        flash("Archivo eliminado correctamente", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error al eliminar archivo: {e}", "error")
+
+    return redirect(url_for('main.ver_carpeta', folder_id=archivo.folder.id))
+
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)

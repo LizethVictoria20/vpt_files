@@ -116,17 +116,7 @@ function closePreviewModal() {
 /************************************************
  *  FUNCIONES PARA ELIMINAR, ETC.
  ************************************************/
-let fileIdToDelete = null;
 
-function openDeleteModal(fileId) {
-  fileIdToDelete = fileId;
-  document.getElementById("deleteConfirmModal").classList.remove("hidden");
-}
-
-function closeDeleteModal() {
-  fileIdToDelete = null;
-  document.getElementById("deleteConfirmModal").classList.add("hidden");
-}
 
 document.addEventListener("DOMContentLoaded", () => {
   // Lógica de inicialización: por ejemplo, ocultar grupos, leer URL, etc.

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Carpeta {{ folder.name }} - Administración</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
@@ -392,23 +393,12 @@
                           </svg>
                         </a>
                         <button
-                          onclick="openDeleteModal('{{ f.id }}')"
-                          class="p-1.5 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors duration-150"
+                        onclick='openDeleteModal(`{{ f.id }}`); event.stopPropagation();'
+                        class="p-1.5 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors duration-150"
                           title="Eliminar"
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
                       </div>
@@ -464,38 +454,21 @@
     </div>
 
     <!-- Modal de confirmación de eliminación, etc. -->
-    <div
-      id="deleteConfirmModal"
-      class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50"
-    >
+    <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg max-w-md w-full p-6">
         <div class="text-center mb-4">
           <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
-          <h3 class="text-lg font-medium text-gray-900 mt-2">
-            ¿Eliminar archivo?
-          </h3>
-          <p class="text-sm text-gray-500 mt-1">
-            Esta acción no se puede deshacer
-          </p>
+          <h3 class="text-lg font-medium text-gray-900 mt-2">¿Eliminar archivo?</h3>
+          <p class="text-sm text-gray-500 mt-1">Esta acción no se puede deshacer</p>
         </div>
         <div class="flex justify-end space-x-3 mt-6">
-          <button
-            type="button"
-            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
-            onclick="closeDeleteModal()"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            id="confirmDeleteBtn"
-            class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none"
-          >
-            Eliminar
-          </button>
+          <button type="button" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" onclick="closeDeleteModal()">Cancelar</button>
+          <button type="button" id="confirmDeleteBtn" data-file-id="" class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none">Eliminar</button>
         </div>
       </div>
     </div>
+    
+    
     <!-- Modal para vista previa (similar al tuyo) -->
     <div
       id="viewerModal"
@@ -641,11 +614,96 @@
           const ext = f.filename.split(".").pop().toLowerCase();
           const iconHTML = getIconForExtension(ext);
           html += `
-            <div class="bg-white border ...">
-              <div class="h-28 ...">${iconHTML}</div>
-              <div class="px-4 py-3 ...">
-                <h3 class="text-sm ...">${f.filename}</h3>
-                <!-- Botones (Descargar, Preview, etc.) -->
+            <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-all duration-200 group">
+              <!-- Sección para el ícono grande -->
+              <div class="h-28 flex items-center justify-center p-4 bg-gray-50 group-hover:bg-gray-100 transition-colors duration-200">
+                ${iconHTML}
+              </div>
+
+              <!-- Sección inferior: nombre y botones -->
+              <div class="px-4 py-3 flex justify-between items-center border-t border-gray-100">
+                <div class="truncate">
+                  <h3 class="text-sm font-medium text-gray-800 truncate">${f.filename}</h3>
+                </div>
+                <div class="flex space-x-1">
+                  <!-- Botón de PREVIEW -->
+                  <a
+                    class="inline-flex items-center px-2 py-1 text-sm text-gray-500 
+                          hover:text-blue-800 hover:bg-blue-50 rounded transition-colors duration-150"
+                    onclick="openPreviewModal('${f.id}', '${ext}'); event.stopPropagation();"
+                    title="Visualizar documento"
+                  >
+                    <!-- icono ojo -->
+                    <svg
+                      class="h-4 w-4 mr-1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                  </a>
+
+                  <!-- Enlace DESCARGAR -->
+                  <a
+                    href="/descargar/${f.id}"
+                    class="p-1.5 rounded-full hover:bg-blue-50 text-gray-500 
+                          hover:text-blue-600 transition-colors duration-150"
+                    title="Descargar"
+                    onclick="event.stopPropagation();"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 
+                          3 0 003-3v-1m-4-4l-4 4m0 
+                          0l-4-4m4 4V4"
+                      />
+                    </svg>
+                  </a>
+
+                  <!-- Botón ELIMINAR -->
+                  <button
+                    onclick="openDeleteModal('${f.id}'); event.stopPropagation();"
+                    class="p-1.5 rounded-full hover:bg-red-50 text-gray-500 
+                          hover:text-red-600 transition-colors duration-150"
+                    title="Eliminar"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 
+                          2 0 0116.138 21H7.862a2 
+                          2 0 01-1.995-1.858L5 
+                          7m5 4v6m4-6v6m1-10V4
+                          a1 1 0 00-1-1h-4a1 
+                          1 0 00-1 1v3M4 
+                          7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           `;
@@ -654,6 +712,57 @@
 
         filesContainer.innerHTML = html;
       }
+    </script>
+    <script>
+      function openDeleteModal(fileId) {
+        document.getElementById("deleteConfirmModal").classList.remove("hidden");
+        const confirmButton = document.getElementById("confirmDeleteBtn");
+        confirmButton.setAttribute("data-file-id", fileId);
+      }
+      function closeDeleteModal() {
+        document.getElementById("deleteConfirmModal").classList.add("hidden");
+      }
+      document.getElementById("confirmDeleteBtn").addEventListener("click", async function() {
+        const fileId = this.getAttribute("data-file-id");
+        
+        if (!fileId) {
+            console.error("No se ha asignado un file_id al botón de confirmación.");
+            return;
+        }
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                              document.querySelector('input[name="csrf_token"]')?.value;
+            
+            const response = await fetch(`/admin/eliminar_file/${fileId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken
+                },
+                body: JSON.stringify({ file_id: fileId })
+            });
+            const responsedata = await response.json();
+            
+            let responseData;
+            try {
+                responseData = await response.json();
+            } catch (e) {
+                responseData = { success: false, message: "Error al procesar la respuesta" };
+            }
+            
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                alert(`Error: ${responseData.message || "No se pudo eliminar el archivo"}`);
+            }
+        } catch (error) {
+            console.error("Error al eliminar archivo:", error);
+            alert("Error de conexión al intentar eliminar el archivo");
+        }
+        closeDeleteModal();
+    });
+
     </script>
   </body>
 </html>

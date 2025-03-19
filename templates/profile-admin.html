@@ -2,15 +2,44 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Perfil de Usuario</title>
+    <title>Perfil de Usuario | Inmigración OK</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
     <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
     />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                light: "#0095c7",
+                DEFAULT: "#0076a8",
+                dark: "#005685",
+              },
+              accent: {
+                light: "#00a8d4",
+                DEFAULT: "#0088b0",
+                dark: "#00678e",
+              },
+              surface: {
+                light: "#FFFFFF",
+                DEFAULT: "#F0F7FC",
+                dark: "#D9E9F2",
+              },
+            },
+            fontFamily: {
+              sans: ["Montserrat", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
     <style>
       body {
-        font-family: "Inter", sans-serif;
+        font-family: "Montserrat", sans-serif;
       }
       @keyframes modal-in {
         from {
@@ -41,36 +70,61 @@
       }
     </style>
   </head>
-  <body class="bg-gray-100">
+  <body class="bg-surface min-h-screen">
     {% include 'base.html' %} {% block content %}
-    <div class="min-h-screen flex flex-col bg-gray-100">
+    <div class="min-h-screen flex flex-col bg-surface">
+      <!-- Cabecera con título de página -->
+      <header class="bg-primary shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <div
+                class="h-14 bg-white rounded-lg p-1 shadow-sm border border-primary-dark/10"
+              >
+                <img
+                  src="../static/image/IOK Logo.png"
+                  alt="Inmigración OK Abogados"
+                  class="h-full object-contain"
+                />
+              </div>
+              <h1 class="text-xl font-bold text-white">Portal de Usuarios</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="text-white/90 text-sm hidden md:inline-block"
+                >Bienvenido, {{ user.name }}</span
+              >
+              <button class="text-white/80 hover:text-white">
+                <i class="fas fa-user-circle text-xl"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
       <!-- Contenedor principal -->
-      <main class="flex-grow py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main class="flex-grow pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div class="mb-8">
-            <div class="flex items-center justify-between">
-              <h1 class="text-3xl font-bold text-gray-900">Mi Perfil</h1>
+            <div
+              class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+            >
+              <div>
+                <h2 class="text-2xl font-bold text-primary-dark mb-1">
+                  Mi Perfil
+                </h2>
+                <p class="text-sm text-gray-600">
+                  Gestiona tu información personal y usuarios del sistema
+                </p>
+              </div>
               <button
                 type="button"
-                class="py-2 px-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 flex items-center"
+                class="py-2.5 px-4 bg-primary hover:bg-primary-dark text-white font-medium rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200 flex items-center justify-center"
                 onclick="openModal()"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                  />
-                </svg>
+                <i class="fas fa-edit mr-2"></i>
                 Modificar información
               </button>
             </div>
-            <p class="text-sm text-gray-600 mt-1">
-              Gestiona tu información personal y usuarios del sistema
-            </p>
           </div>
 
           <!-- Layout de dos contenedores -->
@@ -78,39 +132,50 @@
             <!-- Contenedor Principal (2/3 del ancho en desktop) -->
             <div class="lg:w-2/3 w-full">
               <div
-                class="bg-white shadow-md rounded-md border border-gray-200 overflow-hidden"
+                class="bg-white shadow-lg rounded-2xl border border-surface-dark/10 overflow-hidden"
               >
                 <div
-                  class="border-b border-gray-200 px-6 py-5 bg-gray-50"
+                  class="border-b border-surface-dark/10 px-6 py-5 bg-surface"
                 >
-                  <h2 class="text-xl font-bold text-gray-900">
+                  <h3 class="text-lg font-bold text-primary-dark">
                     Información del Perfil
-                  </h2>
+                  </h3>
                 </div>
 
                 <!-- Sección de Perfil -->
-                <div class="px-6 py-5 flex items-center border-b border-gray-200">
-                  <div class="flex-shrink-0 mr-6">
+                <div
+                  class="px-6 py-5 flex flex-col md:flex-row md:items-center border-b border-surface-dark/10"
+                >
+                  <div
+                    class="flex-shrink-0 mr-6 mb-4 md:mb-0 flex justify-center"
+                  >
                     <div
-                      class="h-20 w-20 rounded-full bg-red-50 border-2 border-red-200 flex items-center justify-center text-red-600 text-2xl font-bold shadow-sm"
+                      class="h-24 w-24 rounded-xl bg-primary/10 border-2 border-primary/20 flex items-center justify-center text-primary text-2xl font-bold shadow-sm"
                     >
                       {{ user.name[0]|upper if user.name else '' }} {{
                       user.lastname[0]|upper if user.lastname else '' }}
                     </div>
                   </div>
-                  
+
                   <div>
-                    <h2 class="text-2xl font-bold text-gray-900">
+                    <h2
+                      class="text-2xl font-bold text-gray-900 text-center md:text-left"
+                    >
                       {{ current_user.username}}
                     </h2>
-                    <div class="flex items-center mt-1">
+                    <div
+                      class="flex flex-wrap items-center mt-2 justify-center md:justify-start"
+                    >
                       {% for r in user.roles %}
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 mr-2">
-                        {% for r in user.roles %} {{ r.name }} {% endfor %}
+                      <span
+                        class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-primary/10 text-primary-dark mr-2 mb-2"
+                      >
+                        {{ r.name }}
                       </span>
                       {% endfor %}
                       <span class="text-sm text-gray-500 ml-2">
-                        Miembro desde {{ user.created_at.strftime('%d %B, %Y') if user.created_at else '' }}
+                        Miembro desde {{ user.created_at.strftime('%d %B, %Y')
+                        if user.created_at else '' }}
                       </span>
                     </div>
                   </div>
@@ -119,77 +184,67 @@
                 <div class="p-6">
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
-                      <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+                      <h3
+                        class="text-lg font-semibold text-primary-dark mb-4 pb-2 border-b border-surface-dark/10"
+                      >
                         Datos Personales
                       </h3>
-                      
-                      <div class="space-y-4">
+
+                      <div class="space-y-6">
                         <div>
                           <h4 class="text-sm font-medium text-gray-500">
                             Nombre Completo
                           </h4>
-                          <p class="text-base text-gray-900 mt-1">
+                          <p class="text-base text-gray-900 mt-1 font-medium">
                             {{ user.name }} {{ user.lastname }}
                           </p>
                         </div>
-                        
+
                         <div>
                           <h4 class="text-sm font-medium text-gray-500">
                             Nombre de Usuario
                           </h4>
-                          <p class="text-base text-gray-900 mt-1">
+                          <p class="text-base text-gray-900 mt-1 font-medium">
                             {{ user.username }}
                           </p>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div>
-                      <h3 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+                      <h3
+                        class="text-lg font-semibold text-primary-dark mb-4 pb-2 border-b border-surface-dark/10"
+                      >
                         Información de Contacto
                       </h3>
-                      
-                      <div class="space-y-4">
+
+                      <div class="space-y-6">
                         <div>
                           <h4 class="text-sm font-medium text-gray-500">
                             Correo Electrónico
                           </h4>
-                          <p class="text-base text-gray-900 mt-1 flex items-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="h-4 w-4 text-red-600 mr-2"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-                              />
-                              <path
-                                d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-                              />
-                            </svg>
+                          <p
+                            class="text-base text-gray-900 mt-1 flex items-center font-medium"
+                          >
+                            <i
+                              class="fas fa-envelope text-primary mr-2 text-sm"
+                            ></i>
                             {{ user.email }}
                           </p>
                         </div>
-                        
+
                         <div>
                           <h4 class="text-sm font-medium text-gray-500">
                             Teléfono
                           </h4>
-                          <p class="text-base text-gray-900 mt-1 flex items-center">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="h-4 w-4 text-red-600 mr-2"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fill-rule="evenodd"
-                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                clip-rule="evenodd"
-                              />
-                            </svg>
-                            {{ user.telephone if user.telephone else 'No registrado' }}
+                          <p
+                            class="text-base text-gray-900 mt-1 flex items-center font-medium"
+                          >
+                            <i
+                              class="fas fa-phone text-primary mr-2 text-sm"
+                            ></i>
+                            {{ user.telephone if user.telephone else 'No
+                            registrado' }}
                           </p>
                         </div>
                       </div>
@@ -202,46 +257,37 @@
             <!-- Contenedor Secundario (1/3 del ancho en desktop) -->
             <div class="lg:w-1/3 w-full flex flex-col">
               <div
-                class="bg-white shadow-md rounded-md border border-gray-200 overflow-hidden flex flex-col h-full"
+                class="bg-white shadow-lg rounded-2xl border border-surface-dark/10 overflow-hidden flex flex-col h-full"
               >
                 <div
-                  class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex justify-between items-center"
+                  class="border-b border-surface-dark/10 px-6 py-4 bg-surface flex justify-between items-center"
                 >
-                  <h2 class="text-lg font-bold text-gray-900">Usuarios del Sistema</h2>
+                  <h3 class="text-lg font-bold text-primary-dark">
+                    Usuarios del Sistema
+                  </h3>
                   <a
                     href="{{ url_for('main.register') }}"
-                    class="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors"
+                    class="inline-flex items-center justify-center px-3 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-primary hover:bg-primary-dark transition-all shadow-sm"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      class="w-4 h-4 mr-1"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
+                    <i class="fas fa-user-plus mr-2 text-sm"></i>
                     Nuevo Usuario
                   </a>
                 </div>
 
                 <!-- User List Container -->
                 <div
-                  class="overflow-y-auto divide-y divide-gray-200 flex-grow"
-                  style="max-height: 600px;"
+                  class="overflow-y-auto divide-y divide-surface-dark/10 flex-grow"
+                  style="max-height: 600px"
                 >
                   {% for u in all_users %}
-                  <div class="hover:bg-gray-50 transition-colors">
+                  <div class="hover:bg-surface/70 transition-colors">
                     <button
                       class="w-full px-6 py-4 flex justify-between items-center focus:outline-none"
                       onclick="toggleAccordion('user{{ u.id }}')"
                     >
                       <div class="flex items-center">
                         <div
-                          class="h-10 w-10 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-600 text-sm font-bold mr-3 shadow-sm"
+                          class="h-10 w-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary text-sm font-bold mr-3 shadow-sm"
                         >
                           {{ u.name[0]|upper if u.name else '' }}{{
                           u.lastname[0]|upper if u.lastname else '' }}
@@ -253,80 +299,80 @@
                           <p class="text-xs text-gray-500">{{ u.email }}</p>
                         </div>
                       </div>
-                      <svg
+                      <i
                         id="icon-user{{ u.id }}"
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5 text-gray-400 transform transition-transform duration-200"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                        class="fas fa-chevron-down text-gray-400 transition-transform duration-200"
+                      ></i>
                     </button>
                     <div
                       id="user{{ u.id }}-content"
-                      class="hidden px-6 py-4 bg-gray-50 border-t border-gray-100"
+                      class="hidden px-6 py-4 bg-surface/50 border-t border-surface-dark/10"
                     >
                       <div class="space-y-3">
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <h3
+                              class="text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
                               Datos Personales
                             </h3>
                             <p class="text-sm text-gray-900 mt-1">
-                              <span class="font-medium">Nombre:</span> {{ u.name }} {{ u.lastname }}
+                              <span class="font-medium">Nombre:</span> {{ u.name
+                              }} {{ u.lastname }}
                             </p>
                             <p class="text-sm text-gray-900 mt-1">
-                              <span class="font-medium">Usuario:</span> {{ u.username }}
+                              <span class="font-medium">Usuario:</span> {{
+                              u.username }}
                             </p>
                             {% for r in u.roles %}
                             <p class="text-sm text-gray-900 mt-1">
-                              <span class="font-medium">Rol:</span> {% for r in u.roles %} {{ r.name }} {% endfor %}
+                              <span class="font-medium">Rol:</span> {{ r.name }}
                             </p>
                             {% endfor %}
                           </div>
-                          
+
                           <div>
-                            <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <h3
+                              class="text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
                               Contacto
                             </h3>
                             <p class="text-sm text-gray-900 mt-1">
-                              <span class="font-medium">Email:</span> {{ u.email }}
+                              <span class="font-medium">Email:</span> {{ u.email
+                              }}
                             </p>
                             <p class="text-sm text-gray-900 mt-1">
-                              <span class="font-medium">Teléfono:</span> {{ u.telephone if u.telephone else 'Sin teléfono' }}
+                              <span class="font-medium">Teléfono:</span> {{
+                              u.telephone if u.telephone else 'Sin teléfono' }}
                             </p>
                             <p class="text-sm text-gray-900 mt-1">
-                              <span class="font-medium">Registro:</span> {{ u.created_at.strftime('%d %B %Y') if u.created_at else '' }}
+                              <span class="font-medium">Registro:</span> {{
+                              u.created_at.strftime('%d %B %Y') if u.created_at
+                              else '' }}
                             </p>
                           </div>
                         </div>
 
-                        <div class="flex justify-end mt-2 pt-2 border-t border-gray-200">
+                        <div
+                          class="flex justify-end mt-2 pt-2 border-t border-surface-dark/10"
+                        >
+                          <!-- Edit Button -->
+                          <a
+                            href="#"
+                            class="inline-flex items-center px-3 py-1.5 border border-primary/20 text-sm font-medium rounded-lg text-primary bg-primary/5 hover:bg-primary/10 focus:outline-none transition-all mr-2"
+                          >
+                            <i class="fas fa-edit mr-1.5"></i>
+                            Editar
+                          </a>
+
                           <!-- Delete Button -->
                           <button
                             type="button"
-                            class="inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none transition-colors"
+                            class="inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded-lg text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none transition-all"
                             onclick="openDeleteModal(`{{ url_for('main.delete_user', user_id=u.id) }}`, `{{ u.name }} {{ u.lastname }}`)"
                           >
-                            <svg
-                              class="w-4 h-4 mr-1.5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
-                            Eliminar usuario
+                            <i class="fas fa-trash-alt mr-1.5"></i>
+                            Eliminar
                           </button>
                         </div>
                       </div>
@@ -343,14 +389,16 @@
       <!-- Modal de Edición -->
       <div
         id="modalOverlay"
-        class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden"
+        class="fixed inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50 hidden"
       >
         <div
           id="modalContent"
-          class="bg-white rounded-md shadow-xl p-0 w-full max-w-2xl mx-4 modal-enter relative overflow-hidden"
+          class="bg-white rounded-2xl shadow-xl p-0 w-full max-w-2xl mx-4 modal-enter relative overflow-hidden border border-surface-dark/10"
         >
-          <div class="bg-gray-50 border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-            <h2 class="text-xl font-bold text-gray-900">
+          <div
+            class="bg-surface border-b border-surface-dark/10 px-6 py-4 flex justify-between items-center"
+          >
+            <h2 class="text-xl font-bold text-primary-dark">
               Editar información del perfil
             </h2>
             <button
@@ -359,20 +407,7 @@
               onclick="closeModal()"
               aria-label="Cerrar"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <i class="fas fa-times text-lg"></i>
             </button>
           </div>
 
@@ -382,9 +417,9 @@
             class="p-6"
           >
             {{ form.csrf_token }}
-            
-            <div class="mb-6 pb-6 border-b border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+
+            <div class="mb-6 pb-6 border-b border-surface-dark/10">
+              <h3 class="text-lg font-semibold text-primary-dark mb-4">
                 Información Personal
               </h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -398,7 +433,7 @@
                     type="text"
                     id="nombreInput"
                     name="nombre"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors shadow-sm"
+                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors shadow-sm bg-surface/50"
                     placeholder="{{ user.name }}"
                     value="{{ user.name }}"
                   />
@@ -414,7 +449,7 @@
                     type="text"
                     id="apellidoInput"
                     name="apellido"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors shadow-sm"
+                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors shadow-sm bg-surface/50"
                     placeholder="{{ user.lastname }}"
                     value="{{ user.lastname }}"
                   />
@@ -430,7 +465,7 @@
                     type="email"
                     id="emailInput"
                     name="email"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors shadow-sm"
+                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors shadow-sm bg-surface/50"
                     placeholder="{{ user.email }}"
                     value="{{ user.email }}"
                   />
@@ -446,7 +481,7 @@
                     type="text"
                     id="telefonoInput"
                     name="telefono"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors shadow-sm"
+                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors shadow-sm bg-surface/50"
                     placeholder="{{ user.telephone }}"
                     value="{{ user.telephone }}"
                   />
@@ -455,7 +490,7 @@
             </div>
 
             <div class="mb-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">
+              <h3 class="text-lg font-semibold text-primary-dark mb-4">
                 Cambiar Contraseña
               </h3>
 
@@ -470,7 +505,7 @@
                     type="password"
                     id="oldPassword"
                     name="old_password"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors shadow-sm"
+                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors shadow-sm bg-surface/50"
                     placeholder="••••••••"
                   />
                 </div>
@@ -484,23 +519,25 @@
                     type="password"
                     id="newPassword"
                     name="new_password"
-                    class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors shadow-sm"
+                    class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors shadow-sm bg-surface/50"
                   />
                 </div>
               </div>
             </div>
 
-            <div class="flex justify-end space-x-4 pt-2 border-t border-gray-200">
+            <div
+              class="flex justify-end space-x-4 pt-4 border-t border-surface-dark/10"
+            >
               <button
                 type="button"
-                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                class="px-4 py-2.5 border border-gray-300 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-surface transition-colors"
                 onclick="closeModal()"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
-                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                class="px-4 py-2.5 bg-primary hover:bg-primary-dark text-white font-medium rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
               >
                 Guardar Cambios
               </button>
@@ -512,10 +549,12 @@
       <!-- Modal de confirmación para eliminación -->
       <div
         id="deleteModal"
-        class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden"
+        class="fixed inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50 hidden"
       >
-        <div class="bg-white rounded-md shadow-xl p-6 w-full max-w-md mx-4 modal-enter">
-          <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <div
+          class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md mx-4 modal-enter border border-surface-dark/10"
+        >
+          <h2 class="text-xl font-bold text-primary-dark mb-4">
             Confirmar eliminación
           </h2>
           <p id="deleteModalMessage" class="text-gray-700 mb-6 text-base"></p>
@@ -523,7 +562,7 @@
             <button
               type="button"
               onclick="closeDeleteModal()"
-              class="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              class="px-4 py-2.5 border border-gray-300 bg-white text-gray-700 rounded-xl hover:bg-surface transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
               Cancelar
             </button>
@@ -532,7 +571,7 @@
               <button
                 type="button"
                 onclick="confirmDelete()"
-                class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                class="px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 Sí, eliminar
               </button>
@@ -542,14 +581,80 @@
       </div>
 
       <!-- Pie de página -->
-      <footer class="bg-white border-t border-gray-200 py-5 mt-auto">
+      <footer class="bg-white border-t border-surface-dark/20 py-5 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p class="text-sm text-center text-gray-500">
-            © 2025 Sistema de Gestión. Todos los derechos reservados.
+            © 2025 Inmigración OK Abogados. Todos los derechos reservados.
           </p>
         </div>
       </footer>
     </div>
+    <script>
+      function toggleAccordion(userId) {
+        const content = document.getElementById(`${userId}-content`);
+        const icon = document.getElementById(`icon-${userId}`);
+
+        // Toggle content visibility
+        if (content.classList.contains("hidden")) {
+          content.classList.remove("hidden");
+          icon.classList.add("rotate-180");
+        } else {
+          content.classList.add("hidden");
+          icon.classList.remove("rotate-180");
+        }
+      }
+
+      function openModal() {
+        const overlay = document.getElementById("modalOverlay");
+        const content = document.getElementById("modalContent");
+
+        overlay.classList.remove("hidden");
+        content.classList.remove("modal-leave");
+        content.classList.add("modal-enter");
+      }
+
+      function closeModal() {
+        const overlay = document.getElementById("modalOverlay");
+        const content = document.getElementById("modalContent");
+
+        content.classList.remove("modal-enter");
+        content.classList.add("modal-leave");
+
+        content.addEventListener(
+          "animationend",
+          () => {
+            if (content.classList.contains("modal-leave")) {
+              overlay.classList.add("hidden");
+            }
+          },
+          { once: true }
+        );
+      }
+
+      function saveChanges() {
+        console.log("Guardando cambios del formulario...");
+      }
+      let deleteUrl = "";
+
+      function openDeleteModal(fullDeleteUrl, username) {
+        deleteUrl = fullDeleteUrl;
+        document.getElementById(
+          "deleteModalMessage"
+        ).textContent = `¿Estás seguro de eliminar al usuario "${username}"?`;
+
+        document.getElementById("deleteModal").classList.remove("hidden");
+      }
+
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.add("hidden");
+      }
+
+      function confirmDelete() {
+        const form = document.getElementById("deleteForm");
+        form.action = deleteUrl;
+        form.submit();
+      }
+    </script>
     {% endblock %}
   </body>
 </html>

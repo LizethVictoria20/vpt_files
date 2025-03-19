@@ -6,22 +6,46 @@
     <title>Carpeta {{ folder.name }} - ImportSystem</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
     <script src="{{ url_for('static', filename='js/ver_carpeta.js') }}"></script>
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#1a4b8c',
+                light: '#3a6fb5',
+                dark: '#0e2a50'
+              },
+              accent: {
+                DEFAULT: '#c8a45d',
+                dark: '#b08f4a'
+              },
+              text: {
+                DEFAULT: '#333333',
+                secondary: '#666666'
+              }
+            },
+            fontFamily: {
+              montserrat: ['Montserrat', 'sans-serif'],
+              opensans: ['Open Sans', 'sans-serif']
+            }
+          }
+        }
       }
+    </script>
+    <style>
       .-rotate--90 {
         transform: rotate(-90deg);
         transition: transform 0.2s ease-in-out;
       }
     </style>
   </head>
-  <body class="bg-gray-50">
+  <body class="bg-gray-50 font-opensans text-text">
     {% include 'base.html' %}
 
     <div class="max-w-[80%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -29,8 +53,8 @@
         class="flex flex-col md:flex-row md:items-center md:justify-between mb-6"
       >
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ folder.name }}</h1>
-          <p class="text-sm text-gray-500 mt-1">ID: {{ folder.drive_id }}</p>
+          <h1 class="text-3xl font-bold font-montserrat text-primary-dark">{{ folder.name }}</h1>
+          <p class="text-sm text-text-secondary mt-1">ID: {{ folder.drive_id }}</p>
         </div>
       </div>
       <div
@@ -61,11 +85,11 @@
               id="searchInput"
               name="searchInput"
               placeholder="Buscar archivos por nombre..."
-              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 shadow-sm"
+              class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary shadow-sm"
               aria-label="Búsqueda de archivos"
             />
           </div>
-          <p class="text-xs text-gray-500 mt-1 ml-1">
+          <p class="text-xs text-text-secondary mt-1 ml-1">
             Busca documentos en esta carpeta
           </p>
         </div>
@@ -74,7 +98,7 @@
           <button
             type="button"
             onclick="document.getElementById('importModal').classList.remove('hidden')"
-            class="w-full md:w-auto flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
+            class="w-full md:w-auto flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150 ease-in-out"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -124,12 +148,12 @@
                 class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"
               >
                 <h3
-                  class="text-xl font-bold text-gray-900 flex items-center"
+                  class="text-xl font-bold font-montserrat text-text flex items-center"
                   id="modal-title"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-red-600 mr-2"
+                    class="h-5 w-5 text-primary mr-2"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -206,18 +230,18 @@
                           onchange="updateFileName(this)"
                         />
 
-                        <p class="text-sm font-medium text-gray-700">
+                        <p class="text-sm font-medium text-text">
                           <span id="fileNameDisplay" class="block mb-1"
                             >Selecciona un archivo para importar</span
                           >
-                          <span class="text-xs text-gray-500"
+                          <span class="text-xs text-text-secondary"
                             >o arrastra y suelta aquí</span
                           >
                         </p>
 
                         <button
                           type="button"
-                          class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-text bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                           onclick="document.getElementById('file').click()"
                         >
                           <svg
@@ -243,7 +267,7 @@
                       <div class="flex-shrink-0">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-blue-500"
+                          class="h-5 w-5 text-primary-light"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -257,7 +281,7 @@
                         </svg>
                       </div>
                       <div class="ml-3">
-                        <p class="text-xs text-gray-500">
+                        <p class="text-xs text-text-secondary">
                           Formatos aceptados:
                           <span class="font-medium"
                             >PDF, XLS, XLSX, CSV, DOC, DOCX</span
@@ -270,20 +294,20 @@
 
                     <div class="mt-4 border-t border-gray-100 pt-4">
                       <div
-                        class="bg-red-50 rounded-lg p-4 border-l-4 border-red-500 relative"
+                        class="bg-red-50 rounded-lg p-4 border-l-4 border-primary relative"
                       >
                         <div
-                          class="absolute -top-3 -left-1 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm"
+                          class="absolute -top-3 -left-1 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm"
                         >
                           Importante
                         </div>
                         <label
                           for="fileLabel"
-                          class="block text-base font-bold text-gray-800 mb-2 flex items-center"
+                          class="block text-base font-bold text-text mb-2 flex items-center"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5 mr-2 text-red-600"
+                            class="h-5 w-5 mr-2 text-primary"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -297,14 +321,14 @@
                           </svg>
                           Etiqueta del archivo
                         </label>
-                        <p class="text-xs text-gray-600 mb-3">
+                        <p class="text-xs text-text-secondary mb-3">
                           Selecciona una categoría para organizar y encontrar
                           fácilmente este documento en el futuro
                         </p>
                         <select
                           id="fileLabel"
                           name="fileLabel"
-                          class="block w-full pl-3 pr-10 py-3 text-base border-2 border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md bg-white shadow-sm"
+                          class="block w-full pl-3 pr-10 py-3 text-base border-2 border-red-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white shadow-sm"
                         >
                           <option value="">-- Seleccionar etiqueta --</option>
                           <optgroup label="Documentos personales">
@@ -382,7 +406,7 @@
                   <div class="w-full bg-gray-200 rounded-full h-2">
                     <div
                       id="progressBar"
-                      class="bg-red-600 h-2 rounded-full"
+                      class="bg-primary h-2 rounded-full"
                       style="width: 0%"
                     ></div>
                   </div>
@@ -395,7 +419,7 @@
               >
                 <button
                   type="button"
-                  class="sm:order-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  class="sm:order-1 inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-text bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                   onclick="document.getElementById('importModal').classList.add('hidden')"
                 >
                   Cancelar
@@ -403,7 +427,7 @@
                 <button
                   type="submit"
                   form="importForm"
-                  class="sm:order-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  class="sm:order-2 inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -436,7 +460,7 @@
         <div
           class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
         >
-          <h2 class="text-xl font-semibold text-gray-800">
+          <h2 class="text-xl font-semibold font-montserrat text-primary-dark">
             Archivos en esta carpeta
           </h2>
         </div>
@@ -452,7 +476,7 @@
               onclick="toggleGroup('group_{{ group_index }}')"
             >
               <svg
-                class="h-6 w-6 mr-3 text-red-500 flex-shrink-0"
+                class="h-6 w-6 mr-3 text-accent flex-shrink-0"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -461,13 +485,13 @@
                 />
               </svg>
 
-              <h2 class="text-base font-medium text-gray-800 flex-grow">
+              <h2 class="text-base font-medium font-montserrat text-text flex-grow">
                 {{ group_lbl }}
               </h2>
 
               <!-- Contador de archivos con diseño mejorado -->
               <span
-                class="text-xs px-2.5 py-1 bg-gray-100 rounded-full text-gray-600 mr-2 font-medium"
+                class="text-xs px-2.5 py-1 bg-gray-100 rounded-full text-text-secondary mr-2 font-medium"
               >
                 {% set total_files = namespace(count=0) %} {% for file_lbl,
                 files in subdict.items() %} {% set total_files.count =
@@ -497,7 +521,7 @@
                     class="h-36 flex items-center justify-center p-4 bg-gray-50"
                   >
                     <svg
-                      class="h-20 w-20 text-red-500 group-hover:text-red-500 transition-colors duration-200"
+                      class="h-20 w-20 text-accent group-hover:text-primary transition-colors duration-200"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -512,18 +536,18 @@
                   >
                     <div class="truncate">
                       <h3
-                        class="text-sm font-medium text-gray-800 truncate group-hover:text-red-700 transition-colors duration-200"
+                        class="text-sm font-medium font-montserrat text-text truncate group-hover:text-primary transition-colors duration-200"
                       >
                         {{ file_lbl }}
                       </h3>
-                      <p class="text-xs text-gray-500 mt-1">
+                      <p class="text-xs text-text-secondary mt-1">
                         {{ files|length }} {{ 'archivo' if files|length == 1
                         else 'archivos' }}
                       </p>
                     </div>
 
                     <div
-                      class="flex items-center justify-center w-7 h-7 rounded-full bg-gray-50 text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-all"
+                      class="flex items-center justify-center w-7 h-7 rounded-full bg-gray-50 text-gray-400 group-hover:bg-primary-light/20 group-hover:text-primary transition-all"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -554,7 +578,7 @@
                 <div class="flex items-center mb-5">
                   <button
                     onclick="toggleLabel('label_{{ group_index }}_{{ loop.index }}')"
-                    class="mr-3 p-1.5 rounded-full hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors duration-150"
+                    class="mr-3 p-1.5 rounded-full hover:bg-gray-100 text-text-secondary hover:text-primary transition-colors duration-150"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -572,7 +596,7 @@
                     </svg>
                   </button>
                   <svg
-                    class="h-5 w-5 text-red-500 mr-2"
+                    class="h-5 w-5 text-accent mr-2"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -580,7 +604,7 @@
                       d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
                     />
                   </svg>
-                  <h2 class="text-lg font-medium text-gray-800">
+                  <h2 class="text-lg font-medium font-montserrat text-primary-dark">
                     {{ file_lbl }}
                   </h2>
                 </div>
@@ -599,7 +623,7 @@
                       {% set file_extension = f.filename.split('.')[-1]|lower %}
                       {% if file_extension in ['pdf'] %}
                       <svg
-                        class="h-16 w-16 text-red-400"
+                        class="h-16 w-16 text-red-400 group-hover:text-primary transition-colors duration-200"
                         fill="currentColor"
                         viewBox="0 0 384 512"
                       >
@@ -610,119 +634,116 @@
 
                       {% elif file_extension in ['doc', 'docx'] %}
                       <svg
-                        class="h-16 w-16 text-blue-400"
+                        class="h-16 w-16 text-blue-400 group-hover:text-primary transition-colors duration-200"
                         fill="currentColor"
                         viewBox="0 0 384 512"
                       >
-                        <path
-                          d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm57.1 120H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm0 96H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
-                        />
-                      </svg>
-                      {% elif file_extension in ['xls', 'xlsx', 'csv'] %}
-                      <svg
-                        class="h-16 w-16 text-green-400"
-                        fill="currentColor"
-                        viewBox="0 0 384 512"
-                      >
-                        <path
-                          d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5L160 336l-60.1-93.5c-5.1-8 .6-18.5 10.1-18.5h34.9c4.4 0 8.5 2.4 10.6 6.3 21.2 38.9 33.2 58 33.2 58 3.3-7.9 36.5-74.3 36.5-74.3 2.1-3.9 6.2-6.3 10.6-6.3H270c9.5-.1 15.2 10.4 10.1 18.5zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
-                        />
-                      </svg>
-                      {% elif file_extension in ['jpg', 'jpeg', 'png', 'gif'] %}
-                      <svg
-                        class="h-16 w-16 text-purple-400"
-                        fill="currentColor"
-                        viewBox="0 0 384 512"
-                      >
-                        <path
-                          d="M384 121.941V128H256V0h6.059a24 24 0 0 1 16.97 7.029l97.941 97.941a24.002 24.002 0 0 1 7.03 16.971zM248 160c-13.2 0-24-10.8-24-24V0H24C10.745 0 0 10.745 0 24v464c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24V160H248zm-135.455 16c26.51 0 48 21.49 48 48s-21.49 48-48 48-48-21.49-48-48 21.491-48 48-48zm208 240h-256l.485-48.485L104.545 328c4.686-4.686 11.799-4.686 16.485 0L160.545 368 264.06 264.485c4.686-4.686 12.284-4.686 16.971 0L320.545 304v112z"
-                        />
-                      </svg>
-                      {% else %}
-                      <svg
-                        class="h-16 w-16 text-gray-400"
-                        fill="currentColor"
-                        viewBox="0 0 384 512"
-                      >
-                        <path
-                          d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"
-                        />
-                      </svg>
-                      {% endif %}
-                    </div>
+                      <path
+                      d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm57.1 120H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm0 96H208c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h73.1c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+                    />
+                  </svg>
+                  {% elif file_extension in ['xls', 'xlsx', 'csv'] %}
+                  <svg
+                    class="h-16 w-16 text-green-400 group-hover:text-primary transition-colors duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 384 512"
+                  >
+                    <path
+                      d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L224 336l60.1 93.5c5.1 8-.6 18.5-10.1 18.5h-34.9c-4.4 0-8.5-2.4-10.6-6.3C208.9 405.5 192 373 192 373c-6.4 14.8-10 20-36.6 68.8-2.1 3.9-6.1 6.3-10.5 6.3H110c-9.5 0-15.2-10.5-10.1-18.5L160 336l-60.1-93.5c-5.1-8 .6-18.5 10.1-18.5h34.9c4.4 0 8.5 2.4 10.6 6.3 21.2 38.9 33.2 58 33.2 58 3.3-7.9 36.5-74.3 36.5-74.3 2.1-3.9 6.2-6.3 10.6-6.3H270c9.5-.1 15.2 10.4 10.1 18.5zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"
+                    />
+                  </svg>
+                  {% elif file_extension in ['jpg', 'jpeg', 'png', 'gif'] %}
+                  <svg
+                    class="h-16 w-16 text-purple-400 group-hover:text-primary transition-colors duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 384 512"
+                  >
+                    <path
+                      d="M384 121.941V128H256V0h6.059a24 24 0 0 1 16.97 7.029l97.941 97.941a24.002 24.002 0 0 1 7.03 16.971zM248 160c-13.2 0-24-10.8-24-24V0H24C10.745 0 0 10.745 0 24v464c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24V160H248zm-135.455 16c26.51 0 48 21.49 48 48s-21.49 48-48 48-48-21.49-48-48 21.491-48 48-48zm208 240h-256l.485-48.485L104.545 328c4.686-4.686 11.799-4.686 16.485 0L160.545 368 264.06 264.485c4.686-4.686 12.284-4.686 16.971 0L320.545 304v112z"
+                    />
+                  </svg>
+                  {% else %}
+                  <svg
+                    class="h-16 w-16 text-gray-400 group-hover:text-primary transition-colors duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 384 512"
+                  >
+                    <path
+                      d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"
+                    />
+                  </svg>
+                  {% endif %}
+                </div>
 
-                    <div
-                      class="px-4 py-3 flex justify-between items-center border-t border-gray-100"
-                    >
-                      <div class="truncate">
-                        <h3 class="text-sm font-medium text-gray-800 truncate">
-                          {{ f.filename }}
-                        </h3>
-                      </div>
-                      <div class="flex space-x-1">
-                        <a
-                          class="inline-flex items-center px-2 py-1 text-sm text-gray-500 hover:text-blue-800 hover:bg-blue-50 rounded transition-colors duration-150"
-                          onclick="openPreviewModal(`{{ f.id }}`, `{{ f.filename.split('.')[-1]|lower }}`)"
-                          title="Visualizar documento"
-                        >
-                          <svg
-                            class="h-4 w-4 mr-1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          >
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                          </svg>
-                        </a>
-                        <a
-                          href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
-                          class="p-1.5 rounded-full hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors duration-150"
-                          title="Descargar"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                            />
-                          </svg>
-                        </a>
-                        <button
-                          onclick="openDeleteModal('{{ f.id }}')"
-                          class="p-1.5 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors duration-150"
-                          title="Eliminar"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
+                <div
+                  class="px-4 py-3 flex justify-between items-center border-t border-gray-100"
+                >
+                  <div class="truncate">
+                    <h3 class="text-sm font-medium font-montserrat text-text truncate">
+                      {{ f.filename }}
+                    </h3>
                   </div>
-                  {% endfor %}
+                  <div class="flex space-x-1">
+                    <a
+                      class="inline-flex items-center px-2 py-1 text-sm text-text-secondary hover:text-primary hover:bg-blue-50 rounded transition-colors duration-150"
+                      onclick="openPreviewModal(`{{ f.id }}`, `{{ f.filename.split('.')[-1]|lower }}`)"
+                      title="Visualizar documento"
+                    >
+                      <svg
+                        class="h-4 w-4 mr-1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                    </a>
+                    <a
+                      href="{{ url_for('main.descargar_archivo', file_id=f.id) }}"
+                      class="p-1.5 rounded-full hover:bg-blue-50 text-text-secondary hover:text-primary transition-colors duration-150"
+                      title="Descargar"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                        />
+                      </svg>
+                    </a>
+                    <button
+                      onclick="openDeleteModal('{{ f.id }}')"
+                      class="p-1.5 rounded-full hover:bg-red-50 text-text-secondary hover:text-red-600 transition-colors duration-150"
+                      title="Eliminar"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
               {% endfor %}
@@ -730,128 +751,43 @@
           </div>
           {% endfor %}
         </div>
-        {% else %}
-        <!-- Estado de carpeta vacía -->
-        <div class="px-6 py-20 text-center">
-          <div
-            class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-50 text-red-400 mb-6"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"
-              />
-            </svg>
-          </div>
-          <h3 class="text-xl font-medium text-gray-900 mb-3">
-            Esta carpeta está vacía
-          </h3>
-          <p class="text-base text-gray-600 mb-8 max-w-md mx-auto">
-            Puedes comenzar a subir archivos
-          </p>
-          <div class="flex flex-wrap justify-center gap-4">
-            <button
-              class="inline-flex items-center px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                />
-              </svg>
-              Subir archivo
-            </button>
-            <button
-              class="inline-flex items-center px-5 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 mr-2 text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-                />
-              </svg>
-              Nueva carpeta
-            </button>
-          </div>
-        </div>
-        {% endif %}
       </div>
+      {% endfor %}
     </div>
-
-    <!-- Modal de confirmación de eliminación -->
-    <div
-      id="deleteConfirmModal"
-      class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50"
-    >
-      <div class="bg-white rounded-lg max-w-md w-full p-6">
-        <div class="text-center mb-4">
-          <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
-          <h3 class="text-lg font-medium text-gray-900 mt-2">
-            ¿Eliminar archivo?
-          </h3>
-          <p class="text-sm text-gray-500 mt-1">
-            Esta acción no se puede deshacer
-          </p>
-        </div>
-        <div class="flex justify-end space-x-3 mt-6">
-          <button
-            type="button"
-            class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
-            onclick="closeDeleteModal()"
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            id="confirmDeleteBtn"
-            class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none"
-          >
-            Eliminar
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal oculto para mostrar los diferentes tipos de archivos -->
-    <div
-      id="viewerModal"
-      class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden"
-    >
+    {% else %}
+    <!-- Estado de carpeta vacía -->
+    <div class="px-6 py-20 text-center">
       <div
-        class="bg-white w-full max-w-4xl relative rounded shadow-lg p-4 flex flex-col"
+        class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-50 text-primary mb-6"
       >
-        <!-- Botón de Cerrar -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-12 w-12"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"
+          />
+        </svg>
+      </div>
+      <h3 class="text-xl font-medium font-montserrat text-text mb-3">
+        Esta carpeta está vacía
+      </h3>
+      <p class="text-base text-text-secondary mb-8 max-w-md mx-auto">
+        Puedes comenzar a subir archivos
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
         <button
-          class="absolute top-2 right-2 text-gray-500 hover:text-red-600"
-          onclick="closePreviewModal()"
+          class="inline-flex items-center px-5 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-150"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-5 w-5 mr-2"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -860,365 +796,454 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
             />
           </svg>
+          Subir archivo
         </button>
-
-        <!-- Contenido del archivo (iframe, img, etc) -->
-        <div id="viewerContent" class="mt-6 flex-1 overflow-auto">
-          <!-- Aquí cargaremos la vista previa -->
-        </div>
+        <button
+          class="inline-flex items-center px-5 py-2.5 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-text bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-150"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2 text-text-secondary"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+            />
+          </svg>
+          Nueva carpeta
+        </button>
       </div>
     </div>
+    {% endif %}
+  </div>
+</div>
 
-    <script>
-      document
-        .getElementById("fileLabel")
-        .addEventListener("change", function () {
-          const select = this;
-          const optGroupLabel = select.selectedOptions[0].parentNode.label;
-          document.getElementById("groupLabel").value = optGroupLabel;
-        });
-    </script>
+<!-- Modal de confirmación de eliminación -->
+<div
+  id="deleteConfirmModal"
+  class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50"
+>
+  <div class="bg-white rounded-lg max-w-md w-full p-6">
+    <div class="text-center mb-4">
+      <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+      <h3 class="text-lg font-medium font-montserrat text-text mt-2">
+        ¿Eliminar archivo?
+      </h3>
+      <p class="text-sm text-text-secondary mt-1">
+        Esta acción no se puede deshacer
+      </p>
+    </div>
+    <div class="flex justify-end space-x-3 mt-6">
+      <button
+        type="button"
+        class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-text hover:bg-gray-50 focus:outline-none"
+        onclick="closeDeleteModal()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        id="confirmDeleteBtn"
+        class="px-4 py-2 bg-primary border border-transparent rounded-lg text-sm font-medium text-white hover:bg-primary-light focus:outline-none"
+      >
+        Eliminar
+      </button>
+    </div>
+  </div>
+</div>
 
-    <script>
-      let fileIdToDelete;
+<!-- Modal oculto para mostrar los diferentes tipos de archivos -->
+<div
+  id="viewerModal"
+  class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden"
+>
+  <div
+    class="bg-white w-full max-w-4xl relative rounded shadow-lg p-4 flex flex-col"
+  >
+    <!-- Botón de Cerrar -->
+    <button
+      class="absolute top-2 right-2 text-text-secondary hover:text-primary"
+      onclick="closePreviewModal()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
 
-      function confirmDelete(fileId) {
-        fileIdToDelete = fileId;
-        document.getElementById("deleteModal").classList.remove("hidden");
+    <!-- Contenido del archivo (iframe, img, etc) -->
+    <div id="viewerContent" class="mt-6 flex-1 overflow-auto">
+      <!-- Aquí cargaremos la vista previa -->
+    </div>
+  </div>
+</div>
+
+<script>
+  document
+    .getElementById("fileLabel")
+    .addEventListener("change", function () {
+      const select = this;
+      const optGroupLabel = select.selectedOptions[0].parentNode.label;
+      document.getElementById("groupLabel").value = optGroupLabel;
+    });
+</script>
+
+<script>
+  let fileIdToDelete;
+
+  function confirmDelete(fileId) {
+    fileIdToDelete = fileId;
+    document.getElementById("deleteModal").classList.remove("hidden");
+  }
+
+  function closeDeleteModal() {
+    document.getElementById("deleteModal").classList.add("hidden");
+  }
+
+  document
+    .getElementById("confirmDeleteBtn")
+    .addEventListener("click", function () {
+      window.location.href =
+        "{{ url_for('main.eliminar_archivo', file_id=0) }}".replace(
+          "0",
+          fileIdToDelete
+        );
+    });
+
+  function confirmDeleteFolder(folderId) {
+    if (
+      confirm(
+        "¿Estás seguro de que quieres eliminar esta carpeta y todo su contenido?"
+      )
+    ) {
+      window.location.href =
+        "{{ url_for('main.eliminar_carpeta', folder_id=0) }}".replace(
+          "0",
+          folderId
+        );
+    }
+  }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const groupElements = document.querySelectorAll("[id^='group_']");
+    const labelElements = document.querySelectorAll("[id^='label_']");
+
+    groupElements.forEach((groupEl) => {
+      groupEl.style.display = "none";
+      const idx = groupEl.id.split("_")[1];
+      const icon = document.getElementById("group_icon_" + idx);
+      if (icon) icon.classList.add("-rotate-90");
+    });
+
+    labelElements.forEach((labelEl) => {
+      labelEl.style.display = "none";
+      const parts = labelEl.id.split("_");
+      if (parts.length >= 3) {
+        const labelIcon = document.getElementById(
+          `label_icon_${parts[1]}_${parts[2]}`
+        );
+        if (labelIcon) labelIcon.classList.add("-rotate-90");
       }
+    });
 
-      function closeDeleteModal() {
-        document.getElementById("deleteModal").classList.add("hidden");
-      }
+    // 2. Leer parámetros de la URL.
+    const params = new URLSearchParams(window.location.search);
+    const openGroup = params.get("openGroup");
+    const openLabel = params.get("openLabel");
 
-      document
-        .getElementById("confirmDeleteBtn")
-        .addEventListener("click", function () {
-          window.location.href =
-            "{{ url_for('main.eliminar_archivo', file_id=0) }}".replace(
-              "0",
-              fileIdToDelete
-            );
-        });
-
-      function confirmDeleteFolder(folderId) {
-        if (
-          confirm(
-            "¿Estás seguro de que quieres eliminar esta carpeta y todo su contenido?"
-          )
-        ) {
-          window.location.href =
-            "{{ url_for('main.eliminar_carpeta', folder_id=0) }}".replace(
-              "0",
-              folderId
-            );
-        }
-      }
-    </script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const groupElements = document.querySelectorAll("[id^='group_']");
-        const labelElements = document.querySelectorAll("[id^='label_']");
-
-        groupElements.forEach((groupEl) => {
-          groupEl.style.display = "none";
-          const idx = groupEl.id.split("_")[1];
-          const icon = document.getElementById("group_icon_" + idx);
-          if (icon) icon.classList.add("-rotate-90");
-        });
-
-        labelElements.forEach((labelEl) => {
-          labelEl.style.display = "none";
-          const parts = labelEl.id.split("_");
-          if (parts.length >= 3) {
-            const labelIcon = document.getElementById(
-              `label_icon_${parts[1]}_${parts[2]}`
-            );
-            if (labelIcon) labelIcon.classList.add("-rotate-90");
-          }
-        });
-
-        // 2. Leer parámetros de la URL.
-        const params = new URLSearchParams(window.location.search);
-        const openGroup = params.get("openGroup");
-        const openLabel = params.get("openLabel");
-
-        if (openGroup) {
-          const groupToOpen = document.querySelector(
-            `[data-group="${openGroup}"]`
-          );
-          if (groupToOpen) {
-            groupToOpen.style.display = "block";
-            const idx = groupToOpen.id.split("_")[1];
-            const icon = document.getElementById("group_icon_" + idx);
-            if (icon) icon.classList.remove("-rotate-90");
-          }
-        }
-
-        if (openLabel) {
-          const labelToOpen = document.querySelector(
-            `[data-label="${openLabel}"]`
-          );
-          if (labelToOpen) {
-            const parentGroup = labelToOpen.closest(".group-content");
-            if (parentGroup) {
-              parentGroup.style.display = "block";
-              const groupID = parentGroup.id;
-              const groupIdx = groupID.split("_")[1];
-              const iconGroup = document.getElementById(
-                "group_icon_" + groupIdx
-              );
-              if (iconGroup) iconGroup.classList.remove("-rotate-90");
-            }
-            labelToOpen.style.display = "block";
-            const parts = labelToOpen.id.split("_");
-            if (parts.length >= 3) {
-              const labelIcon = document.getElementById(
-                `label_icon_${parts[1]}_${parts[2]}`
-              );
-              if (labelIcon) labelIcon.classList.remove("-rotate-90");
-            }
-            labelToOpen.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }
-      });
-
-      function toggleGroup(groupId) {
-        const groupContent = document.getElementById(groupId);
-        if (!groupContent) return;
-
-        const allGroups = document.querySelectorAll("[id^='group_']");
-        allGroups.forEach((g) => {
-          if (g.id !== groupId) {
-            g.style.display = "none";
-            const gidx = g.id.split("_")[1];
-            const gicon = document.getElementById("group_icon_" + gidx);
-            if (gicon) gicon.classList.add("-rotate-90");
-
-            const allLabels = g.querySelectorAll("[id^='label_']");
-            allLabels.forEach((lbl) => {
-              lbl.style.display = "none";
-              const lparts = lbl.id.split("_");
-              if (lparts.length >= 3) {
-                const licon = document.getElementById(
-                  `label_icon_${lparts[1]}_${lparts[2]}`
-                );
-                if (licon) licon.classList.add("-rotate-90");
-              }
-            });
-          }
-        });
-
-        const idx = groupId.split("_")[1];
+    if (openGroup) {
+      const groupToOpen = document.querySelector(
+        `[data-group="${openGroup}"]`
+      );
+      if (groupToOpen) {
+        groupToOpen.style.display = "block";
+        const idx = groupToOpen.id.split("_")[1];
         const icon = document.getElementById("group_icon_" + idx);
-
-        if (groupContent.style.display === "none") {
-          groupContent.style.display = "block";
-          icon?.classList.remove("-rotate-90");
-        } else {
-          groupContent.style.display = "none";
-          icon?.classList.add("-rotate-90");
-
-          const groupLabels = groupContent.querySelectorAll("[id^='label_']");
-          groupLabels.forEach((lbl) => {
-            lbl.style.display = "none";
-            const lparts = lbl.id.split("_");
-            if (lparts.length >= 3) {
-              const licon = document.getElementById(
-                `label_icon_${lparts[1]}_${lparts[2]}`
-              );
-              if (licon) licon.classList.add("-rotate-90");
-            }
-          });
-        }
+        if (icon) icon.classList.remove("-rotate-90");
       }
+    }
 
-      function toggleLabel(labelId) {
-        const labelContent = document.getElementById(labelId);
-        if (!labelContent) return;
+    if (openLabel) {
+      const labelToOpen = document.querySelector(
+        `[data-label="${openLabel}"]`
+      );
+      if (labelToOpen) {
+        const parentGroup = labelToOpen.closest(".group-content");
+        if (parentGroup) {
+          parentGroup.style.display = "block";
+          const groupID = parentGroup.id;
+          const groupIdx = groupID.split("_")[1];
+          const iconGroup = document.getElementById(
+            "group_icon_" + groupIdx
+          );
+          if (iconGroup) iconGroup.classList.remove("-rotate-90");
+        }
+        labelToOpen.style.display = "block";
+        const parts = labelToOpen.id.split("_");
+        if (parts.length >= 3) {
+          const labelIcon = document.getElementById(
+            `label_icon_${parts[1]}_${parts[2]}`
+          );
+          if (labelIcon) labelIcon.classList.remove("-rotate-90");
+        }
+        labelToOpen.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  });
 
-        const allLabels = document.querySelectorAll("[id^='label_']");
+  function toggleGroup(groupId) {
+    const groupContent = document.getElementById(groupId);
+    if (!groupContent) return;
+
+    const allGroups = document.querySelectorAll("[id^='group_']");
+    allGroups.forEach((g) => {
+      if (g.id !== groupId) {
+        g.style.display = "none";
+        const gidx = g.id.split("_")[1];
+        const gicon = document.getElementById("group_icon_" + gidx);
+        if (gicon) gicon.classList.add("-rotate-90");
+
+        const allLabels = g.querySelectorAll("[id^='label_']");
         allLabels.forEach((lbl) => {
-          if (lbl.id !== labelId) {
-            lbl.style.display = "none";
-            const parts = lbl.id.split("_");
-            if (parts.length >= 3) {
-              const lblIcon = document.getElementById(
-                `label_icon_${parts[1]}_${parts[2]}`
-              );
-              if (lblIcon) lblIcon.classList.add("-rotate-90");
-            }
+          lbl.style.display = "none";
+          const lparts = lbl.id.split("_");
+          if (lparts.length >= 3) {
+            const licon = document.getElementById(
+              `label_icon_${lparts[1]}_${lparts[2]}`
+            );
+            if (licon) licon.classList.add("-rotate-90");
           }
         });
-
-        const parts = labelId.split("_");
-        if (labelContent.style.display === "none") {
-          labelContent.style.display = "block";
-          const lblIcon = document.getElementById(
-            `label_icon_${parts[1]}_${parts[2]}`
-          );
-          lblIcon?.classList.remove("-rotate-90");
-
-          //scroll para “enfocar” la subcarpeta:
-          setTimeout(
-            () =>
-              labelContent.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              }),
-            100
-          );
-        } else {
-          labelContent.style.display = "none";
-          const lblIcon = document.getElementById(
-            `label_icon_${parts[1]}_${parts[2]}`
-          );
-          lblIcon?.classList.add("-rotate-90");
-        }
       }
+    });
 
-      function openDeleteModal(fileId) {
-        if (confirm("¿Estás seguro de que deseas eliminar este archivo?")) {
-          // Aquí iría la redirección o acción para eliminar.
-          window.location.href = "/eliminar_file/" + fileId;
-        }
-      }
-    </script>
-    <script>
-      function openDeleteModal(fileId) {
-        fileIdToDelete = fileId;
-        document
-          .getElementById("deleteConfirmModal")
-          .classList.remove("hidden");
-      }
-      function closeDeleteModal() {
-        fileIdToDelete = null;
-        document.getElementById("deleteConfirmModal").classList.add("hidden");
-      }
-      document
-        .getElementById("confirmDeleteBtn")
-        .addEventListener("click", function () {
-          if (fileIdToDelete) {
-            window.location.href = "/eliminar_file/" + fileIdToDelete;
-          }
-        });
-    </script>
-    <script>
-      const searchInput = document.getElementById("searchInput");
-      const liveResults = document.getElementById("liveResults");
+    const idx = groupId.split("_")[1];
+    const icon = document.getElementById("group_icon_" + idx);
 
-      searchInput.addEventListener("keyup", async function () {
-        const query = searchInput.value.trim();
+    if (groupContent.style.display === "none") {
+      groupContent.style.display = "block";
+      icon?.classList.remove("-rotate-90");
+    } else {
+      groupContent.style.display = "none";
+      icon?.classList.add("-rotate-90");
 
-        if (!query) {
-          liveResults.innerHTML = "";
-          return;
-        }
-
-        try {
-          const response = await fetch(
-            `/buscar_archivos_json?q=${encodeURIComponent(query)}`
+      const groupLabels = groupContent.querySelectorAll("[id^='label_']");
+      groupLabels.forEach((lbl) => {
+        lbl.style.display = "none";
+        const lparts = lbl.id.split("_");
+        if (lparts.length >= 3) {
+          const licon = document.getElementById(
+            `label_icon_${lparts[1]}_${lparts[2]}`
           );
-          const data = await response.json();
-
-          renderResults(data);
-        } catch (error) {
-          console.error("Error al buscar archivos:", error);
+          if (licon) licon.classList.add("-rotate-90");
         }
       });
+    }
+  }
 
-      function renderResults(files) {
-        liveResults.innerHTML = "";
+  function toggleLabel(labelId) {
+    const labelContent = document.getElementById(labelId);
+    if (!labelContent) return;
 
-        if (files.length === 0) {
-          liveResults.innerHTML = `
-            <p class="text-sm text-gray-500">Sin coincidencias.</p>
-          `;
-          return;
+    const allLabels = document.querySelectorAll("[id^='label_']");
+    allLabels.forEach((lbl) => {
+      if (lbl.id !== labelId) {
+        lbl.style.display = "none";
+        const parts = lbl.id.split("_");
+        if (parts.length >= 3) {
+          const lblIcon = document.getElementById(
+            `label_icon_${parts[1]}_${parts[2]}`
+          );
+          if (lblIcon) lblIcon.classList.add("-rotate-90");
         }
+      }
+    });
 
-        let html = "";
-        files.forEach((file) => {
-          html += `
-            <div class="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <div class="flex-shrink-0">
-                    <div class="h-10 w-10 bg-red-50 rounded-full flex items-center justify-center text-red-600">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div>
-                    <p class="text-base font-medium text-gray-900">${
-                      file.filename
-                    }</p>
-                    <div class="flex items-center mt-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                      </svg>
-                      <p class="text-xs text-gray-500">Carpeta: ${
-                        file.drive_id
-                      }</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <a href="/carpeta/${
-                  file.folder_id
-                }?openGroup=${encodeURIComponent(
-            file.group_label
-          )}&openLabel=${encodeURIComponent(file.etiquetas)}"
-                  <span>Ver carpeta</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+    const parts = labelId.split("_");
+    if (labelContent.style.display === "none") {
+      labelContent.style.display = "block";
+      const lblIcon = document.getElementById(
+        `label_icon_${parts[1]}_${parts[2]}`
+      );
+      lblIcon?.classList.remove("-rotate-90");
+
+      //scroll para "enfocar" la subcarpeta:
+      setTimeout(
+        () =>
+          labelContent.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          }),
+        100
+      );
+    } else {
+      labelContent.style.display = "none";
+      const lblIcon = document.getElementById(
+        `label_icon_${parts[1]}_${parts[2]}`
+      );
+      lblIcon?.classList.add("-rotate-90");
+    }
+  }
+
+  function openDeleteModal(fileId) {
+    if (confirm("¿Estás seguro de que deseas eliminar este archivo?")) {
+      // Aquí iría la redirección o acción para eliminar.
+      window.location.href = "/eliminar_file/" + fileId;
+    }
+  }
+</script>
+<script>
+  function openDeleteModal(fileId) {
+    fileIdToDelete = fileId;
+    document
+      .getElementById("deleteConfirmModal")
+      .classList.remove("hidden");
+  }
+  function closeDeleteModal() {
+    fileIdToDelete = null;
+    document.getElementById("deleteConfirmModal").classList.add("hidden");
+  }
+  document
+    .getElementById("confirmDeleteBtn")
+    .addEventListener("click", function () {
+      if (fileIdToDelete) {
+        window.location.href = "/eliminar_file/" + fileIdToDelete;
+      }
+    });
+</script>
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const liveResults = document.getElementById("liveResults");
+
+  searchInput.addEventListener("keyup", async function () {
+    const query = searchInput.value.trim();
+
+    if (!query) {
+      liveResults.innerHTML = "";
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/buscar_archivos_json?q=${encodeURIComponent(query)}`
+      );
+      const data = await response.json();
+
+      renderResults(data);
+    } catch (error) {
+      console.error("Error al buscar archivos:", error);
+    }
+  });
+
+  function renderResults(files) {
+    liveResults.innerHTML = "";
+
+    if (files.length === 0) {
+      liveResults.innerHTML = `
+        <p class="text-sm text-text-secondary">Sin coincidencias.</p>
+      `;
+      return;
+    }
+
+    let html = "";
+    files.forEach((file) => {
+      html += `
+        <div class="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="flex-shrink-0">
+                <div class="h-10 w-10 bg-primary-light/20 rounded-full flex items-center justify-center text-primary">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                </a>
+                </div>
+              </div>
+              <div>
+                <p class="text-base font-medium font-montserrat text-text">${
+                  file.filename
+                }</p>
+                <div class="flex items-center mt-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-text-secondary mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                  </svg>
+                  <p class="text-xs text-text-secondary">Carpeta: ${
+                    file.drive_id
+                  }</p>
+                </div>
               </div>
             </div>
-          `;
-        });
+            
+            <a href="/carpeta/${
+              file.folder_id
+            }?openGroup=${encodeURIComponent(
+        file.group_label
+      )}&openLabel=${encodeURIComponent(file.etiquetas)}"
+              class="text-primary hover:text-accent transition-colors duration-150 flex items-center font-medium">
+              <span>Ver carpeta</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      `;
+    });
 
-        liveResults.innerHTML = html;
-      }
-    </script>
-    <script>
-      function openPreviewModal(fileId, extension) {
-        const modal = document.getElementById("viewerModal");
-        const content = document.getElementById("viewerContent");
+    liveResults.innerHTML = html;
+  }
+</script>
+<script>
+  function openPreviewModal(fileId, extension) {
+    const modal = document.getElementById("viewerModal");
+    const content = document.getElementById("viewerContent");
 
-        // Limpia contenido previo
-        content.innerHTML = "";
+    // Limpia contenido previo
+    content.innerHTML = "";
 
-        if (["pdf", "jpg", "jpeg", "png", "gif"].includes(extension)) {
-          // Podemos incrustar en <iframe>:
-          content.innerHTML = `
-            <iframe 
-              src="/preview_file/${fileId}" 
-              frameborder="0" 
-              class="w-full h-[80vh]">
-            </iframe>
-          `;
-        } else if (["doc", "docx"].includes(extension)) {
-          // Redirecciona a la ruta, que a su vez mostrará
-          // un embed de Google Docs o conversión
-          content.innerHTML = `
-            <iframe 
-              src="/preview_file/${fileId}" 
-              frameborder="0"
-              class="w-full h-[80vh]">
-            </iframe>
-          `;
-        } else {
-          // Otros formatos: se descarga o se muestra como texto, a tu criterio
-          content.innerHTML = `
-            <p class="text-gray-600">
-              Formato no soportado para vista previa. 
-              <a class="text-blue-600 underline" 
+    if (["pdf", "jpg", "jpeg", "png", "gif"].includes(extension)) {
+      // Podemos incrustar en <iframe>:
+      content.innerHTML = `
+        <iframe 
+          src="/preview_file/${fileId}" 
+          frameborder="0" 
+          class="w-full h-[80vh]">
+        </iframe>
+      `;
+    } else if (["doc", "docx"].includes(extension)) {
+      // Redirecciona a la ruta, que a su vez mostrará
+      // un embed de Google Docs o conversión
+      content.innerHTML = `
+        <iframe 
+          src="/preview_file/${fileId}" 
+          frameborder="0"
+          class="w-full h-[80vh]">
+        </iframe>
+      `;
+    } else {
+      // Otros formatos: se descarga o se muestra como texto, a tu criterio
+      content.innerHTML = `
+        <p class="text-text-secondary">
+          Formato no soportado para vista previa. 
+            <a class="text-primary hover:text-accent underline" 
                  href="/descargar_archivo/${fileId}">
                 Descargar
               </a>

@@ -51,7 +51,7 @@
             <!-- Logo -->
             <div class="flex items-center space-x-3">
               <div class="h-[10rem] rounded-lg p-1">
-                <img src="../static/image/LogoText.png" alt="Inmigración OK Abogados" class="h-full object-contain" />
+                <img src="{{ url_for('static', filename='image/LogoText.png') }}" alt="Inmigración OK Abogados" class="h-full object-contain" />
               </div>
             </div>
 
@@ -63,51 +63,50 @@
                   {% set _ = user_roles.append(r.slug) %}
                 {% endfor %}
               {% endif %}
-
-              {% if 'cliente' not in user_roles %}
+            
+              {% if 'cliente' in user_roles %}
+                <!-- CLIENTES -->
+                <a href="{{ url_for('main.import_files', folder_id=current_user.folders[0].id if current_user.folders else 0) }}"
+                  class="{% if request.endpoint == 'main.import_files' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
+                  Importar 
+                </a>
+                <a href="{{ url_for('main.ver_carpeta', folder_id=current_user.id) }}"
+                  class="{% if request.endpoint == 'main.ver_carpeta' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
+                  Archivos 
+                </a>
+              {% else %}
+                <!-- For other roles, show original navigation -->
                 {% if 'admin' in user_roles %}
-                <a
-                  href="{{ url_for('admin.listar_carpetas') }}"
-                  class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
-                >
+                <a href="{{ url_for('admin.listar_carpetas') }}"
+                  class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
                   Usuarios
                 </a>
                 {% else %}
-                <a
-                  href="{{ url_for('admin.listar_carpetas') }}"
-                  class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
-                >
+                <a href="{{ url_for('admin.listar_carpetas') }}"
+                  class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
                   Reportes
                 </a>
                 {% endif %}
                 
                 {% if 'admin' in user_roles %}
-                <a
-                  href="{{ url_for('main.register') }}"
-                  class="{% if request.endpoint == 'main.register' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
-                >
+                <a href="{{ url_for('main.register') }}"
+                  class="{% if request.endpoint == 'main.register' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
                   Registro
                 </a>
                 {% endif %}
-              {% endif %}
-              
-              {% if current_user.is_authenticated %}
-              <a
-                  href="{{ url_for('main.profile') }}"
-                  class="{% if request.endpoint == 'main.profile' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
-                >
+                
+                <a href="{{ url_for('main.profile') }}"
+                  class="{% if request.endpoint == 'main.profile' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
                   Perfil
                 </a>
                 <a href="{{ url_for('main.import_files', folder_id=current_user.folders[0].id if current_user.folders else 0) }}"
-                class="{% if request.endpoint == 'main.import_files' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
-                Importar 
-              </a>
-              <a
-              href="{{ url_for('main.ver_carpeta', folder_id=current_user.id) }}"
-              class="{% if request.endpoint == 'main.ver_carpeta' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
-            >
-              Archivos 
-            </a>
+                  class="{% if request.endpoint == 'main.import_files' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
+                  Importar 
+                </a>
+                <a href="{{ url_for('main.ver_carpeta', folder_id=current_user.id) }}"
+                  class="{% if request.endpoint == 'main.ver_carpeta' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150">
+                  Archivos 
+                </a>
               {% endif %}
             </nav>
           </div>

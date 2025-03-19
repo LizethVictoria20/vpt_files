@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Importar Archivos - ImportSystem</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: "#1a4b8c",
+                light: "#3a6fb5",
+                dark: "#0e2a50",
+              },
+              accent: {
+                DEFAULT: "#c8a45d",
+                dark: "#b08f4a",
+              },
+              text: {
+                DEFAULT: "#333333",
+                secondary: "#666666",
+              },
+            },
+            fontFamily: {
+              montserrat: ["Montserrat", "sans-serif"],
+              opensans: ["Open Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50 font-opensans text-text">
+    {% include 'base.html' %}
+
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-col mb-6">
+        <div>
+          <h1 class="text-3xl font-bold font-montserrat text-primary-dark">
+            Importar archivos
+          </h1>
+          <p class="text-sm text-text-secondary mt-1">
+            Importa archivos a la carpeta: {{ folder.name }}
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="text-xl font-semibold font-montserrat text-primary-dark">
+            Subir archivos
+          </h2>
+        </div>
+
+        <div class="p-6">
+          <div id="uploadFormContainer">
+            <form
+              method="POST"
+              id="importForm"
+              enctype="multipart/form-data"
+              action="{{ url_for('main.subir_archivo', folder_id=folder.id) }}"
+            >
+              {{ form.hidden_tag() }}
+
+              <div
+                class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg py-8 px-4 text-center transition-all duration-200"
+                id="dropZone"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="mx-auto h-12 w-12 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  />
+                </svg>
+
+                <div class="mt-3">
+                  <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    multiple
+                    required
+                    class="hidden"
+                    onchange="updateFileName(this)"
+                  />
+
+                  <p class="text-sm font-medium text-text">
+                    <span id="fileNameDisplay" class="block mb-1"
+                      >Selecciona un archivo para importar</span
+                    >
+                    <span class="text-xs text-text-secondary"
+                      >o arrastra y suelta aquí</span
+                    >
+                  </p>
+
+                  <button
+                    type="button"
+                    class="mt-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-text bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                    onclick="document.getElementById('file').click()"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
+                      />
+                    </svg>
+                    Examinar archivos
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Información de formatos aceptados -->
+              <div class="mt-4 flex items-start">
+                <div class="flex-shrink-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-primary-light"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-xs text-text-secondary">
+                    Formatos aceptados:
+                    <span class="font-medium"
+                      >PDF, XLS, XLSX, CSV, DOC, DOCX</span
+                    >
+                    <br />Tamaño máximo de archivo:
+                    <span class="font-medium">10MB</span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Selección de etiqueta -->
+              <div class="mt-4 border-t border-gray-100 pt-4">
+                <div
+                  class="bg-red-50 rounded-lg p-4 border-l-4 border-primary relative"
+                >
+                  <div
+                    class="absolute -top-3 -left-1 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm"
+                  >
+                    Importante
+                  </div>
+                  <label
+                    for="fileLabel"
+                    class="block text-base font-bold text-text mb-2 flex items-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 mr-2 text-primary"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                      />
+                    </svg>
+                    Etiqueta del archivo
+                  </label>
+                  <p class="text-xs text-text-secondary mb-3">
+                    Selecciona una categoría para organizar y encontrar
+                    fácilmente este documento en el futuro
+                  </p>
+                  <select
+                    id="fileLabel"
+                    name="fileLabel"
+                    class="block w-full pl-3 pr-10 py-3 text-base border-2 border-red-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white shadow-sm"
+                  >
+                    <option value="">-- Seleccionar etiqueta --</option>
+                    <optgroup label="Documentos personales">
+                      <option value="Pasaporte">Pasaporte</option>
+                      <option value="Documento de identidad">
+                        Documento de identidad
+                      </option>
+                      <option value="Licencia de conducir">
+                        Licencia de conducir
+                      </option>
+                      <option value="Permiso de residencia">
+                        Permiso de residencia
+                      </option>
+                      <option value="Certificado de nacimiento">
+                        Certificado de nacimiento
+                      </option>
+                    </optgroup>
+                    <optgroup label="Documentos financieros">
+                      <option value="Facturas">Factura</option>
+                      <option value="Recibos de pago">
+                        Recibo de pago
+                      </option>
+                      <option value="Estados de cuenta">
+                        Estado de cuenta bancario
+                      </option>
+                      <option value="Documento fiscal">
+                        Documento fiscal
+                      </option>
+                      <option value="Nomina">Nómina</option>
+                    </optgroup>
+                    <optgroup label="Documentos legales">
+                      <option value="Contrato">Contrato</option>
+                      <option value="Poder notarial">
+                        Poder notarial
+                      </option>
+                      <option value="Certificado legal">
+                        Certificado legal
+                      </option>
+                    </optgroup>
+                    <optgroup label="Otros documentos">
+                      <option value="Documento medico">
+                        Documento médico
+                      </option>
+                      <option value="Documento educativo">
+                        Documento educativo
+                      </option>
+                      <option value="Documento de propiedad">
+                        Documento de propiedad
+                      </option>
+                      <option value="Documento tecnico">
+                        Documento técnico
+                      </option>
+                      <option value="Otros">Otro</option>
+                    </optgroup>
+                  </select>
+                  <input
+                    type="hidden"
+                    id="groupLabel"
+                    name="groupLabel"
+                    value=""
+                  />
+                </div>
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="mt-6 flex justify-end space-x-3">
+                <a 
+                  href="{{ url_for('main.ver_carpeta', folder_id=folder.id) }}"
+                  class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-text bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                >
+                  Cancelar
+                </a>
+                <button
+                  type="submit"
+                  class="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                    />
+                  </svg>
+                  Importar archivo
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Barra de progreso (oculta inicialmente) -->
+          <div
+            id="uploadProgressContainer"
+            class="hidden flex flex-col items-center justify-center"
+            style="min-height: 250px"
+          >
+            <p class="text-sm font-semibold mb-2" id="progressText">
+              Subiendo: 0%
+            </p>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div
+                id="progressBar"
+                class="bg-primary h-2 rounded-full"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript para la funcionalidad de upload -->
+    <script>
+      // Funcionalidad para actualizar el nombre del archivo seleccionado
+      function updateFileName(input) {
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        if (input.files.length > 0) {
+          if (input.files.length === 1) {
+            fileNameDisplay.textContent = input.files[0].name;
+          } else {
+            fileNameDisplay.textContent = `${input.files.length} archivos seleccionados`;
+          }
+        } else {
+          fileNameDisplay.textContent = 'Selecciona un archivo para importar';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('file');
+        const uploadFormContainer = document.getElementById('uploadFormContainer');
+        const uploadProgressContainer = document.getElementById('uploadProgressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const form = document.getElementById('importForm');
+        
+        // Prevenir comportamiento por defecto para permitir soltar archivos
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        
+        // Resaltar zona cuando se arrastra un archivo sobre ella
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropZone.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropZone.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+          dropZone.classList.add('border-primary');
+          dropZone.classList.add('bg-blue-50');
+        }
+        
+        function unhighlight() {
+          dropZone.classList.remove('border-primary');
+          dropZone.classList.remove('bg-blue-50');
+        }
+        
+        // Manejar archivos soltados
+        dropZone.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          fileInput.files = files;
+          updateFileName(fileInput);
+        }
+        
+        // Subir archivo cuando se envía el formulario
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar etiqueta
+            const fileLabel = document.getElementById('fileLabel').value;
+            if (!fileLabel) {
+              alert('Por favor, selecciona una etiqueta para el archivo.');
+              return;
+            }
+            
+            // Validar selección de archivo
+            if (fileInput.files.length === 0) {
+              alert('Por favor, selecciona al menos un archivo para subir.');
+              return;
+            }
+            
+            // Mostrar barra de progreso
+            uploadFormContainer.classList.add('hidden');
+            uploadProgressContainer.classList.remove('hidden');
+            
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Subiendo: 0%';
+            
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action);
+            
+            // Simular progreso (ya que no tenemos información real del progreso)
+            let fakeProgress = 0;
+            const fakeInterval = setInterval(() => {
+              if (fakeProgress < 90) {
+                fakeProgress += 3;
+                progressBar.style.width = fakeProgress + '%';
+                progressText.textContent = 'Subiendo: ' + fakeProgress + '%';
+              } else {
+                clearInterval(fakeInterval);
+              }
+            }, 100);
+            
+            // Manejar respuesta
+            xhr.onload = function() {
+              clearInterval(fakeInterval);
+              if (xhr.status === 200) {
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Subiendo: 100%';
+                
+                // Redireccionar o mostrar mensaje de éxito
+                setTimeout(() => {
+                  const response = JSON.parse(xhr.responseText);
+                  if (response.redirectUrl) {
+                    window.location.href = `/carpeta/${folderId}`;
+                  } else {
+                    window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
+                  }
+                }, 500);
+              } else {
+                alert('Error al subir archivo.');
+                resetUploadUI();
+              }
+            };
+            
+            xhr.onerror = function() {
+              clearInterval(fakeInterval);
+              alert('Error de conexión.');
+              resetUploadUI();
+            };
+            
+            xhr.send(formData);
+          });
+        }
+        
+        // Actualizar el valor del grupo de etiquetas cuando se selecciona una etiqueta
+        const fileLabelSelect = document.getElementById('fileLabel');
+        if (fileLabelSelect) {
+          fileLabelSelect.addEventListener('change', function() {
+            const select = this;
+            const optGroupLabel = select.selectedOptions[0].parentNode.label;
+            document.getElementById('groupLabel').value = optGroupLabel;
+          });
+        }
+        
+        function resetUploadUI() {
+          uploadFormContainer.classList.remove('hidden');
+          uploadProgressContainer.classList.add('hidden');
+          progressBar.style.width = '0%';
+          progressText.textContent = 'Subiendo: 0%';
+          form.reset();
+        }
+      });
+    </script>
+  </body>
+</html>

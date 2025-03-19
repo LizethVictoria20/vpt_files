@@ -213,6 +213,19 @@ def crear_cliente():
 
     return render_template('crear_cliente.html', form=form)
 
+@main_bp.route('/carpeta/<int:folder_id>/import', methods=['GET'])
+@login_required
+def import_files(folder_id):
+    form = GeneralForm()
+    
+    folder = DriveFolder.query.get_or_404(folder_id)
+    
+    if folder.user_id != current_user.id:
+        abort(403)
+
+    return render_template("import_files.html", form=form, folder=folder)
+
+
 @client_permission.require(http_exception=403)      
 @superadmin_permission.require(http_exception=403)      
 @main_bp.route('/carpeta/<int:folder_id>/upload', methods=['POST'])

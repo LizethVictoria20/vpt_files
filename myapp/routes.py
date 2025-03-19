@@ -320,7 +320,8 @@ def mostrar_import_form():
     form = ImportForm()
     return render_template("import.html", form=form,) 
 
-
+@client_permission.require(http_exception=403)
+@superadmin_permission.require(http_exception=403)   
 @main_bp.route('/carpeta/<int:folder_id>')
 @login_required
 def ver_carpeta(folder_id):

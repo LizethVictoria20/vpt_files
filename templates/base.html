@@ -123,12 +123,6 @@
                   >
                     Usuarios
                   </a>
-                  <a
-                    href="{{ url_for('main.register') }}"
-                    class="{% if request.endpoint == 'main.register' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
-                  >
-                    Registro
-                  </a>
                 {% else %}
                   <a
                     href="{{ url_for('admin.listar_carpetas') }}"

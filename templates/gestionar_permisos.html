@@ -269,28 +269,23 @@
                     </div>
                   </td>
                   <td class="px-6 py-4">
-                    <div class="relative">
-                      <select
-                        name="roles-{{ user.id }}" 
-                        multiple
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary shadow-sm text-sm"
-                        size="3"
-                      >
-                        {% for role in roles %}
-                        <option value="{{ role.id }}" {% if role in user.roles %}selected{% endif %}>
-                          {{ role.name }}
-                        </option>
-                        {% endfor %}
-                      </select>
-                      <p class="text-xs text-text-secondary mt-1">
-                        <span class="inline-flex items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          Ctrl+click para múltiples roles
-                        </span>
-                      </p>
-                    </div>
+                    <select
+                    id="fileLabel"
+                    name="fileLabel"
+                    class="block w-full pl-3 pr-10 py-3 text-base border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white shadow-sm"
+                  >
+                    <option value="">-- Seleccionar rol --</option>
+                      <option value="Pasaporte">Superadministrador</option>
+                      <option value="Documento de identidad">
+                        Administrador
+                      </option>
+                      <option value="Licencia de conducir">
+                        Cliente
+                      </option>
+                      <option value="Permiso de residencia">
+                        Lector
+                      </option>
+                  </select>
                   </td>
                   <td class="px-6 py-4">
                     <div class="flex flex-col space-y-2">

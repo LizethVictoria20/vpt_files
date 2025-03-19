@@ -43,19 +43,22 @@ def login():
         user = User.query.filter(or_(User.username == username, User.email == username)).first()
         if user and bcrypt.check_password_hash(user.password_hash, password):
             login_user(user)
-            is_admin = any(role.slug == 'admin' for role in user.roles)
-            if is_admin:
-                return redirect(url_for('admin.listar_carpetas'))
-            folder = DriveFolder.query.filter_by(user_id=user.id).first()
-            is_superadmin = any(role.slug == 'superadmin' for role in user.roles)
-            if is_superadmin:
-                # Redirigir a la página de gestión de permisos si es superadmin
-                return redirect(url_for('superadmin.gestionar_permisos'))
             
-            if folder:
+            is_superadmin = any(role.slug == 'superadmin' for role in user.roles)
+            is_admin = any(role.slug == 'admin' for role in user.roles)
+            is_cliente = any(role.slug == 'cliente' for role in user.roles)
+            
+            folder = DriveFolder.query.filter_by(user_id=user.id).first()
+            
+            if is_superadmin:
+                return redirect(url_for('superadmin.gestionar_permisos'))
+            elif is_admin:
+                return redirect(url_for('admin.listar_carpetas'))
+            elif is_cliente and folder:
+                return redirect(url_for('main.import_files', folder_id=folder.id))
+            elif folder:
                 return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
             else:
-                # Manejo: si no tiene carpeta, redirigir a otra parte o crearla
                 flash("No tienes carpeta asociada. Contacta al administrador.", "warning")
                 return redirect(url_for('admin.listar_carpetas'))
         else:

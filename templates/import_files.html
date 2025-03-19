@@ -53,8 +53,12 @@
         </div>
       </div>
 
-      <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
-        <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+      <div
+        class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden"
+      >
+        <div
+          class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
+        >
           <h2 class="text-xl font-semibold font-montserrat text-primary-dark">
             Subir archivos
           </h2>
@@ -220,30 +224,22 @@
                     </optgroup>
                     <optgroup label="Documentos financieros">
                       <option value="Facturas">Factura</option>
-                      <option value="Recibos de pago">
-                        Recibo de pago
-                      </option>
+                      <option value="Recibos de pago">Recibo de pago</option>
                       <option value="Estados de cuenta">
                         Estado de cuenta bancario
                       </option>
-                      <option value="Documento fiscal">
-                        Documento fiscal
-                      </option>
+                      <option value="Documento fiscal">Documento fiscal</option>
                       <option value="Nomina">Nómina</option>
                     </optgroup>
                     <optgroup label="Documentos legales">
                       <option value="Contrato">Contrato</option>
-                      <option value="Poder notarial">
-                        Poder notarial
-                      </option>
+                      <option value="Poder notarial">Poder notarial</option>
                       <option value="Certificado legal">
                         Certificado legal
                       </option>
                     </optgroup>
                     <optgroup label="Otros documentos">
-                      <option value="Documento medico">
-                        Documento médico
-                      </option>
+                      <option value="Documento medico">Documento médico</option>
                       <option value="Documento educativo">
                         Documento educativo
                       </option>
@@ -267,7 +263,7 @@
 
               <!-- Botones de acción -->
               <div class="mt-6 flex justify-end space-x-3">
-                <a 
+                <a
                   href="{{ url_for('main.ver_carpeta', folder_id=folder.id) }}"
                   class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-text bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                 >
@@ -296,183 +292,238 @@
               </div>
             </form>
           </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal para la barra de progreso -->
+    <div
+      id="progressModal"
+      class="hidden fixed inset-0 z-50 overflow-y-auto"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      >
+        <!-- Overlay de fondo -->
+        <div
+          class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          aria-hidden="true"
+        ></div>
 
-          <!-- Barra de progreso (oculta inicialmente) -->
-          <div
-            id="uploadProgressContainer"
-            class="hidden flex flex-col items-center justify-center"
-            style="min-height: 250px"
-          >
-            <p class="text-sm font-semibold mb-2" id="progressText">
-              Subiendo: 0%
-            </p>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div
-                id="progressBar"
-                class="bg-primary h-2 rounded-full"
-                style="width: 0%"
-              ></div>
+        <span
+          class="hidden sm:inline-block sm:align-middle sm:h-screen"
+          aria-hidden="true"
+          >&#8203;</span
+        >
+
+        <!-- Contenido del modal -->
+        <div
+          class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+        >
+          <!-- Cabecera del modal -->
+          <div class="px-6 py-4 border-b border-gray-100">
+            <h3
+              class="text-xl font-bold font-montserrat text-text flex items-center"
+              id="modal-title"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-primary mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+              Subiendo archivos
+            </h3>
+          </div>
+
+          <!-- Contenido del modal: barra de progreso -->
+          <div class="px-6 py-5">
+            <div
+              id="uploadProgressContainer"
+              class="flex flex-col items-center justify-center"
+              style="min-height: 120px"
+            >
+              <p class="text-sm font-semibold mb-4" id="progressText">
+                Subiendo: 0%
+              </p>
+              <div class="w-full bg-gray-200 rounded-full h-4">
+                <div
+                  id="progressBar"
+                  class="bg-primary h-4 rounded-full transition-all duration-300 ease-out"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <p class="text-xs text-gray-500 mt-4">
+                Por favor, no cierre esta ventana mientras se completa la subida
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- JavaScript para la funcionalidad de upload -->
     <script>
       // Funcionalidad para actualizar el nombre del archivo seleccionado
       function updateFileName(input) {
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-        if (input.files.length > 0) {
-          if (input.files.length === 1) {
-            fileNameDisplay.textContent = input.files[0].name;
-          } else {
-            fileNameDisplay.textContent = `${input.files.length} archivos seleccionados`;
-          }
-        } else {
-          fileNameDisplay.textContent = 'Selecciona un archivo para importar';
-        }
-      }
+         const fileNameDisplay = document.getElementById('fileNameDisplay');
+         if (input.files.length > 0) {
+           if (input.files.length === 1) {
+             fileNameDisplay.textContent = input.files[0].name;
+           } else {
+             fileNameDisplay.textContent = `${input.files.length} archivos seleccionados`;
+           }
+         } else {
+           fileNameDisplay.textContent = 'Selecciona un archivo para importar';
+         }
+       }
 
-      document.addEventListener('DOMContentLoaded', function() {
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('file');
-        const uploadFormContainer = document.getElementById('uploadFormContainer');
-        const uploadProgressContainer = document.getElementById('uploadProgressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const form = document.getElementById('importForm');
-        
-        // Prevenir comportamiento por defecto para permitir soltar archivos
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-          dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-        
-        function preventDefaults(e) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-        
-        // Resaltar zona cuando se arrastra un archivo sobre ella
-        ['dragenter', 'dragover'].forEach(eventName => {
-          dropZone.addEventListener(eventName, highlight, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(eventName => {
-          dropZone.addEventListener(eventName, unhighlight, false);
-        });
-        
-        function highlight() {
-          dropZone.classList.add('border-primary');
-          dropZone.classList.add('bg-blue-50');
-        }
-        
-        function unhighlight() {
-          dropZone.classList.remove('border-primary');
-          dropZone.classList.remove('bg-blue-50');
-        }
-        
-        // Manejar archivos soltados
-        dropZone.addEventListener('drop', handleDrop, false);
-        
-        function handleDrop(e) {
-          const dt = e.dataTransfer;
-          const files = dt.files;
-          fileInput.files = files;
-          updateFileName(fileInput);
-        }
-        
-        // Subir archivo cuando se envía el formulario
-        if (form) {
-          form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Validar etiqueta
-            const fileLabel = document.getElementById('fileLabel').value;
-            if (!fileLabel) {
-              alert('Por favor, selecciona una etiqueta para el archivo.');
-              return;
-            }
-            
-            // Validar selección de archivo
-            if (fileInput.files.length === 0) {
-              alert('Por favor, selecciona al menos un archivo para subir.');
-              return;
-            }
-            
-            // Mostrar barra de progreso
-            uploadFormContainer.classList.add('hidden');
-            uploadProgressContainer.classList.remove('hidden');
-            
-            progressBar.style.width = '0%';
-            progressText.textContent = 'Subiendo: 0%';
-            
-            const formData = new FormData(form);
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', form.action);
-            
-            // Simular progreso (ya que no tenemos información real del progreso)
-            let fakeProgress = 0;
-            const fakeInterval = setInterval(() => {
-              if (fakeProgress < 90) {
-                fakeProgress += 3;
-                progressBar.style.width = fakeProgress + '%';
-                progressText.textContent = 'Subiendo: ' + fakeProgress + '%';
-              } else {
-                clearInterval(fakeInterval);
-              }
-            }, 100);
-            
-            // Manejar respuesta
-            xhr.onload = function() {
-              clearInterval(fakeInterval);
-              if (xhr.status === 200) {
-                progressBar.style.width = '100%';
-                progressText.textContent = 'Subiendo: 100%';
-                
-                // Redireccionar o mostrar mensaje de éxito
-                setTimeout(() => {
-                  const response = JSON.parse(xhr.responseText);
-                  if (response.redirectUrl) {
-                    window.location.href = `/carpeta/${folderId}`;
-                  } else {
-                    window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
-                  }
-                }, 500);
-              } else {
-                alert('Error al subir archivo.');
-                resetUploadUI();
-              }
-            };
-            
-            xhr.onerror = function() {
-              clearInterval(fakeInterval);
-              alert('Error de conexión.');
-              resetUploadUI();
-            };
-            
-            xhr.send(formData);
-          });
-        }
-        
-        // Actualizar el valor del grupo de etiquetas cuando se selecciona una etiqueta
-        const fileLabelSelect = document.getElementById('fileLabel');
-        if (fileLabelSelect) {
-          fileLabelSelect.addEventListener('change', function() {
-            const select = this;
-            const optGroupLabel = select.selectedOptions[0].parentNode.label;
-            document.getElementById('groupLabel').value = optGroupLabel;
-          });
-        }
-        
-        function resetUploadUI() {
-          uploadFormContainer.classList.remove('hidden');
-          uploadProgressContainer.classList.add('hidden');
-          progressBar.style.width = '0%';
-          progressText.textContent = 'Subiendo: 0%';
-          form.reset();
-        }
-      });
+       document.addEventListener('DOMContentLoaded', function() {
+         const dropZone = document.getElementById('dropZone');
+         const fileInput = document.getElementById('file');
+         const progressModal = document.getElementById('progressModal');
+         const progressBar = document.getElementById('progressBar');
+         const progressText = document.getElementById('progressText');
+         const form = document.getElementById('importForm');
+         let folderId = {{ folder.id }};
+
+         // Prevenir comportamiento por defecto para permitir soltar archivos
+         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+           dropZone.addEventListener(eventName, preventDefaults, false);
+         });
+
+         function preventDefaults(e) {
+           e.preventDefault();
+           e.stopPropagation();
+         }
+
+         // Resaltar zona cuando se arrastra un archivo sobre ella
+         ['dragenter', 'dragover'].forEach(eventName => {
+           dropZone.addEventListener(eventName, highlight, false);
+         });
+
+         ['dragleave', 'drop'].forEach(eventName => {
+           dropZone.addEventListener(eventName, unhighlight, false);
+         });
+
+         function highlight() {
+           dropZone.classList.add('border-primary');
+           dropZone.classList.add('bg-blue-50');
+         }
+
+         function unhighlight() {
+           dropZone.classList.remove('border-primary');
+           dropZone.classList.remove('bg-blue-50');
+         }
+
+         // Manejar archivos soltados
+         dropZone.addEventListener('drop', handleDrop, false);
+
+         function handleDrop(e) {
+           const dt = e.dataTransfer;
+           const files = dt.files;
+           fileInput.files = files;
+           updateFileName(fileInput);
+         }
+
+         // Subir archivo cuando se envía el formulario
+         if (form) {
+           form.addEventListener('submit', function(e) {
+             e.preventDefault();
+
+             // Validar etiqueta
+             const fileLabel = document.getElementById('fileLabel').value;
+             if (!fileLabel) {
+               alert('Por favor, selecciona una etiqueta para el archivo.');
+               return;
+             }
+
+             // Validar selección de archivo
+             if (fileInput.files.length === 0) {
+               alert('Por favor, selecciona al menos un archivo para subir.');
+               return;
+             }
+
+             // Mostrar modal con barra de progreso
+             progressModal.classList.remove('hidden');
+             progressBar.style.width = '0%';
+             progressText.textContent = 'Subiendo: 0%';
+
+             const formData = new FormData(form);
+             const xhr = new XMLHttpRequest();
+             xhr.open('POST', form.action);
+
+             // Simular progreso (ya que no tenemos información real del progreso)
+             let fakeProgress = 0;
+             const fakeInterval = setInterval(() => {
+               if (fakeProgress < 90) {
+                 fakeProgress += 2;
+                 progressBar.style.width = fakeProgress + '%';
+                 progressText.textContent = 'Subiendo: ' + fakeProgress + '%';
+               } else {
+                 clearInterval(fakeInterval);
+               }
+             }, 100);
+
+             // Manejar respuesta
+             xhr.onload = function() {
+               clearInterval(fakeInterval);
+               if (xhr.status === 200) {
+                 progressBar.style.width = '100%';
+                 progressText.textContent = 'Subiendo: 100%';
+
+                 // Redireccionar o mostrar mensaje de éxito
+                 setTimeout(() => {
+                   try {
+                     // Intentar parsear la respuesta JSON
+                     const response = JSON.parse(xhr.responseText);
+                     if (response.redirectUrl) {
+                       window.location.href = response.redirectUrl;
+                     } else {
+                       window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
+                     }
+                   } catch (e) {
+                     // Si hay error en el parseo, usar la URL de Flask
+                     window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
+                   }
+                 }, 700); // Un poco más de tiempo para que el usuario vea el 100%
+               } else {
+                 alert('Error al subir archivo.');
+                 progressModal.classList.add('hidden');
+                 progressBar.style.width = '0%';
+               }
+             };
+
+             xhr.onerror = function() {
+               clearInterval(fakeInterval);
+               alert('Error de conexión.');
+               progressModal.classList.add('hidden');
+               progressBar.style.width = '0%';
+             };
+
+             xhr.send(formData);
+           });
+         }
+
+         // Actualizar el valor del grupo de etiquetas cuando se selecciona una etiqueta
+         const fileLabelSelect = document.getElementById('fileLabel');
+         if (fileLabelSelect) {
+           fileLabelSelect.addEventListener('change', function() {
+             const select = this;
+             const optGroupLabel = select.selectedOptions[0].parentNode.label;
+             document.getElementById('groupLabel').value = optGroupLabel;
+           });
+         }
+       });
     </script>
   </body>
 </html>

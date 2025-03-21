@@ -328,7 +328,8 @@ def ver_carpeta(folder_id):
     from flask import abort
     form = GeneralForm()
     folder = DriveFolder.query.get_or_404(folder_id)
-    
+    user_is_cliente = any(r.slug == "cliente" for r in current_user.roles)
+
     if folder.user_id != current_user.id:
         abort(403)
 
@@ -339,7 +340,7 @@ def ver_carpeta(folder_id):
         lbl = f.etiquetas or "Sin etiqueta" 
         by_group[g][lbl].append(f)
 
-    return render_template('ver_carpeta_cliente.html', folder=folder, form=form, by_group=by_group)
+    return render_template('ver_carpeta_as_cliente.html', folder=folder, form=form, by_group=by_group, user_is_cliente=user_is_cliente)
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)

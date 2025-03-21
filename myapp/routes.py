@@ -36,36 +36,42 @@ client_permission = Permission(RoleNeed('cliente'))
 def login():
     from app import bcrypt
     form = LoginForm()
+    errors = {}
 
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
         user = User.query.filter(or_(User.username == username, User.email == username)).first()
-        if user and bcrypt.check_password_hash(user.password_hash, password):
-            login_user(user)
+        
+        if not user:
+            errors['login'] = 'El usuario o correo electrónico no existe'
+            return render_template('login.html', form=form, errors=errors, username=username)
             
-            is_superadmin = any(role.slug == 'superadmin' for role in user.roles)
-            is_admin = any(role.slug == 'admin' for role in user.roles)
-            is_cliente = any(role.slug == 'cliente' for role in user.roles)
-            
-            folder = DriveFolder.query.filter_by(user_id=user.id).first()
-            
-            if is_superadmin:
-                return redirect(url_for('superadmin.gestionar_permisos'))
-            elif is_admin:
-                return redirect(url_for('main.listar_carpetas'))
-            elif is_cliente and folder:
-                return redirect(url_for('main.import_files', folder_id=folder.id))
-            elif folder:
-                return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
-            else:
-                flash("No tienes carpeta asociada. Contacta al administrador.", "warning")
-                return redirect(url_for('main.listar_carpetas'))
+        if not bcrypt.check_password_hash(user.password_hash, password):
+            errors['login'] = 'La contraseña es incorrecta'
+            return render_template('login.html', form=form, errors=errors, username=username)
+        
+        login_user(user)
+        
+        is_superadmin = any(role.slug == 'superadmin' for role in user.roles)
+        is_admin = any(role.slug == 'admin' for role in user.roles)
+        is_cliente = any(role.slug == 'cliente' for role in user.roles)
+        
+        folder = DriveFolder.query.filter_by(user_id=user.id).first()
+        
+        if is_superadmin:
+            return redirect(url_for('superadmin.gestionar_permisos'))
+        elif is_admin:
+            return redirect(url_for('main.listar_carpetas'))
+        elif is_cliente and folder:
+            return redirect(url_for('main.import_files', folder_id=folder.id))
+        elif folder:
+            return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
         else:
-            flash('Nombre de usuario o contraseña incorrectos', 'danger')
-            return redirect(url_for('main.login'))
+            errors['general'] = 'No tienes carpeta asociada. Contacta al administrador.'
+            return render_template('login.html', form=form, errors=errors, username=username)
 
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, errors=errors)
 
 @main_bp.route('/profile', methods=['GET', 'POST'])
 @login_required

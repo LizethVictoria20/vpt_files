@@ -137,84 +137,102 @@ def register():
 
     return render_template('register.html', new_user=new_user)
 
-# Funcion donde se crean los usuarios clientes
 @superadmin_permission.require(http_exception=403)
 @main_bp.route('/crear-cliente', methods=['GET', 'POST'])
 def crear_cliente():
     print("DEBUG: Entrando en crear cliente")
     from app import db
     form = CreateUserForm()
+    errors = {}
+    
     if request.method == 'POST':
         username = request.form.get('username')
         name = request.form.get('name')
         lastname = request.form.get('lastname')
         email = request.form.get('email')
         password = request.form.get('password')
-        usuario_existente = User.query.filter(
-            (User.username == username) | (User.email == email)
-        ).first()
-        if usuario_existente:
-            flash("El usuario o el correo ya existen. Prueba con otros.", "error")
-            return redirect(url_for('main.crear_cliente'))
+        confirm_password = request.form.get('confirm_password')
+        
+        if password != confirm_password:
+            errors['confirm_password'] = "Las contraseñas no coinciden."
+        
+        usuario_username_existente = User.query.filter(User.username == username).first()
+        usuario_email_existente = User.query.filter(User.email == email).first()
+        
+        if usuario_username_existente:
+            errors['username'] = "Este nombre de usuario ya está en uso."
+        if usuario_email_existente:
+            errors['email'] = "Este correo electrónico ya está registrado."
+        
+        if not errors:
+            nuevo_usuario = User(
+                username=username,
+                name=name,
+                lastname=lastname,
+                email=email
+            )
+            nuevo_usuario.set_password(password)
+            db.session.add(nuevo_usuario)
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(f"DEBUG: Error creando usuario: {str(e)}")
+                errors['general'] = f"Error al crear usuario: {e}"
+                return render_template('crear_cliente.html', form=form, errors=errors, 
+                                       username=username, name=name, lastname=lastname, email=email)
 
-        nuevo_usuario = User(
-            username=username,
-            name=name,
-            lastname=lastname,
-            email=email
-        )
-        nuevo_usuario.set_password(password)
-        db.session.add(nuevo_usuario)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            flash(f"Error creando usuario: {e}", "error")
-            return redirect(url_for('main.crear_cliente'))
+            rol_cliente = Roles.query.filter_by(slug='cliente').first()
+            if not rol_cliente:
+                rol_cliente = Roles(name='Cliente', slug='cliente')
+                db.session.add(rol_cliente)
+                db.session.commit()
+            nuevo_usuario.roles.append(rol_cliente)
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(f"DEBUG: Error asignando rol: {str(e)}")
+                errors['general'] = f"Error al asignar rol: {e}"
+                return render_template('crear_cliente.html', form=form, errors=errors, 
+                                      username=username, name=name, lastname=lastname, email=email)
 
-        rol_cliente = Roles.query.filter_by(slug='cliente').first()
-        if not rol_cliente:
-            rol_cliente = Roles(name='Cliente', slug='cliente')
-            db.session.add(rol_cliente)
-            db.session.commit()
-        nuevo_usuario.roles.append(rol_cliente)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            flash(f"Error asignando rol: {e}", "error")
-            return redirect(url_for('main.crear_cliente'))
+            folder_name = f"{name} {lastname}" if lastname else name
+            print("DEBUG: Folder name")
 
-        folder_name = f"{name} {lastname}" if lastname else name
-        print("DEBUG: Folder name")
+            try:
+                print("DEBUG: Creando carpeta en Dropbox con nombre =", folder_name)
+                dropbox_folder_path = crear_carpeta_dropbox(folder_name)
+            except Exception as e:
+                print(f"DEBUG: Error creando carpeta en Drive: {str(e)}")
+                errors['general'] = f"Error al crear carpeta en Drive: {e}"
+                return render_template('crear_cliente.html', form=form, errors=errors, 
+                                      username=username, name=name, lastname=lastname, email=email)
 
-        try:
-            print("DEBUG: Creando carpeta en Dropbox con nombre =", folder_name)
-            dropbox_folder_path = crear_carpeta_dropbox(folder_name)
-        except Exception as e:
-            print("Error creando carpeta en Drive: {e}")
-            return redirect(url_for('main.crear_cliente'))
+            print("DEBUG: Registrando carpeta en la tabla DriveFolder...")
+            nueva_carpeta_db = DriveFolder(
+                user_id=nuevo_usuario.id,
+                drive_id=dropbox_folder_path,
+                name=folder_name,
+                description="Carpeta del cliente"
+            )
+            print("DEBUG: Se creo la nueva carpeta")
+            db.session.add(nueva_carpeta_db)
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(f"DEBUG: Error creando carpeta en la BD: {str(e)}")
+                errors['general'] = f"Error al registrar carpeta: {e}"
+                return render_template('crear_cliente.html', form=form, errors=errors, 
+                                      username=username, name=name, lastname=lastname, email=email)
 
-        print("DEBUG: Registrando carpeta en la tabla DriveFolder...")
-        nueva_carpeta_db = DriveFolder(
-            user_id=nuevo_usuario.id,
-            drive_id=dropbox_folder_path,
-            name=folder_name,
-            description="Carpeta del cliente"
-        )
-        print("DEBUG: Se creo la nueva carpeta")
-        db.session.add(nueva_carpeta_db)
-        try:
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            flash(f"Error creando carpeta en la BD: {e}", "error")
-            return redirect(url_for('main.crear_cliente'))
+            return redirect(url_for('main.login'))
+        else:
+            return render_template('crear_cliente.html', form=form, errors=errors, 
+                                  username=username, name=name, lastname=lastname, email=email)
 
-        flash("Usuario creado exitosamente. Carpeta en Drive generada.", "success")
-        return redirect(url_for('main.login'))
-
-    return render_template('crear_cliente.html', form=form)
+    return render_template('crear_cliente.html', form=form, errors=errors)
 
 @main_bp.route('/carpeta/<int:folder_id>/import', methods=['GET'])
 @login_required

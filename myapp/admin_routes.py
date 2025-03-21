@@ -3,7 +3,7 @@ from flask import Blueprint, Response, abort, flash, jsonify, render_template, r
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
 from myapp.dropbox_utils import _get_dbx
-from myapp.models import DriveFile, DriveFolder, User
+from myapp.models import DriveFile, DriveFolder, Roles, User
 from forms import DeleteForm
 from myapp.services.preview_files_service import preview_file_logic
 from myapp.services.search_service import buscar_archivos, buscar_usuarios
@@ -30,16 +30,6 @@ def admin_required(f):
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
-
-@admin_permission.require(http_exception=403)
-@superadmin_permission.require(http_exception=403)
-@lector_permission.require(http_exception=403)
-@admin_bp.route('/carpetas', methods=['GET', 'POST'])
-@login_required
-def listar_carpetas():
-    usuarios = User.query.all()
-    delete_form = DeleteForm()
-    return render_template('listar_carpetas.html', usuarios=usuarios, delete_form=delete_form)
 
 
 @admin_bp.route('/admin_carpeta/<int:folder_id>')

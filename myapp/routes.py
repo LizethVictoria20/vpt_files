@@ -53,14 +53,14 @@ def login():
             if is_superadmin:
                 return redirect(url_for('superadmin.gestionar_permisos'))
             elif is_admin:
-                return redirect(url_for('admin.listar_carpetas'))
+                return redirect(url_for('main.listar_carpetas'))
             elif is_cliente and folder:
                 return redirect(url_for('main.import_files', folder_id=folder.id))
             elif folder:
                 return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
             else:
                 flash("No tienes carpeta asociada. Contacta al administrador.", "warning")
-                return redirect(url_for('admin.listar_carpetas'))
+                return redirect(url_for('main.listar_carpetas'))
         else:
             flash('Nombre de usuario o contraseña incorrectos', 'danger')
             return redirect(url_for('main.login'))
@@ -394,16 +394,18 @@ def eliminar_carpeta(folder_id):
     db.session.delete(carpeta)
     db.session.commit()
     flash(f"Carpeta '{carpeta.name}' eliminada exitosamente.", "success")
-    return redirect(url_for('admin.listar_carpetas'))
+    return redirect(url_for('main.listar_carpetas'))
 
-# @admin_permission.require(http_exception=403)
-# @main_bp.route('/archivos', methods=['GET'])
-# @login_required
-# def listar_archivos():
-#     archivos = DriveFile.query.order_by(DriveFile.uploaded_at.desc()).all()
-#     delete_form = DeleteForm()
+@admin_permission.require(http_exception=403)
+@superadmin_permission.require(http_exception=403)
+@lector_permission.require(http_exception=403)
+@main_bp.route('/carpetas', methods=['GET', 'POST'])
+@login_required
+def listar_carpetas():
+    usuarios = User.query.all()
+    delete_form = DeleteForm()
+    return render_template('listar_carpetas.html', usuarios=usuarios, delete_form=delete_form)
 
-#     return render_template('archivos_list.html', archivos=archivos, delete_form=delete_form)
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)
@@ -418,7 +420,7 @@ def descargar_carpeta(folder_id):
     
     if not archivos:
         flash(f"La carpeta '{carpeta.name}' no tiene archivos o no existe.", "warning")
-        return redirect(url_for('admin.listar_carpetas'))
+        return redirect(url_for('main.listar_carpetas'))
     
     memory_file = BytesIO()
     with ZipFile(memory_file, 'w') as zipf:

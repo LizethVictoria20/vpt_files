@@ -80,8 +80,8 @@
                   Permisos
                 </a>
                 <a
-                  href="{{ url_for('admin.listar_carpetas') }}"
-                  class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
+                  href="{{ url_for('main.listar_carpetas') }}"
+                  class="{% if request.endpoint == 'main.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
                 >
                   Usuarios
                 </a>
@@ -118,15 +118,15 @@
                 <!-- For other roles (including admin) -->
                 {% if 'admin' in user_roles %}
                   <a
-                    href="{{ url_for('admin.listar_carpetas') }}"
-                    class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
+                    href="{{ url_for('main.listar_carpetas') }}"
+                    class="{% if request.endpoint == 'main.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
                   >
                     Usuarios
                   </a>
                 {% else %}
                   <a
-                    href="{{ url_for('admin.listar_carpetas') }}"
-                    class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
+                    href="{{ url_for('main.listar_carpetas') }}"
+                    class="{% if request.endpoint == 'main.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
                   >
                     Reportes
                   </a>
@@ -235,21 +235,21 @@
       <div class="px-4 py-3 space-y-1">
         {% if 'cliente' not in user_roles %} {% if 'admin' in user_roles %}
         <a
-          href="{{ url_for('admin.listar_carpetas') }}"
-          class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary {% else %} text-gray-600 {% endif %} block px-3 py-2 rounded-lg font-medium hover:bg-surface transition-colors"
+          href="{{ url_for('main.listar_carpetas') }}"
+          class="{% if request.endpoint == 'main.listar_carpetas' %} text-primary {% else %} text-gray-600 {% endif %} block px-3 py-2 rounded-lg font-medium hover:bg-surface transition-colors"
         >
           <i
-            class="fas fa-users mr-2 {% if request.endpoint == 'admin.listar_carpetas' %} text-primary {% else %} text-gray-400 {% endif %}"
+            class="fas fa-users mr-2 {% if request.endpoint == 'main.listar_carpetas' %} text-primary {% else %} text-gray-400 {% endif %}"
           ></i>
           Usuarios
         </a>
         {% else %}
         <a
-          href="{{ url_for('admin.listar_carpetas') }}"
-          class="{% if request.endpoint == 'admin.listar_carpetas' %} text-primary {% else %} text-gray-600 {% endif %} block px-3 py-2 rounded-lg font-medium hover:bg-surface transition-colors"
+          href="{{ url_for('main.listar_carpetas') }}"
+          class="{% if request.endpoint == 'main.listar_carpetas' %} text-primary {% else %} text-gray-600 {% endif %} block px-3 py-2 rounded-lg font-medium hover:bg-surface transition-colors"
         >
           <i
-            class="fas fa-chart-bar mr-2 {% if request.endpoint == 'admin.listar_carpetas' %} text-primary {% else %} text-gray-400 {% endif %}"
+            class="fas fa-chart-bar mr-2 {% if request.endpoint == 'main.listar_carpetas' %} text-primary {% else %} text-gray-400 {% endif %}"
           ></i>
           Reportes
         </a>

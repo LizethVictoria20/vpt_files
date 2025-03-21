@@ -5,187 +5,236 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <title>ImportSystem - Registro</title>
-    <style>
-      body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Inmigración OK Abogados - Registro</title>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                light: '#0095c7',
+                DEFAULT: '#0076a8',
+                dark: '#005685'
+              },
+              accent: {
+                light: '#00a8d4',
+                DEFAULT: '#0088b0',
+                dark: '#00678e'
+              },
+              surface: {
+                light: '#FFFFFF',
+                DEFAULT: '#F0F7FC',
+                dark: '#D9E9F2'
+              }
+            },
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif']
+            }
+          }
+        }
       }
-      
-      .bg-pattern {
-        background-color: #ffffff;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23f9fafb' fill-opacity='1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      }
-    </style>
+    </script>
   </head>
-  <body class="bg-white">
-    <div class="min-h-screen flex flex-col lg:flex-row">
-      <!-- Panel lateral (izquierdo en pantallas grandes) -->
-      <div class="lg:w-5/12 bg-slate-900 text-white relative hidden lg:block">
-        <div class="absolute top-0 left-0 p-8">
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-box text-red-400 text-xl"></i>
-            <span class="font-semibold text-xl">ImportSystem</span>
-          </div>
-        </div>
+  <body class="font-sans bg-surface">
+    <div class="h-screen flex flex-col lg:flex-row overflow-hidden">
+      <!-- Panel lateral izquierdo -->
+      <div class="lg:w-1/2 order-1 relative h-auto lg:h-screen">
+        <!-- Fondo con gradiente de azules más oscuros -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-light via-primary to-primary-dark"></div>
         
-        <div class="h-full flex flex-col justify-center p-12">
-          <div class="max-w-md">
-            <h1 class="text-4xl font-bold mb-6">Únete a nuestra plataforma</h1>
-            <p class="text-slate-300 text-lg mb-8">Crea tu cuenta y comienza a gestionar tus procesos de importación de manera eficiente y segura.</p>
-            
-            <div class="space-y-6 mt-12">
-              <div class="flex items-start">
-                <div class="mt-1">
-                  <i class="fas fa-chart-line text-red-400 text-xl"></i>
+        <!-- Decoración sutil -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-accent-light/20 rounded-full -translate-y-1/3 translate-x-1/3 blur-2xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-accent/15 rounded-full translate-y-1/3 -translate-x-1/3 blur-3xl"></div>
+        
+        <div class="relative z-10 h-full flex flex-col p-6 lg:p-10">
+          <div class="flex items-center space-x-2 mb-8">
+            <div class="h-14 lg:h-16 rounded-lg p-2">
+              <img src="../static/image/Logo.png" alt="Inmigración OK Abogados" class="h-full object-contain" />
+            </div>
+          </div>
+          
+          <div class="flex-1 flex flex-col justify-center py-6">
+            <div class="max-w-md">
+              <h1 class="text-3xl font-bold text-white mb-4 leading-tight">Crea tu cuenta</h1>
+              <p class="text-white/90 mb-10 text-lg leading-relaxed">Únete a nuestra plataforma y simplifica tus trámites migratorios.</p>
+              
+              <div class="space-y-6">
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <div class="w-12 h-12 rounded-xl bg-accent-dark/60 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-white text-lg"></i>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <h3 class="font-semibold text-white text-lg">Control Total</h3>
+                      <p class="text-white/80 mt-1">Monitorea el estado de tus trámites y procedimientos migratorios con actualizaciones periódicas.</p>
+                    </div>
+                  </div>
                 </div>
-                <div class="ml-4">
-                  <h3 class="font-semibold text-xl">Control total</h3>
-                  <p class="text-slate-300 mt-1">Monitorea tus envíos y procesos aduaneros en tiempo real</p>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <div class="w-12 h-12 rounded-xl bg-accent-dark/60 flex items-center justify-center">
+                        <i class="fas fa-file-signature text-white text-lg"></i>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <h3 class="font-semibold text-white text-lg">Documentación Digital</h3>
+                      <p class="text-white/80 mt-1">Gestiona todos tus documentos de manera segura y eficiente.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <div class="flex items-start">
-                <div class="mt-1">
-                  <i class="fas fa-file-invoice text-red-400 text-xl"></i>
-                </div>
-                <div class="ml-4">
-                  <h3 class="font-semibold text-xl">Documentación digital</h3>
-                  <p class="text-slate-300 mt-1">Olvídate del papeleo y gestiona todo desde un solo lugar</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start">
-                <div class="mt-1">
-                  <i class="fas fa-headset text-red-400 text-xl"></i>
-                </div>
-                <div class="ml-4">
-                  <h3 class="font-semibold text-xl">Soporte especializado</h3>
-                  <p class="text-slate-300 mt-1">Asistencia personalizada por parte de expertos en comercio exterior</p>
-                </div>
+            </div>
+          </div>
+          
+          <div class="mt-8">
+            <div class="flex justify-between items-center">
+              <div class="flex space-x-4">
+                <a href="#" class="text-white/80 hover:text-white transition-colors">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="#" class="text-white/80 hover:text-white transition-colors">
+                  <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" class="text-white/80 hover:text-white transition-colors">
+                  <i class="fab fa-instagram"></i>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Contenido principal (derecho en pantallas grandes, completo en móviles) -->
-      <div class="lg:w-7/12 min-h-screen bg-pattern">
-        <!-- Navbar solo visible en móvil -->
-        <div class="lg:hidden p-6 flex justify-between items-center">
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-box text-red-500 text-xl"></i>
-            <span class="font-semibold text-xl text-slate-900">ImportSystem</span>
+      <!-- Panel registro derecho -->
+      <div class="lg:w-1/2 order-2 h-screen flex items-center justify-center p-4 pt-16 lg:pt-0 lg:p-8 overflow-auto bg-surface-light">
+        <div class="w-full max-w-md">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-primary-dark mb-2">Registro de Usuario</h2>
+            <p class="text-gray-600 text-sm">Crea tu cuenta para acceder a nuestros servicios</p>
           </div>
-          <button class="p-2 text-slate-800 hover:text-red-500 transition-colors">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
-        
-        <div class="flex items-center justify-center px-6 py-8 lg:py-0 lg:h-screen overflow-auto">
-          <div class="w-full max-w-md my-8 lg:my-0">
-            <div class="lg:mt-0 mb-8">
-              <h2 class="text-3xl font-bold text-slate-900">Crea tu cuenta</h2>
-              <p class="text-slate-600 mt-2">Únete a miles de empresas que optimizan sus importaciones</p>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
-              <form method="POST" action="{{ url_for('main.crear_cliente') }}">
-                {{ form.hidden_tag() }}
-                
-                <div class="mb-6">
-                  <label for="username" class="block text-sm font-medium text-slate-700 mb-2">Nombre de Usuario</label>
+          
+          <div class="bg-white rounded-2xl shadow-lg p-6 border border-surface-dark/10">
+            <form method="POST" action="{{ url_for('main.crear_cliente') }}">
+              {{ form.hidden_tag() }}
+              
+              <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Nombre de Usuario</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-user text-gray-400"></i>
+                  </div>
                   <input
                     type="text"
                     id="username"
                     name="username"
-                    class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                    placeholder="usuario123"
+                    class="pl-12 w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                    placeholder="Elige un nombre de usuario"
                     required
                   />
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label for="name" class="block text-sm font-medium text-slate-700 mb-2">Nombre</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                      placeholder="Juan"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label for="lastname" class="block text-sm font-medium text-slate-700 mb-2">Apellido</label>
-                    <input
-                      type="text"
-                      id="lastname"
-                      name="lastname"
-                      class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                      placeholder="Pérez"
-                    />
-                  </div>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                    placeholder="Ingresa tu nombre"
+                  />
                 </div>
-                
-                <div class="mb-6">
-                  <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Correo Electrónico</label>
+                <div>
+                  <label for="lastname" class="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+                  <input
+                    type="text"
+                    id="lastname"
+                    name="lastname"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                    placeholder="Ingresa tu apellido"
+                  />
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-envelope text-gray-400"></i>
+                  </div>
                   <input
                     type="email"
                     id="email"
                     name="email"
-                    class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                    placeholder="ejemplo@empresa.com"
+                    class="pl-12 w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                    placeholder="Ingresa tu correo electrónico"
                     required
                   />
-                  <p class="mt-1 text-xs text-slate-500">Recibirás un correo de confirmación</p>
                 </div>
-                
-                <div class="mb-6">
-                  <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
+              </div>
+              
+              <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-gray-400"></i>
+                  </div>
                   <input
                     type="password"
                     id="password"
                     name="password"
-                    class="w-full px-4 py-3 border-b-2 border-slate-200 text-slate-900 focus:border-red-500 focus:outline-none transition-colors"
-                    placeholder="••••••••"
+                    class="pl-12 w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                    placeholder="Crea tu contraseña"
                     required
                   />
-                  <p class="mt-1 text-xs text-slate-500">Mínimo 8 caracteres, incluye mayúsculas y números</p>
                 </div>
-                
-                <div class="flex items-center mb-6">
-                  <input type="checkbox" id="terms" name="terms" class="w-4 h-4 text-red-500 border-slate-300 rounded focus:ring-red-500" required />
-                  <label for="terms" class="ml-2 text-sm text-slate-600">
-                    Acepto los <a href="#" class="text-red-500 hover:underline">términos y condiciones</a>
-                  </label>
-                </div>
-                
-                <div class="mb-4">
-                  <button
-                    type="submit"
-                    class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                  >
-                    Crear Cuenta
-                  </button>
-                </div>
-              </form>
-            </div>
+                <p class="mt-1 text-xs text-gray-500">Mínimo 8 caracteres, incluye mayúsculas y números</p>
+              </div>
+              
+              <div class="flex items-center mb-4">
+                <input 
+                  type="checkbox" 
+                  name="terms" 
+                  id="terms" 
+                  class="w-4 h-4 text-accent border-gray-300 rounded focus:ring-accent"
+                  required
+                >
+                <label for="terms" class="ml-2 text-gray-600 text-sm">
+                  Acepto los <a href="#" class="text-primary hover:text-primary-dark">términos y condiciones</a>
+                </label>
+              </div>
+              
+              <div class="mb-4">
+                <button
+                  type="submit"
+                  class="w-full bg-primary hover:bg-primary-dark py-2.5 px-6 rounded-xl text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center"
+                >
+                  <span>Crear Cuenta</span>
+                  <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+              </div>
+            </form>
             
-            <div class="text-center mt-6">
-              <p class="text-sm text-slate-600">
+            <div class="text-center mt-4">
+              <p class="text-gray-600 text-sm">
                 ¿Ya tienes una cuenta? 
-                <a href="{{ url_for('main.login') }}" class="text-red-500 font-medium hover:text-red-600">Iniciar sesión</a>
+                <a href="{{ url_for('main.login') }}" class="text-primary font-semibold hover:text-primary-dark">
+                  Iniciar sesión
+                </a>
               </p>
             </div>
-            
-            <div class="mt-10 flex justify-center space-x-4 text-xs text-slate-500">
-              <a href="#" class="hover:text-slate-800 transition-colors">Términos</a>
-              <span>&middot;</span>
-              <a href="#" class="hover:text-slate-800 transition-colors">Privacidad</a>
-              <span>&middot;</span>
-              <a href="#" class="hover:text-slate-800 transition-colors">Ayuda</a>
+          </div>
+          
+          <div class="flex justify-center mt-4">
+            <div class="flex space-x-8 text-xs text-gray-500">
+              <a href="#" class="hover:text-primary transition-colors">Términos</a>
+              <a href="#" class="hover:text-primary transition-colors">Privacidad</a>
+              <a href="#" class="hover:text-primary transition-colors">Ayuda</a>
             </div>
           </div>
         </div>

@@ -75,7 +75,7 @@
               {{ form.hidden_tag() }}
 
               <div
-                class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg py-8 px-4 text-center transition-all duration-200"
+                class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg py-8 px-4 text-center transition-all duration-200 hover:bg-gray-100"
                 id="dropZone"
               >
                 <svg
@@ -104,14 +104,18 @@
                     onchange="updateFileName(this)"
                   />
 
-                  <p class="text-sm font-medium text-text">
-                    <span id="fileNameDisplay" class="block mb-1"
-                      >Selecciona un archivo para importar</span
+                  <div class="mb-2">
+                    <p
+                      id="fileNameDisplay"
+                      class="text-sm font-medium text-text"
                     >
+                      Selecciona un archivo para importar
+                    </p>
+                    <div id="fileListContainer" class="mt-1 text-xs"></div>
                     <span class="text-xs text-text-secondary"
                       >o arrastra y suelta aquí</span
                     >
-                  </p>
+                  </div>
 
                   <button
                     type="button"
@@ -136,7 +140,7 @@
                   </button>
                 </div>
               </div>
-              
+
               <!-- Información de formatos aceptados -->
               <div class="mt-4 flex items-start">
                 <div class="flex-shrink-0">
@@ -375,155 +379,188 @@
     <script>
       // Funcionalidad para actualizar el nombre del archivo seleccionado
       function updateFileName(input) {
-         const fileNameDisplay = document.getElementById('fileNameDisplay');
-         if (input.files.length > 0) {
-           if (input.files.length === 1) {
-             fileNameDisplay.textContent = input.files[0].name;
-           } else {
-             fileNameDisplay.textContent = `${input.files.length} archivos seleccionados`;
-           }
-         } else {
-           fileNameDisplay.textContent = 'Selecciona un archivo para importar';
-         }
-       }
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const fileListContainer = document.getElementById('fileListContainer');
+        const dropZone = document.getElementById('dropZone');
 
-       document.addEventListener('DOMContentLoaded', function() {
-         const dropZone = document.getElementById('dropZone');
-         const fileInput = document.getElementById('file');
-         const progressModal = document.getElementById('progressModal');
-         const progressBar = document.getElementById('progressBar');
-         const progressText = document.getElementById('progressText');
-         const form = document.getElementById('importForm');
-         let folderId = {{ folder.id }};
+        fileListContainer.innerHTML = '';
 
-         // Prevenir comportamiento por defecto para permitir soltar archivos
-         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-           dropZone.addEventListener(eventName, preventDefaults, false);
-         });
+        if (input.files.length > 0) {
+          if (input.files.length === 1) {
+            const file = input.files[0];
+            const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
 
-         function preventDefaults(e) {
-           e.preventDefault();
-           e.stopPropagation();
-         }
+            fileNameDisplay.innerHTML = `<span class="font-medium text-primary">${file.name}</span>`;
+            fileListContainer.innerHTML = `<span class="text-gray-500">(${fileSizeInMB} MB)</span>`;
+          } else {
+            fileNameDisplay.innerHTML = `<span class="font-medium text-primary">${input.files.length} archivos seleccionados</span>`;
 
-         // Resaltar zona cuando se arrastra un archivo sobre ella
-         ['dragenter', 'dragover'].forEach(eventName => {
-           dropZone.addEventListener(eventName, highlight, false);
-         });
+            const fileList = document.createElement('div');
+            fileList.className = 'mt-1 text-gray-600';
 
-         ['dragleave', 'drop'].forEach(eventName => {
-           dropZone.addEventListener(eventName, unhighlight, false);
-         });
+            const maxFilesToShow = Math.min(3, input.files.length);
+            for (let i = 0; i < maxFilesToShow; i++) {
+              const file = input.files[i];
+              const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+              fileList.innerHTML += `<div class="truncate">- ${file.name} (${fileSizeInMB} MB)</div>`;
+            }
 
-         function highlight() {
-           dropZone.classList.add('border-primary');
-           dropZone.classList.add('bg-blue-50');
-         }
+            if (input.files.length > 3) {
+              fileList.innerHTML += `<div>... y ${input.files.length - 3} más</div>`;
+            }
 
-         function unhighlight() {
-           dropZone.classList.remove('border-primary');
-           dropZone.classList.remove('bg-blue-50');
-         }
+            fileListContainer.appendChild(fileList);
+          }
 
-         // Manejar archivos soltados
-         dropZone.addEventListener('drop', handleDrop, false);
+          dropZone.classList.add('border-primary');
+          dropZone.classList.add('bg-blue-50');
+        } else {
+          fileNameDisplay.textContent = 'Selecciona un archivo para importar';
+          dropZone.classList.remove('border-primary');
+          dropZone.classList.remove('bg-blue-50');
+        }
+      }
 
-         function handleDrop(e) {
-           const dt = e.dataTransfer;
-           const files = dt.files;
-           fileInput.files = files;
-           updateFileName(fileInput);
-         }
+      document.addEventListener('DOMContentLoaded', function() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('file');
+        const progressModal = document.getElementById('progressModal');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const form = document.getElementById('importForm');
+        let folderId = {{ folder.id }};
 
-         // Subir archivo cuando se envía el formulario
-         if (form) {
-           form.addEventListener('submit', function(e) {
-             e.preventDefault();
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+          dropZone.addEventListener(eventName, preventDefaults, false);
+        });
 
-             // Validar etiqueta
-             const fileLabel = document.getElementById('fileLabel').value;
-             if (!fileLabel) {
-               alert('Por favor, selecciona una etiqueta para el archivo.');
-               return;
-             }
+        function preventDefaults(e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
 
-             // Validar selección de archivo
-             if (fileInput.files.length === 0) {
-               alert('Por favor, selecciona al menos un archivo para subir.');
-               return;
-             }
+        // Resaltar zona cuando se arrastra un archivo sobre ella
+        ['dragenter', 'dragover'].forEach(eventName => {
+          dropZone.addEventListener(eventName, highlight, false);
+        });
 
-             // Mostrar modal con barra de progreso
-             progressModal.classList.remove('hidden');
-             progressBar.style.width = '0%';
-             progressText.textContent = 'Subiendo: 0%';
+        ['dragleave', 'drop'].forEach(eventName => {
+          dropZone.addEventListener(eventName, unhighlight, false);
+        });
 
-             const formData = new FormData(form);
-             const xhr = new XMLHttpRequest();
-             xhr.open('POST', form.action);
+        function highlight() {
+          dropZone.classList.add('border-primary');
+          dropZone.classList.add('bg-blue-50');
+        }
 
-             // Simular progreso (ya que no tenemos información real del progreso)
-             let fakeProgress = 0;
-             const fakeInterval = setInterval(() => {
-               if (fakeProgress < 90) {
-                 fakeProgress += 2;
-                 progressBar.style.width = fakeProgress + '%';
-                 progressText.textContent = 'Subiendo: ' + fakeProgress + '%';
-               } else {
-                 clearInterval(fakeInterval);
-               }
-             }, 100);
+        function unhighlight() {
+          dropZone.classList.remove('border-primary');
+          dropZone.classList.remove('bg-blue-50');
+        }
 
-             // Manejar respuesta
-             xhr.onload = function() {
-               clearInterval(fakeInterval);
-               if (xhr.status === 200) {
-                 progressBar.style.width = '100%';
-                 progressText.textContent = 'Subiendo: 100%';
+        // Manejar archivos soltados
+        dropZone.addEventListener('drop', handleDrop, false);
 
-                 // Redireccionar o mostrar mensaje de éxito
-                 setTimeout(() => {
-                   try {
-                     // Intentar parsear la respuesta JSON
-                     const response = JSON.parse(xhr.responseText);
-                     if (response.redirectUrl) {
-                       window.location.href = response.redirectUrl;
-                     } else {
-                       window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
-                     }
-                   } catch (e) {
-                     // Si hay error en el parseo, usar la URL de Flask
-                     window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
-                   }
-                 }, 700); // Un poco más de tiempo para que el usuario vea el 100%
-               } else {
-                 alert('Error al subir archivo.');
-                 progressModal.classList.add('hidden');
-                 progressBar.style.width = '0%';
-               }
-             };
+        function handleDrop(e) {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          fileInput.files = files;
+          updateFileName(fileInput);
+        }
 
-             xhr.onerror = function() {
-               clearInterval(fakeInterval);
-               alert('Error de conexión.');
-               progressModal.classList.add('hidden');
-               progressBar.style.width = '0%';
-             };
+        if (form) {
+          form.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-             xhr.send(formData);
-           });
-         }
+            const fileLabel = document.getElementById('fileLabel').value;
+            if (!fileLabel) {
+              alert('Por favor, selecciona una etiqueta para el archivo.');
+              return;
+            }
 
-         // Actualizar el valor del grupo de etiquetas cuando se selecciona una etiqueta
-         const fileLabelSelect = document.getElementById('fileLabel');
-         if (fileLabelSelect) {
-           fileLabelSelect.addEventListener('change', function() {
-             const select = this;
-             const optGroupLabel = select.selectedOptions[0].parentNode.label;
-             document.getElementById('groupLabel').value = optGroupLabel;
-           });
-         }
-       });
+            if (fileInput.files.length === 0) {
+              alert('Por favor, selecciona al menos un archivo para subir.');
+              return;
+            }
+
+            let exceedsMaxSize = false;
+            const maxSizeInBytes = 10 * 1024 * 1024;
+            for (let i = 0; i < fileInput.files.length; i++) {
+              if (fileInput.files[i].size > maxSizeInBytes) {
+                exceedsMaxSize = true;
+                break;
+              }
+            }
+
+            if (exceedsMaxSize) {
+              alert('Uno o más archivos exceden el tamaño máximo de 10MB.');
+              return;
+            }
+
+            progressModal.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Subiendo: 0%';
+
+            const formData = new FormData(form);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action);
+
+            let fakeProgress = 0;
+            const fakeInterval = setInterval(() => {
+              if (fakeProgress < 90) {
+                fakeProgress += 2;
+                progressBar.style.width = fakeProgress + '%';
+                progressText.textContent = 'Subiendo: ' + fakeProgress + '%';
+              } else {
+                clearInterval(fakeInterval);
+              }
+            }, 100);
+
+            xhr.onload = function() {
+              clearInterval(fakeInterval);
+              if (xhr.status === 200) {
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Subiendo: 100%';
+
+                setTimeout(() => {
+                  try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.redirectUrl) {
+                      window.location.href = response.redirectUrl;
+                    } else {
+                      window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
+                    }
+                  } catch (e) {
+                    window.location.href = "{{ url_for('main.ver_carpeta', folder_id=folder.id) }}";
+                  }
+                }, 700);
+              } else {
+                alert('Error al subir archivo.');
+                progressModal.classList.add('hidden');
+                progressBar.style.width = '0%';
+              }
+            };
+
+            xhr.onerror = function() {
+              clearInterval(fakeInterval);
+              alert('Error de conexión.');
+              progressModal.classList.add('hidden');
+              progressBar.style.width = '0%';
+            };
+
+            xhr.send(formData);
+          });
+        }
+
+        const fileLabelSelect = document.getElementById('fileLabel');
+        if (fileLabelSelect) {
+          fileLabelSelect.addEventListener('change', function() {
+            const select = this;
+            const optGroupLabel = select.selectedOptions[0].parentNode.label;
+            document.getElementById('groupLabel').value = optGroupLabel;
+          });
+        }
+      });
     </script>
   </body>
 </html>

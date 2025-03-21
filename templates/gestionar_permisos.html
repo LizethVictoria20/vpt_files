@@ -103,29 +103,6 @@
             Administra roles y permisos de los usuarios del sistema
           </p>
         </div>
-
-        <div class="mt-4 md:mt-0 flex items-center">
-          <a
-            href="{{ url_for('main.dashboard') }}"
-            class="flex items-center text-primary hover:text-primary-light font-medium text-sm transition duration-150 ease-in-out"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 mr-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-            Volver al Panel
-          </a>
-        </div>
       </div>
 
       <!-- Filtros y búsqueda -->
@@ -166,28 +143,16 @@
           <div class="relative inline-block w-full md:w-auto">
             <select
               id="roleFilter"
-              class="block w-full pl-3 pr-10 py-2.5 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white"
+              class="block w-full pl-3 pr-10 py-2.5 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white appearance-none"
             >
               <option value="all">Todos los roles</option>
               {% for role in roles %}
               <option value="{{ role.name }}">{{ role.name }}</option>
               {% endfor %}
             </select>
-            <div
-              class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
-            >
-              <svg
-                class="h-5 w-5 text-gray-400"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
               </svg>
             </div>
           </div>
@@ -316,84 +281,68 @@
                     </div>
                   </td>
                   <form
-                    method="POST"
-                    action="{{ url_for('superadmin.gestionar_permisos') }}"
-                    class="contents"
-                  >
-                    <input
-                      type="hidden"
-                      name="csrf_token"
-                      value="{{ csrf_token() }}"
-                    />
-                    <input type="hidden" name="user_id" value="{{ user.id }}" />
-
-                    <td class="px-6 py-4">
-                      <!-- Selector de rol -->
+                  method="POST"
+                  action="{{ url_for('superadmin.gestionar_permisos') }}"
+                  class="contents"
+                >
+                  <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                  />
+                  <input type="hidden" name="user_id" value="{{ user.id }}" />
+                
+                  <td class="px-6 py-4">
+                    <div class="relative">
                       <select
                         name="selected_role"
-                        class="block w-full pl-3 pr-10 py-3 text-base border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white shadow-sm"
+                        class="block w-full bg-white border-0 pl-3 pr-10 rounded-md py-2.5 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary text-gray-900 sm:text-sm sm:leading-6 shadow-sm appearance-none"
                       >
                         <option value="">-- Seleccionar rol --</option>
                         {% for role in roles %}
                         <option value="{{ role.id }}">{{ role.name }}</option>
                         {% endfor %}
                       </select>
-                    </td>
-
-                    <td class="px-6 py-4">
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                  </td>
+                
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
                       <!-- Botón de actualizar -->
-                      <div class="flex flex-col space-y-2">
-                        <button
-                          type="submit"
-                          class="inline-flex justify-center items-center px-3 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4 mr-1.5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                          Actualizar
-                        </button>
-
+                      <button
+                        type="submit"
+                        class="inline-flex items-center rounded-md bg-primary px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:bg-primary-dark transition-all duration-200"
+                      >
+                        <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Actualizar
+                      </button>
+                
+                      <div class="relative group">
                         <a
                           href="#"
-                          class="has-tooltip inline-flex justify-center items-center px-3 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-text-secondary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150"
+                          class="inline-flex items-center rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 hover:text-primary hover:ring-primary transition-all duration-200"
                         >
-                          <span class="tooltip">Ver perfil del usuario</span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4 mr-1.5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                            />
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                            />
+                          <svg class="mr-1.5 h-4 w-4 text-gray-500 group-hover:text-primary transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                           </svg>
                           Ver perfil
                         </a>
+                        <div class="absolute z-10 bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap">
+                          Ver perfil del usuario
+                          <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                        </div>
                       </div>
-                    </td>
-                  </form>
+                    </div>
+                  </td>
+                </form>
                 </tr>
                 {% endfor %}
               </tbody>

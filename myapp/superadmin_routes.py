@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
+from forms import GeneralForm
 from myapp.models import User, Roles
 
 superadmin_bp = Blueprint('superadmin', __name__, url_prefix='/superadmin')
@@ -22,20 +23,37 @@ def superadmin_required(f):
 @superadmin_required
 def gestionar_permisos():
     from app import db
-    
-    # Ya no necesitamos verificación manual aquí porque está en el decorador
+    form = GeneralForm()
     users = User.query.all()
     roles = Roles.query.all()
     
     if request.method == 'POST':
         user_id = request.form['user_id']
-        new_role_ids = [int(role_id) for role_id in request.form.getlist('roles')]
+        new_role_id = request.form.get('selected_role')
+        
+        if not new_role_id:
+            flash('Por favor, selecciona un rol para asignar', 'error')
+            return redirect(url_for('superadmin.gestionar_permisos'))
         
         user = User.query.get(user_id)
-        user.roles = [role for role in roles if role.id in new_role_ids]
-        db.session.commit()
+        if not user:
+            flash('Usuario no encontrado', 'error')
+            return redirect(url_for('superadmin.gestionar_permisos'))
         
-        flash('Permisos actualizados correctamente', 'success')
+        new_role = Roles.query.get(new_role_id)
+        if not new_role:
+            flash('Rol no encontrado', 'error')
+            return redirect(url_for('superadmin.gestionar_permisos'))
+        
+        user.roles = [new_role]
+        
+        try:
+            db.session.commit()
+            flash(f'El rol {new_role.name} ha sido asignado al usuario {user.username}', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al actualizar los permisos: {str(e)}', 'error')
+        
         return redirect(url_for('superadmin.gestionar_permisos'))
     
-    return render_template('gestionar_permisos.html', users=users, roles=roles)
+    return render_template('gestionar_permisos.html', users=users, roles=roles, form=form)

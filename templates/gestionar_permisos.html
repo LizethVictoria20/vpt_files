@@ -48,11 +48,11 @@
           transform: translateY(0);
         }
       }
-      
+
       .fade-in {
         animation: fadeIn 0.3s ease-out forwards;
       }
-      
+
       .tooltip {
         visibility: hidden;
         position: absolute;
@@ -70,7 +70,7 @@
         opacity: 0;
         transition: opacity 0.3s;
       }
-      
+
       .tooltip::after {
         content: "";
         position: absolute;
@@ -81,7 +81,7 @@
         border-style: solid;
         border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
       }
-      
+
       .has-tooltip:hover .tooltip {
         visibility: visible;
         opacity: 1;
@@ -92,7 +92,9 @@
     {% include 'base.html' %}
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between mb-8"
+      >
         <div>
           <h1 class="text-3xl font-bold font-montserrat text-primary-dark">
             Gestión de Permisos
@@ -101,7 +103,7 @@
             Administra roles y permisos de los usuarios del sistema
           </p>
         </div>
-        
+
         <div class="mt-4 md:mt-0 flex items-center">
           <a
             href="{{ url_for('main.dashboard') }}"
@@ -127,10 +129,14 @@
       </div>
 
       <!-- Filtros y búsqueda -->
-      <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-4 bg-white rounded-lg border border-gray-100 shadow-sm mb-6">
+      <div
+        class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-4 bg-white rounded-lg border border-gray-100 shadow-sm mb-6"
+      >
         <div class="w-full md:w-auto md:flex-grow md:max-w-xl">
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 text-gray-400"
@@ -164,10 +170,12 @@
             >
               <option value="all">Todos los roles</option>
               {% for role in roles %}
-                <option value="{{ role.name }}">{{ role.name }}</option>
+              <option value="{{ role.name }}">{{ role.name }}</option>
               {% endfor %}
             </select>
-            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+            <div
+              class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none"
+            >
               <svg
                 class="h-5 w-5 text-gray-400"
                 xmlns="http://www.w3.org/2000/svg"
@@ -187,8 +195,12 @@
       </div>
 
       <!-- Tarjeta principal con tabla de usuarios -->
-      <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden mb-8">
-        <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+      <div
+        class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden mb-8"
+      >
+        <div
+          class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
+        >
           <div class="flex items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -209,7 +221,8 @@
             </h2>
           </div>
           <div class="text-sm text-text-secondary">
-            Total: <span class="font-semibold">{{ users|length }}</span> usuarios
+            Total:
+            <span class="font-semibold">{{ users|length }}</span> usuarios
           </div>
         </div>
 
@@ -219,26 +232,46 @@
             <table class="min-w-full divide-y divide-gray-200">
               <thead>
                 <tr class="bg-gray-50">
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                  >
                     Información de Usuario
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                  >
                     Roles Actuales
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                  >
                     Asignar Roles
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider"
+                  >
                     Acciones
                   </th>
                 </tr>
               </thead>
-              <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+              <tbody
+                id="usersTableBody"
+                class="bg-white divide-y divide-gray-200"
+              >
                 {% for user in users %}
-                <tr class="user-row hover:bg-gray-50 transition duration-150" data-roles="{{ user.roles|map(attribute='name')|join(' ') }}">
+                <tr
+                  class="user-row hover:bg-gray-50 transition duration-150"
+                  data-roles="{{ user.roles|map(attribute='name')|join(' ') }}"
+                >
                   <td class="px-6 py-4">
                     <div class="flex items-center">
-                      <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-light/20 flex items-center justify-center text-primary font-semibold">
+                      <div
+                        class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-light/20 flex items-center justify-center text-primary font-semibold"
+                      >
                         {{ user.username[0]|upper if user.username else '' }}
                       </div>
                       <div class="ml-4">
@@ -250,10 +283,22 @@
                         </div>
                         <div class="text-xs text-text-secondary mt-1">
                           <span class="inline-flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              class="h-3 w-3 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
                             </svg>
-                            Registrado: {{ user.created_at.strftime('%d/%m/%Y') if user.created_at else 'N/A' }}
+                            Registrado: {{ user.created_at.strftime('%d/%m/%Y')
+                            if user.created_at else 'N/A' }}
                           </span>
                         </div>
                       </div>
@@ -262,108 +307,144 @@
                   <td class="px-6 py-4">
                     <div class="flex flex-wrap gap-1">
                       {% for role in user.roles %}
-                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light/20 text-primary">
+                      <span
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light/20 text-primary"
+                      >
                         {{ role.name }}
                       </span>
                       {% endfor %}
                     </div>
                   </td>
-                  <td class="px-6 py-4">
-                    <select
-                    id="fileLabel"
-                    name="fileLabel"
-                    class="block w-full pl-3 pr-10 py-3 text-base border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white shadow-sm"
+                  <form
+                    method="POST"
+                    action="{{ url_for('superadmin.gestionar_permisos') }}"
+                    class="contents"
                   >
-                    <option value="">-- Seleccionar rol --</option>
-                      <option value="Pasaporte">Superadministrador</option>
-                      <option value="Documento de identidad">
-                        Administrador
-                      </option>
-                      <option value="Licencia de conducir">
-                        Cliente
-                      </option>
-                      <option value="Permiso de residencia">
-                        Lector
-                      </option>
-                  </select>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex flex-col space-y-2">
-                      <button
-                        type="submit"
-                        name="user_id"
-                        value="{{ user.id }}"
-                        class="inline-flex justify-center items-center px-3 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150"
+                    <input
+                      type="hidden"
+                      name="csrf_token"
+                      value="{{ csrf_token() }}"
+                    />
+                    <input type="hidden" name="user_id" value="{{ user.id }}" />
+
+                    <td class="px-6 py-4">
+                      <!-- Selector de rol -->
+                      <select
+                        name="selected_role"
+                        class="block w-full pl-3 pr-10 py-3 text-base border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white shadow-sm"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4 mr-1.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                        <option value="">-- Seleccionar rol --</option>
+                        {% for role in roles %}
+                        <option value="{{ role.id }}">{{ role.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </td>
+
+                    <td class="px-6 py-4">
+                      <!-- Botón de actualizar -->
+                      <div class="flex flex-col space-y-2">
+                        <button
+                          type="submit"
+                          class="inline-flex justify-center items-center px-3 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150"
                         >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
-                        Actualizar
-                      </button>
-                      
-                      <a
-                        href="#"
-                        class="has-tooltip inline-flex justify-center items-center px-3 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-text-secondary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150"
-                      >
-                        <span class="tooltip">Ver perfil del usuario</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4 mr-1.5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 mr-1.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          Actualizar
+                        </button>
+
+                        <a
+                          href="#"
+                          class="has-tooltip inline-flex justify-center items-center px-3 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-text-secondary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-150"
                         >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
-                        Ver perfil
-                      </a>
-                    </div>
-                  </td>
+                          <span class="tooltip">Ver perfil del usuario</span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 mr-1.5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                          Ver perfil
+                        </a>
+                      </div>
+                    </td>
+                  </form>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
           </form>
         </div>
-        
+
         <!-- Estado vacío (oculto por defecto) -->
         <div id="emptyState" class="hidden p-8 text-center">
-          <div class="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <div
+            class="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
             </svg>
           </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-1">No se encontraron usuarios</h3>
-          <p class="text-gray-500 mb-4">No hay usuarios que coincidan con los criterios de búsqueda.</p>
-          <button 
-            type="button" 
+          <h3 class="text-lg font-medium text-gray-900 mb-1">
+            No se encontraron usuarios
+          </h3>
+          <p class="text-gray-500 mb-4">
+            No hay usuarios que coincidan con los criterios de búsqueda.
+          </p>
+          <button
+            type="button"
             id="clearFilters"
             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
             </svg>
             Limpiar filtros
           </button>
@@ -371,7 +452,9 @@
       </div>
 
       <!-- Leyenda de roles -->
-      <div class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden">
+      <div
+        class="bg-white shadow-sm rounded-xl border border-gray-100 overflow-hidden"
+      >
         <div class="px-6 py-5 border-b border-gray-100 flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -391,32 +474,51 @@
             Información de Roles
           </h2>
         </div>
-        
+
         <div class="p-6">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             {% for role in roles %}
             <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
               <div class="flex items-center mb-3">
-                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-light/20 text-primary mr-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                <span
+                  class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary-light/20 text-primary mr-3"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
                   </svg>
                 </span>
                 <h3 class="text-base font-medium text-text">{{ role.name }}</h3>
               </div>
               <p class="text-sm text-text-secondary">
-                {{ role.description if role.description else 'Sin descripción disponible' }}
+                {{ role.description if role.description else 'Sin descripción
+                disponible' }}
               </p>
               <div class="mt-3 pt-3 border-t border-gray-200">
-                <h4 class="text-xs font-medium text-text-secondary mb-2">Permisos incluidos:</h4>
+                <h4 class="text-xs font-medium text-text-secondary mb-2">
+                  Permisos incluidos:
+                </h4>
                 <div class="flex flex-wrap gap-1">
                   {% for permission in role.permissions %}
-                  <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-text-secondary">
+                  <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-text-secondary"
+                  >
                     {{ permission.name }}
                   </span>
-                  {% endfor %}
-                  {% if not role.permissions %}
-                  <span class="text-xs text-text-secondary italic">Sin permisos específicos</span>
+                  {% endfor %} {% if not role.permissions %}
+                  <span class="text-xs text-text-secondary italic"
+                    >Sin permisos específicos</span
+                  >
                   {% endif %}
                 </div>
               </div>
@@ -429,98 +531,159 @@
 
     <!-- Notificaciones toast -->
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50 w-72">
-      {% if get_flashed_messages(category_filter=["success"]) %}
-        {% for message in get_flashed_messages(category_filter=["success"]) %}
-        <div class="fade-in bg-green-50 border-l-4 border-green-500 text-green-800 p-4 mb-3 rounded-lg shadow-md flex items-start">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div>
-            <span class="font-medium">¡Éxito!</span>
-            <p>{{ message }}</p>
-          </div>
+      {% if get_flashed_messages(category_filter=["success"]) %} {% for message
+      in get_flashed_messages(category_filter=["success"]) %}
+      <div
+        class="fade-in bg-green-50 border-l-4 border-green-500 text-green-800 p-4 mb-3 rounded-lg shadow-md flex items-start"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2 flex-shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <div>
+          <span class="font-medium">¡Éxito!</span>
+          <p>{{ message }}</p>
         </div>
-        {% endfor %}
-      {% endif %}
-      
-      {% if get_flashed_messages(category_filter=["error"]) %}
-        {% for message in get_flashed_messages(category_filter=["error"]) %}
-        <div class="fade-in bg-red-50 border-l-4 border-red-500 text-red-800 p-4 mb-3 rounded-lg shadow-md flex items-start">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <div>
-            <span class="font-medium">Error</span>
-            <p>{{ message }}</p>
-          </div>
+      </div>
+      {% endfor %} {% endif %} {% if
+      get_flashed_messages(category_filter=["error"]) %} {% for message in
+      get_flashed_messages(category_filter=["error"]) %}
+      <div
+        class="fade-in bg-red-50 border-l-4 border-red-500 text-red-800 p-4 mb-3 rounded-lg shadow-md flex items-start"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2 flex-shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <div>
+          <span class="font-medium">Error</span>
+          <p>{{ message }}</p>
         </div>
-        {% endfor %}
-      {% endif %}
+      </div>
+      {% endfor %} {% endif %}
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // Búsqueda de usuarios
-        const userSearch = document.getElementById('userSearch');
-        const roleFilter = document.getElementById('roleFilter');
-        const userRows = document.querySelectorAll('.user-row');
-        const emptyState = document.getElementById('emptyState');
-        const usersTableBody = document.getElementById('usersTableBody');
-        const clearFiltersBtn = document.getElementById('clearFilters');
-        
+        const userSearch = document.getElementById("userSearch");
+        const roleFilter = document.getElementById("roleFilter");
+        const userRows = document.querySelectorAll(".user-row");
+        const emptyState = document.getElementById("emptyState");
+        const usersTableBody = document.getElementById("usersTableBody");
+        const clearFiltersBtn = document.getElementById("clearFilters");
+
         // Función para filtrar usuarios
         function filterUsers() {
           const searchValue = userSearch.value.toLowerCase();
           const roleValue = roleFilter.value.toLowerCase();
-          
+
           let visibleCount = 0;
-          
-          userRows.forEach(row => {
-            const username = row.querySelector('.text-sm.font-medium').textContent.toLowerCase();
-            const email = row.querySelector('.text-sm.text-text-secondary').textContent.toLowerCase();
-            const userRoles = row.getAttribute('data-roles').toLowerCase();
-            
-            // Comprobar si el usuario coincide con los criterios de búsqueda
-            const matchesSearch = username.includes(searchValue) || email.includes(searchValue);
-            const matchesRole = roleValue === 'all' || userRoles.includes(roleValue);
-            
-            if (matchesSearch && matchesRole) {
-              row.classList.remove('hidden');
-              visibleCount++;
-            } else {
-              row.classList.add('hidden');
+
+          userRows.forEach((row) => {
+            const roleSelect = row.querySelector(
+              'select[name="selected_role"]'
+            );
+            const updateButton = row.querySelector('button[name="user_id"]');
+
+            if (roleSelect && updateButton) {
+              // Cambiar color del botón cuando se selecciona un rol
+              roleSelect.addEventListener("change", function () {
+                if (this.value) {
+                  updateButton.classList.remove("bg-primary");
+                  updateButton.classList.add(
+                    "bg-green-600",
+                    "hover:bg-green-700"
+                  );
+                } else {
+                  updateButton.classList.remove(
+                    "bg-green-600",
+                    "hover:bg-green-700"
+                  );
+                  updateButton.classList.add(
+                    "bg-primary",
+                    "hover:bg-primary-light"
+                  );
+                }
+              });
+
+              // Opcional: Preseleccionar el rol actual del usuario
+              const currentRoles = row.getAttribute("data-roles").split(" ");
+              if (currentRoles.length > 0 && currentRoles[0] !== "") {
+                // Encontrar la opción que coincide con el rol actual
+                const options = Array.from(roleSelect.options);
+                options.forEach((option) => {
+                  if (option.textContent.trim() in currentRoles) {
+                    option.selected = true;
+                  }
+                });
+              }
             }
           });
-          
+          const permissionsForm = document.getElementById("permissionsForm");
+          if (permissionsForm) {
+            permissionsForm.addEventListener("submit", function (e) {
+              const activeRow = document.activeElement.closest(".user-row");
+              if (activeRow) {
+                const roleSelect = activeRow.querySelector(
+                  'select[name="selected_role"]'
+                );
+                if (roleSelect && !roleSelect.value) {
+                  e.preventDefault();
+                  alert("Por favor, selecciona un rol antes de actualizar");
+                }
+              }
+            });
+          }
           // Mostrar estado vacío si no hay resultados
           if (visibleCount === 0) {
-            emptyState.classList.remove('hidden');
-            usersTableBody.classList.add('hidden');
+            emptyState.classList.remove("hidden");
+            usersTableBody.classList.add("hidden");
           } else {
-            emptyState.classList.add('hidden');
-            usersTableBody.classList.remove('hidden');
+            emptyState.classList.add("hidden");
+            usersTableBody.classList.remove("hidden");
           }
         }
-        
+
         // Eventos para filtros
-        userSearch.addEventListener('input', filterUsers);
-        roleFilter.addEventListener('change', filterUsers);
-        
+        userSearch.addEventListener("input", filterUsers);
+        roleFilter.addEventListener("change", filterUsers);
+
         // Limpiar filtros
-        clearFiltersBtn.addEventListener('click', function() {
-          userSearch.value = '';
-          roleFilter.value = 'all';
+        clearFiltersBtn.addEventListener("click", function () {
+          userSearch.value = "";
+          roleFilter.value = "all";
           filterUsers();
         });
-        
+
         // Cierre automático de notificaciones
-        const toasts = document.querySelectorAll('.fade-in');
-        toasts.forEach(toast => {
+        const toasts = document.querySelectorAll(".fade-in");
+        toasts.forEach((toast) => {
           setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(10px)';
-            toast.style.transition = 'opacity 0.5s, transform 0.5s';
-            
+            toast.style.opacity = "0";
+            toast.style.transform = "translateY(10px)";
+            toast.style.transition = "opacity 0.5s, transform 0.5s";
+
             setTimeout(() => {
               toast.remove();
             }, 500);

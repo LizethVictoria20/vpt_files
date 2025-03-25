@@ -439,12 +439,14 @@ def listar_carpetas():
     usuarios_paginados = User.query.paginate(page=page, per_page=per_page, error_out=False)
     usuarios = usuarios_paginados.items
     delete_form = DeleteForm()
-    
+    is_lector = any(role.slug == 'lector' for role in current_user.roles)
+
     return render_template(
         'listar_carpetas.html', 
         usuarios=usuarios, 
         delete_form=delete_form,
-        pagination=usuarios_paginados
+        pagination=usuarios_paginados,
+        is_lector=is_lector
     )
 
 @admin_permission.require(http_exception=403)

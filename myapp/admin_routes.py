@@ -24,17 +24,16 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
-            return redirect(url_for('auth.login'))  # O la ruta de login que uses
-        # Por ejemplo, si tus roles tienen un 'slug' o 'name' = 'admin'
-        if not any(role.slug == 'admin' for role in current_user.roles):
+            return redirect(url_for('auth.login'))
+        if not any(role.slug == 'admin' or role.slug == 'lector' or role.slug == 'superadmin'  for role in current_user.roles):
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
-
+@lector_permission.require(http_exception=403)      
 @admin_bp.route('/admin_carpeta/<int:folder_id>')
 @login_required
-@admin_required  # tu decorador para validar rol admin
+@admin_required 
 def admin_ver_carpeta(folder_id):
     folder = DriveFolder.query.get_or_404(folder_id)
     archivos = DriveFile.query.filter_by(folder_id=folder.id).all()

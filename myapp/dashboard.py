@@ -71,7 +71,15 @@ def get_file_types_stats():
 def calculate_percent_change(current, previous):
     if previous == 0:
         return 100 if current > 0 else 0
-    return round(((current - previous) / previous) * 100)
+    
+    percent = ((current - previous) / previous) * 100
+    
+    if percent > 100:
+        return 100
+    elif percent < -100:
+        return -100
+    
+    return round(percent)
 
 def get_friendly_mimetype(mimetype):
     if not mimetype:

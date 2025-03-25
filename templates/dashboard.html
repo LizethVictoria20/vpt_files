@@ -89,13 +89,14 @@
         </div>
         <div class="mt-4 md:mt-0">
           <div class="inline-flex rounded-md shadow">
-            <button
+            <a
+              href="{{ url_for('admin.dashboard') }}"
               type="button"
               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             >
               <i class="fas fa-sync-alt mr-2"></i>
               Actualizar datos
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -104,165 +105,128 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Estadística 1: Archivos hoy -->
         <div
-          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+          class="bg-white px-5 py-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <div class="p-5">
-            <div class="flex items-center">
-              <div class="flex-shrink-0 rounded-full p-3 bg-blue-100">
-                <i class="fas fa-file-upload text-blue-600 text-xl"></i>
-              </div>
-              <div class="ml-5 w-0 flex-1">
-                <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">
-                    Archivos subidos hoy
-                  </dt>
-                  <dd>
-                    <div class="text-lg font-bold text-primary-dark">
-                      {{ stats.files_today }}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+          <p
+            class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3"
+          >
+            Archivos hoy
+          </p>
+          <div class="flex items-center justify-between">
+            <h3 class="text-3xl font-light text-gray-700">
+              {{ stats.files_today }}
+            </h3>
+            <div class="text-xs font-medium flex items-center">
+              {% if stats.files_today_percent > 0 %}
+              <span class="text-green-500"
+                >+{{ stats.files_today_percent }}%</span
+              >
+              {% elif stats.files_today_percent < 0 %}
+              <span class="text-red-500">{{ stats.files_today_percent }}%</span>
+              {% else %}
+              <span class="text-gray-400">0%</span>
+              {% endif %}
             </div>
           </div>
-          <div class="bg-surface px-5 py-3 flex items-center justify-between">
-            <div class="text-sm">
-              <span class="font-medium text-green-700">
-                <i class="fas fa-arrow-up mr-1"></i>{{ stats.files_today_percent
-                }}%
-              </span>
-              <span class="text-gray-500 ml-1">vs. ayer</span>
-            </div>
-            <a
-              href="#detalle-archivos"
-              class="text-primary text-sm font-medium hover:text-primary-dark"
-            >
-              Ver detalles
-            </a>
+          <div class="mt-2 flex items-center">
+            <i class="fas fa-file-upload text-gray-300 mr-2"></i>
+            <span class="text-gray-400 text-xs">vs. ayer</span>
           </div>
         </div>
 
         <!-- Estadística 2: Archivos esta semana -->
         <div
-          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+          class="bg-white px-5 py-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <div class="p-5">
-            <div class="flex items-center">
-              <div class="flex-shrink-0 rounded-full p-3 bg-purple-100">
-                <i class="fas fa-calendar-week text-purple-600 text-xl"></i>
-              </div>
-              <div class="ml-5 w-0 flex-1">
-                <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">
-                    Archivos esta semana
-                  </dt>
-                  <dd>
-                    <div class="text-lg font-bold text-primary-dark">
-                      {{ stats.files_week }}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+          <p
+            class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3"
+          >
+            Archivos semana
+          </p>
+          <div class="flex items-center justify-between">
+            <h3 class="text-3xl font-light text-gray-700">
+              {{ stats.files_week }}
+            </h3>
+            <div class="text-xs font-medium flex items-center">
+              {% if stats.files_week_percent > 0 %}
+              <span class="text-green-500"
+                >+{{ stats.files_week_percent }}%</span
+              >
+              {% elif stats.files_week_percent < 0 %}
+              <span class="text-red-500">{{ stats.files_week_percent }}%</span>
+              {% else %}
+              <span class="text-gray-400">0%</span>
+              {% endif %}
             </div>
           </div>
-          <div class="bg-surface px-5 py-3 flex items-center justify-between">
-            <div class="text-sm">
-              <span class="font-medium text-green-700">
-                <i class="fas fa-arrow-up mr-1"></i>{{ stats.files_week_percent
-                }}%
-              </span>
-              <span class="text-gray-500 ml-1">vs. semana pasada</span>
-            </div>
-            <a
-              href="#detalle-archivos"
-              class="text-primary text-sm font-medium hover:text-primary-dark"
-            >
-              Ver detalles
-            </a>
+          <div class="mt-2 flex items-center">
+            <i class="fas fa-calendar-week text-gray-300 mr-2"></i>
+            <span class="text-gray-400 text-xs">vs. semana pasada</span>
           </div>
         </div>
 
         <!-- Estadística 3: Archivos este mes -->
         <div
-          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+          class="bg-white px-5 py-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <div class="p-5">
-            <div class="flex items-center">
-              <div class="flex-shrink-0 rounded-full p-3 bg-orange-100">
-                <i class="fas fa-calendar-alt text-orange-600 text-xl"></i>
-              </div>
-              <div class="ml-5 w-0 flex-1">
-                <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">
-                    Archivos este mes
-                  </dt>
-                  <dd>
-                    <div class="text-lg font-bold text-primary-dark">
-                      {{ stats.files_month }}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+          <p
+            class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3"
+          >
+            Archivos mes
+          </p>
+          <div class="flex items-center justify-between">
+            <h3 class="text-3xl font-light text-gray-700">
+              {{ stats.files_month }}
+            </h3>
+            <div class="text-xs font-medium flex items-center">
+              {% if stats.files_month_percent > 0 %}
+              <span class="text-green-500"
+                >+{{ stats.files_month_percent }}%</span
+              >
+              {% elif stats.files_month_percent < 0 %}
+              <span class="text-red-500">{{ stats.files_month_percent }}%</span>
+              {% else %}
+              <span class="text-gray-400">0%</span>
+              {% endif %}
             </div>
           </div>
-          <div class="bg-surface px-5 py-3 flex items-center justify-between">
-            <div class="text-sm">
-              <span class="font-medium text-green-700">
-                <i class="fas fa-arrow-up mr-1"></i>{{ stats.files_month_percent
-                }}%
-              </span>
-              <span class="text-gray-500 ml-1">vs. mes pasado</span>
-            </div>
-            <a
-              href="#detalle-archivos"
-              class="text-primary text-sm font-medium hover:text-primary-dark"
-            >
-              Ver detalles
-            </a>
+          <div class="mt-2 flex items-center">
+            <i class="fas fa-calendar-alt text-gray-300 mr-2"></i>
+            <span class="text-gray-400 text-xs">vs. mes pasado</span>
           </div>
         </div>
 
         <!-- Estadística 4: Usuarios nuevos -->
         <div
-          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+          class="bg-white px-5 py-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <div class="p-5">
-            <div class="flex items-center">
-              <div class="flex-shrink-0 rounded-full p-3 bg-green-100">
-                <i class="fas fa-user-plus text-green-600 text-xl"></i>
-              </div>
-              <div class="ml-5 w-0 flex-1">
-                <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">
-                    Usuarios nuevos (mes)
-                  </dt>
-                  <dd>
-                    <div class="text-lg font-bold text-primary-dark">
-                      {{ stats.new_users_month }}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+          <p
+            class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3"
+          >
+            Usuarios nuevos
+          </p>
+          <div class="flex items-center justify-between">
+            <h3 class="text-3xl font-light text-gray-700">
+              {{ stats.new_users_month }}
+            </h3>
+            <div class="text-xs font-medium flex items-center">
+              {% if stats.new_users_percent > 0 %}
+              <span class="text-green-500"
+                >+{{ stats.new_users_percent }}%</span
+              >
+              {% elif stats.new_users_percent < 0 %}
+              <span class="text-red-500">{{ stats.new_users_percent }}%</span>
+              {% else %}
+              <span class="text-gray-400">0%</span>
+              {% endif %}
             </div>
           </div>
-          <div class="bg-surface px-5 py-3 flex items-center justify-between">
-            <div class="text-sm">
-              <span class="font-medium text-green-700">
-                <i class="fas fa-arrow-up mr-1"></i>{{ stats.new_users_percent
-                }}%
-              </span>
-              <span class="text-gray-500 ml-1">vs. mes pasado</span>
-            </div>
-            <a
-              href="#detalle-usuarios"
-              class="text-primary text-sm font-medium hover:text-primary-dark"
-            >
-              Ver detalles
-            </a>
+          <div class="mt-2 flex items-center">
+            <i class="fas fa-user-plus text-gray-300 mr-2"></i>
+            <span class="text-gray-400 text-xs">vs. mes pasado</span>
           </div>
         </div>
       </div>
-
       <!-- Gráficas principales -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Gráfica de archivos -->
@@ -495,7 +459,6 @@
         </div>
       </div>
     </div>
-
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         // Obtener los datos de los gráficos del backend (pasados como variable)
@@ -709,8 +672,8 @@
             filesChart.update();
 
             // Actualizar estilo de botones
-            periodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
-            this.classList.add('active', 'bg-primary', 'text-white');
+            periodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-gray-500'));
+            this.classList.add('active', 'bg-primary', 'text-gray-500');
           });
         });
 
@@ -724,14 +687,14 @@
             usersChart.update();
 
             // Actualizar estilo de botones
-            userPeriodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
-            this.classList.add('active', 'bg-primary', 'text-white');
+            userPeriodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-gray-500'));
+            this.classList.add('active', 'bg-primary', 'text-gray-500');
           });
         });
 
         // Estilo inicial para botones activos
         document.querySelectorAll('.period-btn.active, .user-period-btn.active').forEach(btn => {
-          btn.classList.add('bg-primary', 'text-white');
+          btn.classList.add('bg-primary', 'text-gray-500');
         });
       });
     </script>

@@ -35,7 +35,7 @@ function renderUserTable(users) {
   users.forEach((u) => {
     const displayName = (u.name || "") + " " + (u.lastname || "");
     const iconLetter = u.name ? u.name[0].toUpperCase() : "U";
-    const roles = u.roles[0];
+    const roles = u.roles[0] || "Sin rol";
     console.log(u);
   
     html += `
@@ -57,14 +57,13 @@ function renderUserTable(users) {
           <div class="text-sm text-gray-500">${u.email}</div>
         </td>
 
-        <!-- Si no devuelves roles en JSON, puedes dejar vacío -->
         <td class="px-6 py-4">
           <span class="text-xs text-gray-400">${roles}</span>
         </td>
 
         <td class="px-6 py-4 whitespace-nowrap">
           <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
-            ${u.folders_count} carpeta
+            ${u.folders_count} carpeta${u.folders_count !== 1 ? 's' : ''}
           </span>
         </td>
 

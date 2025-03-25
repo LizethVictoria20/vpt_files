@@ -2,12 +2,15 @@ from collections import defaultdict
 from flask import Blueprint, Response, abort, flash, jsonify, render_template, request, redirect, send_file, session, url_for
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_principal import Permission, RoleNeed
+from myapp.dashboard import calculate_percent_change, get_charts_data, get_file_types_stats
 from myapp.dropbox_utils import _get_dbx
 from myapp.models import DriveFile, DriveFolder, Roles, User
 from forms import DeleteForm
 from myapp.services.preview_files_service import preview_file_logic
 from myapp.services.search_service import buscar_archivos, buscar_usuarios
-
+from datetime import datetime, timedelta
+from sqlalchemy import func
+import calendar
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 login_manager = LoginManager()
@@ -110,3 +113,108 @@ def eliminar_archivo(file_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": f"Error al eliminar archivo: {str(e)}"}), 500
+    
+    
+@superadmin_permission.require(http_exception=403)      
+@admin_bp.route('/dashboard', methods=['GET'])
+@login_required
+def dashboard():
+    from app import db
+    # Fechas para filtrar
+    today = datetime.utcnow().date()
+    yesterday = today - timedelta(days=1)
+    start_of_week = today - timedelta(days=today.weekday())
+    last_week_start = start_of_week - timedelta(days=7)
+    last_week_end = start_of_week - timedelta(days=1)
+    
+    # Primer día del mes actual
+    first_day_of_month = today.replace(day=1)
+    
+    # Último día del mes anterior
+    last_month = (first_day_of_month - timedelta(days=1))
+    first_day_last_month = last_month.replace(day=1)
+    
+    # Archivos subidos hoy
+    files_today_count = DriveFile.query.filter(
+        func.date(DriveFile.uploaded_at) == today
+    ).count()
+    
+    # Archivos subidos ayer
+    files_yesterday_count = DriveFile.query.filter(
+        func.date(DriveFile.uploaded_at) == yesterday
+    ).count()
+    
+    # Archivos subidos esta semana
+    files_this_week_count = DriveFile.query.filter(
+        func.date(DriveFile.uploaded_at) >= start_of_week,
+        func.date(DriveFile.uploaded_at) <= today
+    ).count()
+    
+    # Archivos subidos la semana pasada
+    files_last_week_count = DriveFile.query.filter(
+        func.date(DriveFile.uploaded_at) >= last_week_start,
+        func.date(DriveFile.uploaded_at) <= last_week_end
+    ).count()
+    
+    # Archivos subidos este mes
+    files_this_month_count = DriveFile.query.filter(
+        func.date(DriveFile.uploaded_at) >= first_day_of_month,
+        func.date(DriveFile.uploaded_at) <= today
+    ).count()
+    
+    # Archivos subidos el mes pasado
+    files_last_month_count = DriveFile.query.filter(
+        func.date(DriveFile.uploaded_at) >= first_day_last_month,
+        func.date(DriveFile.uploaded_at) < first_day_of_month
+    ).count()
+    
+    # Usuarios nuevos este mes
+    new_users_this_month = User.query.filter(
+        func.date(User.created_at) >= first_day_of_month,
+        func.date(User.created_at) <= today
+    ).count()
+    
+    # Usuarios nuevos el mes pasado
+    new_users_last_month = User.query.filter(
+        func.date(User.created_at) >= first_day_last_month,
+        func.date(User.created_at) < first_day_of_month
+    ).count()
+    
+    # Calcular porcentajes de cambio
+    files_today_percent = calculate_percent_change(files_today_count, files_yesterday_count)
+    files_week_percent = calculate_percent_change(files_this_week_count, files_last_week_count)
+    files_month_percent = calculate_percent_change(files_this_month_count, files_last_month_count)
+    new_users_percent = calculate_percent_change(new_users_this_month, new_users_last_month)
+    
+    # Crear diccionario de estadísticas
+    stats = {
+        'files_today': files_today_count,
+        'files_today_percent': files_today_percent,
+        'files_week': files_this_week_count,
+        'files_week_percent': files_week_percent,
+        'files_month': files_this_month_count,
+        'files_month_percent': files_month_percent,
+        'new_users_month': new_users_this_month,
+        'new_users_percent': new_users_percent
+    }
+    
+    # Obtener archivos recientes para la tabla
+    recent_files = DriveFile.query.order_by(DriveFile.uploaded_at.desc()).limit(10).all()
+    recent_files = db.session.query(DriveFile, User)\
+    .join(DriveFolder, DriveFile.folder_id == DriveFolder.id)\
+    .join(User, DriveFolder.user_id == User.id)\
+    .order_by(DriveFile.uploaded_at.desc())\
+    .limit(5).all()
+
+    # Datos para las gráficas
+    charts_data = get_charts_data()
+    file_types = get_file_types_stats()
+
+    return render_template(
+        'dashboard.html', 
+        stats=stats,
+        recent_files=recent_files,
+        file_types=file_types,
+        charts_data=charts_data
+    )
+

@@ -1,11 +1,739 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Dashboard</h1>
-</body>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Estadísticas - ImportSystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: "#0076a8",
+                light: "#0095c7",
+                dark: "#005685",
+              },
+              accent: {
+                DEFAULT: "#0088b0",
+                light: "#00a8d4",
+                dark: "#00678e",
+              },
+              surface: {
+                light: "#FFFFFF",
+                DEFAULT: "#F0F7FC",
+                dark: "#D9E9F2",
+              },
+            },
+            fontFamily: {
+              montserrat: ["Montserrat", "sans-serif"],
+              opensans: ["Open Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Montserrat", sans-serif;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease-out forwards;
+      }
+
+      .stat-card {
+        transition: all 0.2s ease-in-out;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    {% include 'base.html' %}
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Encabezado -->
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between mb-8"
+      >
+        <div>
+          <h1 class="text-3xl font-bold text-primary-dark mb-1">
+            Dashboard Estadístico
+          </h1>
+          <p class="text-gray-600 text-sm">
+            Monitorea la actividad y crecimiento del sistema
+          </p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <div class="inline-flex rounded-md shadow">
+            <button
+              type="button"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              <i class="fas fa-sync-alt mr-2"></i>
+              Actualizar datos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjetas de estadísticas generales -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Estadística 1: Archivos hoy -->
+        <div
+          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+        >
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 rounded-full p-3 bg-blue-100">
+                <i class="fas fa-file-upload text-blue-600 text-xl"></i>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Archivos subidos hoy
+                  </dt>
+                  <dd>
+                    <div class="text-lg font-bold text-primary-dark">
+                      {{ stats.files_today }}
+                    </div>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-surface px-5 py-3 flex items-center justify-between">
+            <div class="text-sm">
+              <span class="font-medium text-green-700">
+                <i class="fas fa-arrow-up mr-1"></i>{{ stats.files_today_percent
+                }}%
+              </span>
+              <span class="text-gray-500 ml-1">vs. ayer</span>
+            </div>
+            <a
+              href="#detalle-archivos"
+              class="text-primary text-sm font-medium hover:text-primary-dark"
+            >
+              Ver detalles
+            </a>
+          </div>
+        </div>
+
+        <!-- Estadística 2: Archivos esta semana -->
+        <div
+          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+        >
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 rounded-full p-3 bg-purple-100">
+                <i class="fas fa-calendar-week text-purple-600 text-xl"></i>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Archivos esta semana
+                  </dt>
+                  <dd>
+                    <div class="text-lg font-bold text-primary-dark">
+                      {{ stats.files_week }}
+                    </div>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-surface px-5 py-3 flex items-center justify-between">
+            <div class="text-sm">
+              <span class="font-medium text-green-700">
+                <i class="fas fa-arrow-up mr-1"></i>{{ stats.files_week_percent
+                }}%
+              </span>
+              <span class="text-gray-500 ml-1">vs. semana pasada</span>
+            </div>
+            <a
+              href="#detalle-archivos"
+              class="text-primary text-sm font-medium hover:text-primary-dark"
+            >
+              Ver detalles
+            </a>
+          </div>
+        </div>
+
+        <!-- Estadística 3: Archivos este mes -->
+        <div
+          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+        >
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 rounded-full p-3 bg-orange-100">
+                <i class="fas fa-calendar-alt text-orange-600 text-xl"></i>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Archivos este mes
+                  </dt>
+                  <dd>
+                    <div class="text-lg font-bold text-primary-dark">
+                      {{ stats.files_month }}
+                    </div>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-surface px-5 py-3 flex items-center justify-between">
+            <div class="text-sm">
+              <span class="font-medium text-green-700">
+                <i class="fas fa-arrow-up mr-1"></i>{{ stats.files_month_percent
+                }}%
+              </span>
+              <span class="text-gray-500 ml-1">vs. mes pasado</span>
+            </div>
+            <a
+              href="#detalle-archivos"
+              class="text-primary text-sm font-medium hover:text-primary-dark"
+            >
+              Ver detalles
+            </a>
+          </div>
+        </div>
+
+        <!-- Estadística 4: Usuarios nuevos -->
+        <div
+          class="stat-card bg-white overflow-hidden shadow-sm rounded-xl border border-surface-dark/10"
+        >
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 rounded-full p-3 bg-green-100">
+                <i class="fas fa-user-plus text-green-600 text-xl"></i>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">
+                    Usuarios nuevos (mes)
+                  </dt>
+                  <dd>
+                    <div class="text-lg font-bold text-primary-dark">
+                      {{ stats.new_users_month }}
+                    </div>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="bg-surface px-5 py-3 flex items-center justify-between">
+            <div class="text-sm">
+              <span class="font-medium text-green-700">
+                <i class="fas fa-arrow-up mr-1"></i>{{ stats.new_users_percent
+                }}%
+              </span>
+              <span class="text-gray-500 ml-1">vs. mes pasado</span>
+            </div>
+            <a
+              href="#detalle-usuarios"
+              class="text-primary text-sm font-medium hover:text-primary-dark"
+            >
+              Ver detalles
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficas principales -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Gráfica de archivos -->
+        <div
+          class="bg-white rounded-xl shadow-sm border border-surface-dark/10 overflow-hidden"
+        >
+          <div
+            class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-chart-line text-accent mr-3"></i>
+              <h2
+                class="text-xl font-semibold text-primary-dark"
+                id="detalle-archivos"
+              >
+                Archivos Subidos
+              </h2>
+            </div>
+            <div class="flex space-x-2">
+              <button
+                class="px-3 py-1 text-xs font-medium rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 period-btn active"
+                data-period="week"
+              >
+                Semana
+              </button>
+              <button
+                class="px-3 py-1 text-xs font-medium rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 period-btn"
+                data-period="month"
+              >
+                Mes
+              </button>
+              <button
+                class="px-3 py-1 text-xs font-medium rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 period-btn"
+                data-period="year"
+              >
+                Año
+              </button>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="h-80">
+              <canvas id="filesChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfica de usuarios -->
+        <div
+          class="bg-white rounded-xl shadow-sm border border-surface-dark/10 overflow-hidden"
+        >
+          <div
+            class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-users text-accent mr-3"></i>
+              <h2
+                class="text-xl font-semibold text-primary-dark"
+                id="detalle-usuarios"
+              >
+                Usuarios Nuevos
+              </h2>
+            </div>
+            <div class="flex space-x-2">
+              <button
+                class="px-3 py-1 text-xs font-medium rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 user-period-btn active"
+                data-period="week"
+              >
+                Semana
+              </button>
+              <button
+                class="px-3 py-1 text-xs font-medium rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 user-period-btn"
+                data-period="month"
+              >
+                Mes
+              </button>
+              <button
+                class="px-3 py-1 text-xs font-medium rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 user-period-btn"
+                data-period="year"
+              >
+                Año
+              </button>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="h-80">
+              <canvas id="usersChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recientes y Estadísticas -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Archivos recientes -->
+        <div
+          class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-surface-dark/10 overflow-hidden"
+        >
+          <div
+            class="px-6 py-5 border-b border-gray-100 flex items-center justify-between"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-file-alt text-accent mr-3"></i>
+              <h2 class="text-xl font-semibold text-primary-dark">
+                Archivos Recientes
+              </h2>
+            </div>
+            <a
+              href="{{ url_for('main.listar_carpetas') }}"
+              class="text-primary hover:text-primary-dark text-sm font-medium"
+            >
+              Ver todos
+            </a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-surface">
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Archivo
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Usuario
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Fecha
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Tamaño
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                {% for file, user in recent_files %}
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div
+                        class="flex-shrink-0 h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center"
+                      >
+                        <i class="fas fa-file text-gray-400"></i>
+                      </div>
+                      <div class="ml-4">
+                        <div
+                          class="text-sm font-medium text-gray-900 truncate max-w-xs"
+                        >
+                          {{ file.filename }}
+                        </div>
+                        <div class="text-xs text-gray-500">
+                          {{ file.mimetype }}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900">{{ user.username }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-500">
+                      {{ file.uploaded_at.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ file.size }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% if not recent_files %}
+          <div class="p-8 text-center">
+            <div
+              class="mx-auto h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mb-4"
+            >
+              <i class="fas fa-inbox text-gray-400 text-xl"></i>
+            </div>
+            <h3 class="text-sm font-medium text-gray-900">
+              No hay archivos recientes
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+              Aún no se han subido archivos al sistema.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Distribución por tipo -->
+        <div
+          class="bg-white rounded-xl shadow-sm border border-surface-dark/10 overflow-hidden"
+        >
+          <div class="px-6 py-5 border-b border-gray-100 flex items-center">
+            <i class="fas fa-chart-pie text-accent mr-3"></i>
+            <h2 class="text-xl font-semibold text-primary-dark">
+              Distribución por Tipo
+            </h2>
+          </div>
+          <div class="p-6">
+            <div class="h-72">
+              <canvas id="fileTypesChart"></canvas>
+            </div>
+            <div class="mt-6 space-y-2">
+              {% for type in file_types %}
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <span
+                    class="inline-block w-3 h-3 rounded-full mr-2"
+                    style="background-color: {{ type.color }};"
+                  ></span>
+                  <span class="text-sm text-gray-600">{{ type.name }}</span>
+                </div>
+                <div class="text-sm font-medium">
+                  {{ type.count }} ({{ type.percentage }}%)
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Obtener los datos de los gráficos del backend (pasados como variable)
+        const chartsData = {{ charts_data|tojson }};
+
+        // Preparar datos para los gráficos de archivos
+        const filesData = {
+          week: {
+            labels: chartsData.files.week.map(item => item.label),
+            datasets: [{
+              label: 'Archivos subidos',
+              data: chartsData.files.week.map(item => item.value),
+              borderColor: '#0076a8',
+              backgroundColor: 'rgba(0, 118, 168, 0.1)',
+              tension: 0.3,
+              fill: true
+            }]
+          },
+          month: {
+            labels: chartsData.files.month.map(item => item.label),
+            datasets: [{
+              label: 'Archivos subidos',
+              data: chartsData.files.month.map(item => item.value),
+              borderColor: '#0076a8',
+              backgroundColor: 'rgba(0, 118, 168, 0.1)',
+              tension: 0.3,
+              fill: true
+            }]
+          },
+          year: {
+            labels: chartsData.files.year.map(item => item.label),
+            datasets: [{
+              label: 'Archivos subidos',
+              data: chartsData.files.year.map(item => item.value),
+              borderColor: '#0076a8',
+              backgroundColor: 'rgba(0, 118, 168, 0.1)',
+              tension: 0.3,
+              fill: true
+            }]
+          }
+        };
+
+        // Preparar datos para los gráficos de usuarios
+        const usersData = {
+          week: {
+            labels: chartsData.users.week.map(item => item.label),
+            datasets: [{
+              label: 'Usuarios nuevos',
+              data: chartsData.users.week.map(item => item.value),
+              borderColor: '#00a8d4',
+              backgroundColor: 'rgba(0, 168, 212, 0.1)',
+              tension: 0.3,
+              fill: true
+            }]
+          },
+          month: {
+            labels: chartsData.users.month.map(item => item.label),
+            datasets: [{
+              label: 'Usuarios nuevos',
+              data: chartsData.users.month.map(item => item.value),
+              borderColor: '#00a8d4',
+              backgroundColor: 'rgba(0, 168, 212, 0.1)',
+              tension: 0.3,
+              fill: true
+            }]
+          },
+          year: {
+            labels: chartsData.users.year.map(item => item.label),
+            datasets: [{
+              label: 'Usuarios nuevos',
+              data: chartsData.users.year.map(item => item.value),
+              borderColor: '#00a8d4',
+              backgroundColor: 'rgba(0, 168, 212, 0.1)',
+              tension: 0.3,
+              fill: true
+            }]
+          }
+        };
+
+        // Obtener datos para el gráfico circular de tipos de archivo
+        const fileTypes = {{ file_types|tojson }};
+
+        // Colores para el gráfico circular
+        const fileTypesColors = fileTypes.map(type => type.color);
+
+        // Datos para el gráfico circular
+        const fileTypesData = {
+          labels: fileTypes.map(type => type.name),
+          datasets: [{
+            data: fileTypes.map(type => type.count),
+            backgroundColor: fileTypesColors,
+            borderWidth: 0
+          }]
+        };
+
+        // Configuración y creación de gráficos
+        // Gráfico de archivos
+        const filesCtx = document.getElementById('filesChart').getContext('2d');
+        const filesChart = new Chart(filesCtx, {
+          type: 'line',
+          data: filesData.week,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `Archivos: ${context.parsed.y}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  drawBorder: false
+                },
+                ticks: {
+                  precision: 0
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        });
+
+        // Gráfico de usuarios
+        const usersCtx = document.getElementById('usersChart').getContext('2d');
+        const usersChart = new Chart(usersCtx, {
+          type: 'line',
+          data: usersData.week,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `Usuarios: ${context.parsed.y}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  drawBorder: false
+                },
+                ticks: {
+                  precision: 0
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        });
+
+        // Gráfico de tipos de archivo
+        const fileTypesCtx = document.getElementById('fileTypesChart').getContext('2d');
+        const fileTypesChart = new Chart(fileTypesCtx, {
+          type: 'doughnut',
+          data: fileTypesData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const label = context.label || '';
+                    const value = context.parsed || 0;
+                    const percentage = context.dataset.data[context.dataIndex] /
+                      context.dataset.data.reduce((a, b) => a + b, 0) * 100;
+                    return `${label}: ${value} (${percentage.toFixed(1)}%)`;
+                  }
+                }
+              }
+            },
+            cutout: '70%'
+          }
+        });
+
+        // Cambiar periodos en los gráficos
+        const periodBtns = document.querySelectorAll('.period-btn');
+        periodBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            const period = this.getAttribute('data-period');
+
+            // Actualizar gráfico
+            filesChart.data = filesData[period];
+            filesChart.update();
+
+            // Actualizar estilo de botones
+            periodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
+            this.classList.add('active', 'bg-primary', 'text-white');
+          });
+        });
+
+        const userPeriodBtns = document.querySelectorAll('.user-period-btn');
+        userPeriodBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            const period = this.getAttribute('data-period');
+
+            // Actualizar gráfico
+            usersChart.data = usersData[period];
+            usersChart.update();
+
+            // Actualizar estilo de botones
+            userPeriodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
+            this.classList.add('active', 'bg-primary', 'text-white');
+          });
+        });
+
+        // Estilo inicial para botones activos
+        document.querySelectorAll('.period-btn.active, .user-period-btn.active').forEach(btn => {
+          btn.classList.add('bg-primary', 'text-white');
+        });
+      });
+    </script>
+  </body>
 </html>

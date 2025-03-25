@@ -335,13 +335,6 @@ def delete_user(user_id):
     return redirect(url_for('main.profile'))
 
 
-@client_permission.require(http_exception=403)
-@superadmin_permission.require(http_exception=403)      
-@main_bp.route('/dashboard', methods=['GET'])
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
-
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)
 @admin_permission.require(http_exception=403)

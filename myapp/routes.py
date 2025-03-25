@@ -37,7 +37,6 @@ def login():
     from app import bcrypt
     form = LoginForm()
     errors = {}
-
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
@@ -56,6 +55,7 @@ def login():
         is_superadmin = any(role.slug == 'superadmin' for role in user.roles)
         is_admin = any(role.slug == 'admin' for role in user.roles)
         is_cliente = any(role.slug == 'cliente' for role in user.roles)
+        is_lector = any(role.slug == 'lector' for role in user.roles)
         
         folder = DriveFolder.query.filter_by(user_id=user.id).first()
         
@@ -63,14 +63,21 @@ def login():
             return redirect(url_for('superadmin.gestionar_permisos'))
         elif is_admin:
             return redirect(url_for('main.listar_carpetas'))
-        elif is_cliente and folder:
-            return redirect(url_for('main.import_files', folder_id=folder.id))
+        elif is_cliente:
+            if folder:
+                return redirect(url_for('main.import_files', folder_id=folder.id))
+            else:
+                return redirect(url_for('main.profile')) 
+        elif is_lector:
+            if folder:
+                return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
+            else:
+                return redirect(url_for('main.profile'))  
         elif folder:
             return redirect(url_for('main.ver_carpeta', folder_id=folder.id))
         else:
             errors['general'] = 'No tienes carpeta asociada. Contacta al administrador.'
             return render_template('login.html', form=form, errors=errors, username=username)
-
     return render_template('login.html', form=form, errors=errors)
 
 @main_bp.route('/profile', methods=['GET', 'POST'])

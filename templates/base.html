@@ -130,13 +130,21 @@
               >
                 Dashboard
               </a>
-              {% else %}
+              {% endif %}
+              <!-- LECTOR -->
+              {% if 'lector' in user_roles %}
               <a
                 href="{{ url_for('main.listar_carpetas') }}"
                 class="{% if request.endpoint == 'main.listar_carpetas' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
               >
                 Usuarios
               </a>
+              <a
+              href="{{ url_for('admin.dashboard') }}"
+              class="{% if request.endpoint == 'admin.dashboard' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
+            >
+              Dashboard
+            </a>
               {% endif %}
 
               <a
@@ -144,12 +152,6 @@
                 class="{% if request.endpoint == 'main.profile' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
               >
                 Perfil
-              </a>
-              <a
-                href="{{ url_for('admin.dashboard') }}"
-                class="{% if request.endpoint == 'admin.dashboard' %} text-primary font-medium border-b-2 border-primary {% else %} text-gray-600 hover:text-primary font-medium border-b-2 border-transparent hover:border-primary/30 {% endif %} h-16 flex items-center transition-colors duration-150"
-              >
-                Dashboard
               </a>
               {% set first_folder = current_user.folders[0] if
               current_user.folders else None %} {% if first_folder %}

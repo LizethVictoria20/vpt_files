@@ -40,6 +40,7 @@ def admin_required(f):
 def admin_ver_carpeta(folder_id):
     folder = DriveFolder.query.get_or_404(folder_id)
     archivos = DriveFile.query.filter_by(folder_id=folder.id).all()
+    is_lector = any(role.slug == 'lector' for role in current_user.roles)
 
     by_group = defaultdict(lambda: defaultdict(list))
     for f in archivos:
@@ -50,7 +51,8 @@ def admin_ver_carpeta(folder_id):
     return render_template(
         'admin_ver_usuario.html',
         folder=folder,
-        by_group=by_group
+        by_group=by_group,
+        is_lector=is_lector
     )
 
 

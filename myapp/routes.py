@@ -427,10 +427,18 @@ def eliminar_carpeta(folder_id):
 @main_bp.route('/carpetas', methods=['GET', 'POST'])
 @login_required
 def listar_carpetas():
-    usuarios = User.query.all()
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    usuarios_paginados = User.query.paginate(page=page, per_page=per_page, error_out=False)
+    usuarios = usuarios_paginados.items
     delete_form = DeleteForm()
-    return render_template('listar_carpetas.html', usuarios=usuarios, delete_form=delete_form)
-
+    
+    return render_template(
+        'listar_carpetas.html', 
+        usuarios=usuarios, 
+        delete_form=delete_form,
+        pagination=usuarios_paginados
+    )
 
 @admin_permission.require(http_exception=403)
 @superadmin_permission.require(http_exception=403)

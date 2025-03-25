@@ -6,7 +6,10 @@
     <title>Administración de Usuarios</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
         font-family: "Montserrat", sans-serif;
@@ -18,24 +21,24 @@
           extend: {
             colors: {
               primary: {
-                light: '#0095c7',
-                DEFAULT: '#0076a8',
-                dark: '#005685'
+                light: "#0095c7",
+                DEFAULT: "#0076a8",
+                dark: "#005685",
               },
               accent: {
-                light: '#00a8d4',
-                DEFAULT: '#0088b0',
-                dark: '#00678e'
+                light: "#00a8d4",
+                DEFAULT: "#0088b0",
+                dark: "#00678e",
               },
               surface: {
-                light: '#FFFFFF',
-                DEFAULT: '#F0F7FC',
-                dark: '#D9E9F2'
-              }
-            }
-          }
-        }
-      }
+                light: "#FFFFFF",
+                DEFAULT: "#F0F7FC",
+                dark: "#D9E9F2",
+              },
+            },
+          },
+        },
+      };
     </script>
   </head>
   <body class="bg-gray-50 min-h-screen">
@@ -43,19 +46,33 @@
     <div class="min-h-screen bg-gray-50">
       <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Encabezado de sección -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4"
+        >
           <div>
-            <h2 class="text-3xl font-bold text-primary-dark mb-1">Lista de Usuarios</h2>
-            <p class="text-gray-600 text-sm">Gestiona los usuarios del sistema</p>
+            <h2 class="text-3xl font-bold text-primary-dark mb-1">
+              Lista de Usuarios
+            </h2>
+            <p class="text-gray-600 text-sm">
+              Gestiona los usuarios del sistema
+            </p>
           </div>
         </div>
 
         <!-- Buscador -->
-        <div class="mb-8 bg-white p-6 rounded-2xl shadow-md border border-surface-dark/10">
+        <div
+          class="mb-8 bg-white p-6 rounded-2xl shadow-md border border-surface-dark/10"
+        >
           <div class="max-w-xl">
-            <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-2">Buscar usuario</label>
+            <label
+              for="searchInput"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Buscar usuario</label
+            >
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+              >
                 <i class="fas fa-search text-gray-400"></i>
               </div>
               <input
@@ -70,9 +87,11 @@
             <div id="liveResults" class="mt-4 space-y-2"></div>
           </div>
         </div>
-        
+
         <!-- Tabla de Usuarios -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-surface-dark/10 mb-8">
+        <div
+          class="bg-white rounded-2xl shadow-lg overflow-hidden border border-surface-dark/10 mb-8"
+        >
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-surface">
@@ -121,7 +140,10 @@
                   </th>
                 </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200" id="userTableBody">
+              <tbody
+                class="bg-white divide-y divide-gray-200"
+                id="userTableBody"
+              >
                 {% for user in usuarios %}
                 <tr class="hover:bg-surface/50 transition-all">
                   <td class="px-6 py-5 whitespace-nowrap">
@@ -135,7 +157,9 @@
                         <div class="text-sm font-semibold text-gray-900">
                           {{ user.name }} {{ user.lastname }}
                         </div>
-                        <div class="text-xs text-gray-500">@{{ user.username }}</div>
+                        <div class="text-xs text-gray-500">
+                          @{{ user.username }}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -202,37 +226,79 @@
         </div>
 
         <!-- Paginación -->
-        <div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
+        <!-- Paginación -->
+        <div
+          class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between"
+        >
           <div class="text-sm text-gray-600">
-            Mostrando <span class="font-medium">1</span> a
-            <span class="font-medium">{{ usuarios|length }}</span> de
-            <span class="font-medium">{{ usuarios|length }}</span> usuarios
+            Mostrando
+            <span class="font-medium"
+              >{{ (pagination.page - 1) * pagination.per_page + 1 }}</span
+            >
+            a
+            <span class="font-medium"
+              >{{ (pagination.page - 1) * pagination.per_page + usuarios|length
+              }}</span
+            >
+            de <span class="font-medium">{{ pagination.total }}</span> usuarios
           </div>
           <div class="flex-1 flex justify-end">
             <nav
               class="relative z-0 inline-flex shadow-sm -space-x-px"
               aria-label="Pagination"
             >
+              {% if pagination.has_prev %}
               <a
-                href="#"
+                href="{{ url_for('main.listar_carpetas', page=pagination.prev_num) }}"
                 class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-surface transition-all"
               >
                 <span class="sr-only">Anterior</span>
                 <i class="fas fa-chevron-left text-xs"></i>
               </a>
-              <a
-                href="#"
+              {% else %}
+              <span
+                class="relative inline-flex items-center px-3 py-2 rounded-l-lg border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed"
+              >
+                <span class="sr-only">Anterior</span>
+                <i class="fas fa-chevron-left text-xs"></i>
+              </span>
+              {% endif %} {% for page_num in pagination.iter_pages(left_edge=1,
+              right_edge=1, left_current=2, right_current=2) %} {% if page_num
+              %} {% if page_num == pagination.page %}
+              <span
                 class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-primary text-sm font-medium text-white"
               >
-                1
-              </a>
+                {{ page_num }}
+              </span>
+              {% else %}
               <a
-                href="#"
+                href="{{ url_for('main.listar_carpetas', page=page_num) }}"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-surface transition-all"
+              >
+                {{ page_num }}
+              </a>
+              {% endif %} {% else %}
+              <span
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+              >
+                ...
+              </span>
+              {% endif %} {% endfor %} {% if pagination.has_next %}
+              <a
+                href="{{ url_for('main.listar_carpetas', page=pagination.next_num) }}"
                 class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-surface transition-all"
               >
                 <span class="sr-only">Siguiente</span>
                 <i class="fas fa-chevron-right text-xs"></i>
               </a>
+              {% else %}
+              <span
+                class="relative inline-flex items-center px-3 py-2 rounded-r-lg border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed"
+              >
+                <span class="sr-only">Siguiente</span>
+                <i class="fas fa-chevron-right text-xs"></i>
+              </span>
+              {% endif %}
             </nav>
           </div>
         </div>
@@ -246,10 +312,16 @@
       role="dialog"
       aria-modal="true"
     >
-      <div class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"></div>
+      <div
+        class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"
+      ></div>
       <div class="fixed inset-0 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-surface-dark/10">
-          <h2 class="text-xl font-bold text-primary-dark mb-4">Confirmar eliminación</h2>
+        <div
+          class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-surface-dark/10"
+        >
+          <h2 class="text-xl font-bold text-primary-dark mb-4">
+            Confirmar eliminación
+          </h2>
           <p class="text-gray-700 mb-6" id="deleteModalMessage"></p>
           <div class="flex justify-end space-x-4">
             <button
@@ -292,6 +364,88 @@
       function closeDeleteModal() {
         document.getElementById("deleteModal").classList.add("hidden");
       }
+    </script>
+    <script>
+      // Añadir este script a tu plantilla para mantener los filtros durante la paginación
+      document.addEventListener("DOMContentLoaded", function () {
+        // Obtener el campo de búsqueda
+        const searchInput = document.getElementById("searchInput");
+
+        // Verificar si hay un parámetro de búsqueda en la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get("search");
+
+        // Si hay un parámetro de búsqueda, establecerlo en el campo
+        if (searchQuery) {
+          searchInput.value = searchQuery;
+          // Opcionalmente, activar la búsqueda con el valor
+          filterTable(searchQuery);
+        }
+
+        // Añadir evento de búsqueda
+        searchInput.addEventListener("input", function () {
+          filterTable(this.value);
+        });
+
+        // Modificar todos los enlaces de paginación para incluir el filtro actual
+        function updatePaginationLinks() {
+          const paginationLinks = document.querySelectorAll(
+            'nav[aria-label="Pagination"] a'
+          );
+          const searchValue = searchInput.value.trim();
+
+          if (searchValue) {
+            paginationLinks.forEach((link) => {
+              const url = new URL(link.href);
+              url.searchParams.set("search", searchValue);
+              link.href = url.toString();
+            });
+          }
+        }
+
+        // Llamar a esta función cuando se escriba en el campo de búsqueda
+        searchInput.addEventListener("input", updatePaginationLinks);
+
+        // Llamar a esta función al cargar la página
+        updatePaginationLinks();
+
+        // Función para filtrar la tabla (funciona solo en el cliente)
+        function filterTable(query) {
+          query = query.toLowerCase();
+
+          const rows = document.querySelectorAll("#userTableBody tr");
+          let visibleCount = 0;
+
+          rows.forEach((row) => {
+            const username = row
+              .querySelector("td:nth-child(1)")
+              .textContent.toLowerCase();
+            const email = row
+              .querySelector("td:nth-child(2)")
+              .textContent.toLowerCase();
+            const roles = row
+              .querySelector("td:nth-child(3)")
+              .textContent.toLowerCase();
+
+            if (
+              username.includes(query) ||
+              email.includes(query) ||
+              roles.includes(query)
+            ) {
+              row.style.display = "";
+              visibleCount++;
+            } else {
+              row.style.display = "none";
+            }
+          });
+
+          // Opcionalmente, actualizar el contador de resultados
+          const countDisplay = document.querySelector(".text-gray-600");
+          if (countDisplay && visibleCount < rows.length) {
+            countDisplay.innerHTML = `Mostrando <span class="font-medium">${visibleCount}</span> de <span class="font-medium">${rows.length}</span> usuarios (filtrados)`;
+          }
+        }
+      });
     </script>
     <script src="{{ url_for('static', filename='js/search_as_admin.js') }}"></script>
 

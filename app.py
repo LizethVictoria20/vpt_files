@@ -9,8 +9,8 @@ from myapp.routes import main_bp
 from myapp.admin_routes import admin_bp
 from myapp.superadmin_routes import superadmin_bp
 import openai
-from myapp.models import db, User
 from flask_wtf import CSRFProtect
+from myapp.models import db, User, DriveFolder, DriveFile, Roles, UserRole
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -33,6 +33,21 @@ migrate = Migrate(app, db)
 app.register_blueprint(main_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(superadmin_bp)
+
+# Configuración de la base de datos
+if os.environ.get('DATABASE_URL'):
+    # Configuración para producción
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+else:
+    # Configuración para desarrollo local
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+    
+db = SQLAlchemy(app)
+
+with app.app_context():
+    db.create_all()
+    print("Tablas creadas correctamente")
+    
 
 @login_manager.user_loader
 def load_user(user_id):

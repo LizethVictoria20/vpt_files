@@ -1,6 +1,6 @@
 Flask==2.2.5
 flask-socketio==5.5.1
-eventlet==0.33.3        # o gevent, si prefieres
+eventlet==0.33.3
 flask-sqlalchemy==3.0.5
 Flask-Migrate==4.0.4
 openai==0.27.2
@@ -14,3 +14,4 @@ google-api-python-client
 google-auth 
 google-auth-oauthlib
 dropbox==11.36.0
+gunicorn==21.2.0

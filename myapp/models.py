@@ -1,8 +1,6 @@
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-
-db = SQLAlchemy()
+from myapp.db import db
 
 user_folders = db.Table('user_folders',
   db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),

@@ -1,7 +1,8 @@
 # manage.py
 import click
 from flask.cli import FlaskGroup
-from myapp import create_app, db
+from .myapp import db
+from myapp import create_app
 from myapp.models import User, Informe, Roles
 
 def create_my_app():

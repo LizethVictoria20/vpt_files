@@ -8,7 +8,7 @@ from flask_wtf import CSRFProtect
 import openai
 
 # Importa db solo una vez
-from db import db
+from myapp.db import db
 
 # Importa tus modelos y rutas (asegúrate de que no importen otra instancia de db)
 from myapp.routes import main_bp

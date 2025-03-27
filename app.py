@@ -47,8 +47,17 @@ app.register_blueprint(superadmin_bp)
 
 # Crear tablas
 with app.app_context():
-    db.create_all()
-    print("Tablas creadas correctamente")
+    existing_roles = ['admin', 'user', 'superadmin', 'lector']
+    for role_slug in existing_roles:
+        if not Roles.query.filter_by(slug=role_slug).first():
+            new_role = Roles(name=role_slug.capitalize(), slug=role_slug)
+            db.session.add(new_role)
+    db.session.commit()
+    
+    # Crear usuarios iniciales
+    from myapp.init_users import create_initial_users
+    create_initial_users()
+    
 
 @login_manager.user_loader
 def load_user(user_id):

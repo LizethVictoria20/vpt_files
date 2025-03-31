@@ -1,3 +1,5 @@
+import json
+import os
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 from forms import GeneralForm
@@ -25,8 +27,12 @@ def gestionar_permisos():
     from app import db
     form = GeneralForm()
     users = User.query.all()
-    roles = Roles.query.all()
+    roles_path = os.path.join(os.path.dirname(__file__), 'services', 'roles.json')
+    with open(roles_path, 'r', encoding='utf-8') as f:
+        roles_data = json.load(f)
     
+    # Extraer la lista de roles
+    roles = roles_data.get('roles', [])
     if request.method == 'POST':
         user_id = request.form['user_id']
         new_role_id = request.form.get('selected_role')

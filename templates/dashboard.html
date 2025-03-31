@@ -672,8 +672,8 @@
             filesChart.update();
 
             // Actualizar estilo de botones
-            periodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-gray-500'));
-            this.classList.add('active', 'bg-primary', 'text-gray-500');
+            periodBtns.forEach(b => b.classList.remove('active', 'bg-white', 'text-gray-500'));
+            this.classList.add('active', 'bg-white', 'text-gray-500');
           });
         });
 
@@ -687,14 +687,14 @@
             usersChart.update();
 
             // Actualizar estilo de botones
-            userPeriodBtns.forEach(b => b.classList.remove('active', 'bg-primary', 'text-gray-500'));
-            this.classList.add('active', 'bg-primary', 'text-gray-500');
+            userPeriodBtns.forEach(b => b.classList.remove('active', 'bg-red', 'text-gray-500'));
+            this.classList.add('active', 'bg-red', 'text-gray-500');
           });
         });
 
         // Estilo inicial para botones activos
         document.querySelectorAll('.period-btn.active, .user-period-btn.active').forEach(btn => {
-          btn.classList.add('bg-primary', 'text-gray-500');
+          btn.classList.add('bg-red', 'text-gray-500');
         });
       });
     </script>

@@ -484,6 +484,44 @@ def buscar_archivos_json():
     files = buscar_archivos(q, current_user, is_admin=False)
     return jsonify(files)
 
+@main_bp.route('/search/users', methods=['GET'])
+@login_required
+def search_users():
+    query = request.args.get('q', '').strip()
+
+    try:
+        users_query = User.query
+
+        if query:
+            users_query = users_query.filter(
+                (User.email.ilike(f"%{query}%")) |
+                (User.name.ilike(f"%{query}%")) |
+                (User.lastname.ilike(f"%{query}%")) |
+                (User.username.ilike(f"%{query}%"))
+            )
+
+        found_users = users_query.all()
+
+        results = []
+        for u in found_users:
+            role_names = [role.name for role in u.roles]
+            folders_count = len(u.folders)
+            results.append({
+                "id": u.id,
+                "username": u.username,
+                "email": u.email,
+                "name": u.name or '',
+                "lastname": u.lastname or '',
+                "roles": role_names,
+                "folders_count": folders_count,
+            })
+
+        return jsonify(results)
+    
+    except Exception as e:
+        print(f"Error en búsqueda de usuarios: {e}")
+        return jsonify({"error": "Error en la búsqueda"}), 500
+
 @main_bp.route("/preview_file/<int:file_id>")
 def preview_file(file_id):
     return preview_file_logic(file_id)

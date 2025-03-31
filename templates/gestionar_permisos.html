@@ -138,36 +138,6 @@
             />
           </div>
         </div>
-
-        <div class="w-full md:w-auto flex items-center space-x-3">
-          <div class="relative inline-block w-full md:w-auto">
-            <select
-              id="roleFilter"
-              class="block w-full pl-3 pr-10 py-2.5 text-base border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm rounded-md bg-white appearance-none"
-            >
-              <option value="all">Todos los roles</option>
-              {% for role in roles %}
-              <option value="{{ role.name }}">{{ role.name }}</option>
-              {% endfor %}
-            </select>
-            <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
-            >
-              <svg
-                class="h-5 w-5 text-gray-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Tarjeta principal con tabla de usuarios -->
@@ -356,6 +326,13 @@
                           </svg>
                           Actualizar
                         </button>
+                        <button
+                          type="button"
+                          onclick="confirmDeleteUser({{ user.id }}, '{{ user.username }}')"
+                          class="text-red-600 hover:text-red-700 transition-colors bg-red-50 hover:bg-red-100 p-2 rounded-lg"
+                        >
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
                       </div>
                     </td>
                   </form>
@@ -444,27 +421,57 @@
         <div class="bg-white shadow-lg rounded-xl p-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {% for role in roles %}
-            <div class="border-l-4 border-primary hover:border-accent transition-all duration-300 bg-gray-50/50 rounded-r-lg p-4 transform hover:-translate-y-2 hover:shadow-md">
+            <div
+              class="border-l-4 border-primary hover:border-accent transition-all duration-300 bg-gray-50/50 rounded-r-lg p-4 transform hover:-translate-y-2 hover:shadow-md"
+            >
               <div class="flex items-center mb-3">
-                <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                <div
+                  class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mr-4"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-primary"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
                   </svg>
                 </div>
-                <h3 class="text-lg font-semibold text-primary-dark">{{ role.name }}</h3>
+                <h3 class="text-lg font-semibold text-primary-dark">
+                  {{ role.name }}
+                </h3>
               </div>
               <p class="text-sm text-text-secondary mb-4 h-16 overflow-hidden">
                 {{ role.description }}
               </p>
               <div class="border-t border-gray-200 pt-4">
-                <h4 class="text-xs font-medium text-text-secondary mb-2 uppercase tracking-wider">
+                <h4
+                  class="text-xs font-medium text-text-secondary mb-2 uppercase tracking-wider"
+                >
                   Permisos
                 </h4>
                 <div class="space-y-1">
                   {% for permission in role.permissions %}
                   <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 text-accent mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     <span class="text-xs text-text">{{ permission }}</span>
                   </div>
@@ -531,114 +538,174 @@
       </div>
       {% endfor %} {% endif %}
     </div>
+    <div
+      id="deleteModal"
+      class="fixed inset-0 z-50 hidden"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"
+      ></div>
+      <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div
+          class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-surface-dark/10"
+        >
+          <h2 class="text-xl font-bold text-primary-dark mb-4">
+            Confirmar eliminación de usuario
+          </h2>
+          <div id="deleteModalMessage" class="mb-6"></div>
+          <div class="flex justify-end space-x-4">
+            <button
+              type="button"
+              class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-all duration-300"
+              onclick="closeDeleteModal()"
+            >
+              Cancelar
+            </button>
+            <form id="deleteForm" method="POST" style="display: inline">
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
+              <button
+                type="submit"
+                class="px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-300"
+              >
+                Sí, eliminar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Búsqueda de usuarios
         const userSearch = document.getElementById("userSearch");
-        const roleFilter = document.getElementById("roleFilter");
-        const userRows = document.querySelectorAll(".user-row");
-        const emptyState = document.getElementById("emptyState");
         const usersTableBody = document.getElementById("usersTableBody");
-        const clearFiltersBtn = document.getElementById("clearFilters");
+        const emptyState = document.getElementById("emptyState");
 
-        // Función para filtrar usuarios
-        function filterUsers() {
-          const searchValue = userSearch.value.toLowerCase();
-          const roleValue = roleFilter.value.toLowerCase();
+        userSearch.addEventListener("input", function () {
+          const query = this.value.trim();
 
-          let visibleCount = 0;
+          fetch(`/search/users?q=${encodeURIComponent(query)}`)
+            .then((response) => response.json())
+            .then((users) => {
+              usersTableBody.innerHTML = "";
 
-          userRows.forEach((row) => {
-            const roleSelect = row.querySelector(
-              'select[name="selected_role"]'
-            );
-            const updateButton = row.querySelector('button[name="user_id"]');
+              // Si no hay resultados
+              if (users.length === 0) {
+                emptyState.classList.remove("hidden");
+                usersTableBody.classList.add("hidden");
+                return;
+              }
 
-            if (roleSelect && updateButton) {
-              // Cambiar color del botón cuando se selecciona un rol
-              roleSelect.addEventListener("change", function () {
-                if (this.value) {
-                  updateButton.classList.remove("bg-primary");
-                  updateButton.classList.add(
-                    "bg-green-600",
-                    "hover:bg-green-700"
-                  );
-                } else {
-                  updateButton.classList.remove(
-                    "bg-green-600",
-                    "hover:bg-green-700"
-                  );
-                  updateButton.classList.add(
-                    "bg-primary",
-                    "hover:bg-primary-light"
-                  );
-                }
+              emptyState.classList.add("hidden");
+              usersTableBody.classList.remove("hidden");
+
+              users.forEach((user) => {
+                const userRow = `
+                    <tr class="user-row hover:bg-gray-50 transition duration-150"
+                        data-roles="${user.roles.join(" ")}">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-light/20 flex items-center justify-center text-primary font-semibold">
+                                    ${user.username[0].toUpperCase()}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-text">
+                                        ${user.username}
+                                    </div>
+                                    <div class="text-sm text-text-secondary">
+                                        ${user.email}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-wrap gap-1">
+                                ${user.roles
+                                  .map(
+                                    (role) => `
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-light/20 text-primary">
+                                    ${role}
+                                </span>
+                                `
+                                  )
+                                  .join("")}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="relative">
+                                <select name="selected_role" 
+                                    class="block w-full bg-white border-0 pl-3 pr-10 rounded-md py-2.5 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary text-gray-900 sm:text-sm sm:leading-6 shadow-sm appearance-none">
+                                    <option value="">-- Seleccionar rol --</option>
+                                    {% for role in roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <button type="submit" 
+                                    class="inline-flex items-center rounded-md bg-primary px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:bg-primary-dark transition-all duration-200">
+                                    Actualizar
+                                </button>
+                                <button 
+                                    onclick="confirmDeleteUser(${user.id}, '${
+                  user.username
+                }')"
+                                    class="text-red-600 hover:text-red-700 transition-colors bg-red-50 hover:bg-red-100 p-2 rounded-lg">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    `;
+                usersTableBody.innerHTML += userRow;
               });
-
-              // Opcional: Preseleccionar el rol actual del usuario
-              const currentRoles = row.getAttribute("data-roles").split(" ");
-              if (currentRoles.length > 0 && currentRoles[0] !== "") {
-                // Encontrar la opción que coincide con el rol actual
-                const options = Array.from(roleSelect.options);
-                options.forEach((option) => {
-                  if (option.textContent.trim() in currentRoles) {
-                    option.selected = true;
-                  }
-                });
-              }
-            }
-          });
-          const permissionsForm = document.getElementById("permissionsForm");
-          if (permissionsForm) {
-            permissionsForm.addEventListener("submit", function (e) {
-              const activeRow = document.activeElement.closest(".user-row");
-              if (activeRow) {
-                const roleSelect = activeRow.querySelector(
-                  'select[name="selected_role"]'
-                );
-                if (roleSelect && !roleSelect.value) {
-                  e.preventDefault();
-                  alert("Por favor, selecciona un rol antes de actualizar");
-                }
-              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              emptyState.classList.remove("hidden");
+              usersTableBody.classList.add("hidden");
             });
-          }
-          // Mostrar estado vacío si no hay resultados
-          if (visibleCount === 0) {
-            emptyState.classList.remove("hidden");
-            usersTableBody.classList.add("hidden");
-          } else {
-            emptyState.classList.add("hidden");
-            usersTableBody.classList.remove("hidden");
-          }
-        }
-
-        // Eventos para filtros
-        userSearch.addEventListener("input", filterUsers);
-        roleFilter.addEventListener("change", filterUsers);
-
-        // Limpiar filtros
-        clearFiltersBtn.addEventListener("click", function () {
-          userSearch.value = "";
-          roleFilter.value = "all";
-          filterUsers();
-        });
-
-        // Cierre automático de notificaciones
-        const toasts = document.querySelectorAll(".fade-in");
-        toasts.forEach((toast) => {
-          setTimeout(() => {
-            toast.style.opacity = "0";
-            toast.style.transform = "translateY(10px)";
-            toast.style.transition = "opacity 0.5s, transform 0.5s";
-
-            setTimeout(() => {
-              toast.remove();
-            }, 500);
-          }, 5000);
         });
       });
+    </script>
+    <script>
+      function confirmDeleteUser(userId, username) {
+        const deleteForm = document.getElementById("deleteForm");
+
+        deleteForm.action = `/admin/users/${userId}/delete`;
+
+        const messageElement = document.getElementById("deleteModalMessage");
+        messageElement.innerHTML = `
+        <div class="text-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+            <p class="mb-2">¿Estás seguro de eliminar al usuario <strong>${username}</strong>?</p>
+            <p class="text-sm text-gray-600">
+                Esta acción eliminará:
+                <ul class="list-disc list-inside text-left mt-2">
+                    <li>Información del usuario</li>
+                    <li>Carpetas del usuario</li>
+                    <li>Archivos del usuario</li>
+                    <li>Roles asignados</li>
+                </ul>
+            </p>
+            <p class="text-xs text-red-500 mt-2">La eliminación es permanente y no se puede deshacer.</p>
+        </div>
+    `;
+
+        document.getElementById("deleteModal").classList.remove("hidden");
+      }
+
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.add("hidden");
+      }
     </script>
   </body>
 </html>

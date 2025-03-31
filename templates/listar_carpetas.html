@@ -346,44 +346,51 @@
     </div>
 
     <script>
-      function confirmDeleteUser(userId, username) {
-        const deleteForm = document.getElementById("deleteForm");
-        deleteForm.action = `/admin/users/${userId}/delete`;
+  function confirmDeleteUser(userId, username) {
+    const deleteForm = document.getElementById("deleteForm");
+    deleteForm.action = `/admin/users/${userId}/delete`;
 
-        document.getElementById(
-          "deleteModalMessage"
-        ).textContent = `¿Estás seguro de que deseas eliminar al usuario "${username}"? Esta acción no se puede deshacer.`;
+    const messageElement = document.getElementById("deleteModalMessage");
+    messageElement.innerHTML = `
+        <div class="text-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+            <p class="mb-2">¿Estás seguro de eliminar al usuario <strong>${username}</strong>?</p>
+            <p class="text-sm text-gray-600">
+                Esta acción eliminará:
+                <ul class="list-disc list-inside text-left mt-2">
+                    <li>Información del usuario</li>
+                    <li>Carpetas del usuario</li>
+                    <li>Archivos del usuario</li>
+                    <li>Roles asignados</li>
+                </ul>
+            </p>
+            <p class="text-xs text-red-500 mt-2">La eliminación es permanente y no se puede deshacer.</p>
+        </div>
+    `;
 
-        document.getElementById("deleteModal").classList.remove("hidden");
-      }
+    document.getElementById("deleteModal").classList.remove("hidden");
+  }
 
-      function closeDeleteModal() {
-        document.getElementById("deleteModal").classList.add("hidden");
-      }
+  function closeDeleteModal() {
+    document.getElementById("deleteModal").classList.add("hidden");
+  }
     </script>
     <script>
-      // Añadir este script a tu plantilla para mantener los filtros durante la paginación
       document.addEventListener("DOMContentLoaded", function () {
-        // Obtener el campo de búsqueda
         const searchInput = document.getElementById("searchInput");
 
-        // Verificar si hay un parámetro de búsqueda en la URL
         const urlParams = new URLSearchParams(window.location.search);
         const searchQuery = urlParams.get("search");
 
-        // Si hay un parámetro de búsqueda, establecerlo en el campo
         if (searchQuery) {
           searchInput.value = searchQuery;
-          // Opcionalmente, activar la búsqueda con el valor
           filterTable(searchQuery);
         }
 
-        // Añadir evento de búsqueda
         searchInput.addEventListener("input", function () {
           filterTable(this.value);
         });
 
-        // Modificar todos los enlaces de paginación para incluir el filtro actual
         function updatePaginationLinks() {
           const paginationLinks = document.querySelectorAll(
             'nav[aria-label="Pagination"] a'
@@ -399,13 +406,10 @@
           }
         }
 
-        // Llamar a esta función cuando se escriba en el campo de búsqueda
         searchInput.addEventListener("input", updatePaginationLinks);
 
-        // Llamar a esta función al cargar la página
         updatePaginationLinks();
 
-        // Función para filtrar la tabla (funciona solo en el cliente)
         function filterTable(query) {
           query = query.toLowerCase();
 
@@ -435,7 +439,6 @@
             }
           });
 
-          // Opcionalmente, actualizar el contador de resultados
           const countDisplay = document.querySelector(".text-gray-600");
         }
       });

@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from flask_principal import Permission, RoleNeed
 from myapp.dashboard import calculate_percent_change, get_charts_data, get_file_types_stats
 from myapp.dropbox_utils import _get_dbx
-from myapp.models import DriveFile, DriveFolder, Roles, User
+from myapp.models import DriveFile, DriveFolder, Roles, User, UserRole
 from forms import DeleteForm
 from myapp.services.preview_files_service import preview_file_logic
 from myapp.services.search_service import buscar_archivos, buscar_usuarios
@@ -220,3 +220,34 @@ def dashboard():
         charts_data=charts_data
     )
 
+@admin_bp.route('/users/<int:user_id>/delete', methods=['POST'])
+@admin_required
+def delete_user(user_id):
+    from app import db
+    user_to_delete = User.query.get_or_404(user_id)
+    
+    if user_to_delete.id == current_user.id:
+        flash('No puedes eliminar tu propio usuario', 'error')
+        return redirect(url_for('main.listar_carpetas'))
+    
+    try:
+        user_folders = DriveFolder.query.filter_by(user_id=user_id).all()
+        folder_count = len(user_folders)
+        
+        file_count = 0
+        for folder in user_folders:
+            files = DriveFile.query.filter_by(folder_id=folder.id).all()
+            file_count += len(files)
+            for file in files:
+                db.session.delete(file)
+            db.session.delete(folder)
+        
+        UserRole.query.filter_by(user_id=user_id).delete()
+        db.session.delete(user_to_delete)
+        
+        db.session.commit()
+        
+    except Exception as e:
+        db.session.rollback()
+    
+    return redirect(url_for('main.listar_carpetas'))

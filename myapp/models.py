@@ -30,6 +30,8 @@ class User(db.Model, UserMixin):
   created_at = db.Column(db.DateTime, default=datetime.utcnow)
   roles = db.relationship("Roles", secondary="user_roles", back_populates="users")
   folders = db.relationship("DriveFolder", backref="user", lazy=True)
+  login_attempts = db.Column(db.Integer, default=0, nullable=True)
+  blocked_until = db.Column(db.DateTime, nullable=True)
 
   __table_args__ = (
     db.UniqueConstraint('username', name='uq_user_username'),

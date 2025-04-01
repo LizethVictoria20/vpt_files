@@ -307,7 +307,15 @@
                 </button>
               </div>
             </form>
-
+            <div class="text-center mt-4">
+              <a
+                href="#"
+                id="recuperarContrasenaLink"
+                class="text-primary text-sm hover:text-primary-dark"
+              >
+                ¿Olvidaste tu contraseña?
+              </a>
+            </div>
             <div class="text-center mt-6 lg:mt-8">
               <p class="text-gray-600 text-sm lg:text-base">
                 ¿No tienes una cuenta?
@@ -348,5 +356,129 @@
         </div>
       </div>
     </div>
+    <div
+      id="recuperarContrasenaModal"
+      class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-primary-dark">
+            Recuperar Contraseña
+          </h2>
+          <button
+            id="cerrarModalRecuperacion"
+            class="text-gray-500 hover:text-gray-700"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+
+        <form id="formRecuperarContrasena">
+          <div class="mb-4">
+            <label
+              for="emailRecuperacion"
+              class="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Correo electrónico
+            </label>
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+              >
+                <i class="fas fa-envelope text-gray-400"></i>
+              </div>
+              <input
+                type="email"
+                id="emailRecuperacion"
+                name="email"
+                required
+                class="pl-12 w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-accent focus:ring-2 focus:ring-accent/20 bg-surface/50"
+                placeholder="Ingresa tu correo electrónico"
+              />
+            </div>
+          </div>
+
+          <div id="mensajeRecuperacion" class="mb-4 hidden"></div>
+
+          <button
+            type="submit"
+            class="w-full bg-primary hover:bg-primary-dark py-3 px-6 rounded-xl text-white font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 flex items-center justify-center"
+          >
+            Enviar instrucciones de recuperación
+            <i class="fas fa-paper-plane ml-2"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const recuperarContrasenaLink = document.getElementById(
+          "recuperarContrasenaLink"
+        );
+        const recuperarContrasenaModal = document.getElementById(
+          "recuperarContrasenaModal"
+        );
+        const cerrarModalRecuperacion = document.getElementById(
+          "cerrarModalRecuperacion"
+        );
+        const formRecuperarContrasena = document.getElementById(
+          "formRecuperarContrasena"
+        );
+        const mensajeRecuperacion = document.getElementById(
+          "mensajeRecuperacion"
+        );
+
+        recuperarContrasenaLink.addEventListener("click", function (e) {
+          e.preventDefault();
+          recuperarContrasenaModal.classList.remove("hidden");
+        });
+
+        cerrarModalRecuperacion.addEventListener("click", function () {
+          recuperarContrasenaModal.classList.add("hidden");
+        });
+
+        formRecuperarContrasena.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const email = document.getElementById("emailRecuperacion").value;
+
+          fetch("/recuperar-contrasena", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{ csrf_token() }}",
+            },
+            body: JSON.stringify({ email: email }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              mensajeRecuperacion.classList.remove("hidden");
+              if (data.success) {
+                mensajeRecuperacion.innerHTML = `
+                      <div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-xl">
+                          ${data.message}
+                      </div>
+                  `;
+                // Limpiar formulario
+                formRecuperarContrasena.reset();
+              } else {
+                mensajeRecuperacion.innerHTML = `
+                      <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl">
+                          ${data.message}
+                      </div>
+                  `;
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              mensajeRecuperacion.classList.remove("hidden");
+              mensajeRecuperacion.innerHTML = `
+                  <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl">
+                      Ocurrió un error. Por favor, intenta nuevamente.
+                  </div>
+              `;
+            });
+        });
+      });
+    </script>
   </body>
 </html>

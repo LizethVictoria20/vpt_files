@@ -346,12 +346,12 @@
     </div>
 
     <script>
-  function confirmDeleteUser(userId, username) {
-    const deleteForm = document.getElementById("deleteForm");
-    deleteForm.action = `/admin/users/${userId}/delete`;
+      function confirmDeleteUser(userId, username) {
+        const deleteForm = document.getElementById("deleteForm");
+        deleteForm.action = `/admin/users/${userId}/delete`;
 
-    const messageElement = document.getElementById("deleteModalMessage");
-    messageElement.innerHTML = `
+        const messageElement = document.getElementById("deleteModalMessage");
+        messageElement.innerHTML = `
         <div class="text-center">
             <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
             <p class="mb-2">¿Estás seguro de eliminar al usuario <strong>${username}</strong>?</p>
@@ -368,12 +368,12 @@
         </div>
     `;
 
-    document.getElementById("deleteModal").classList.remove("hidden");
-  }
+        document.getElementById("deleteModal").classList.remove("hidden");
+      }
 
-  function closeDeleteModal() {
-    document.getElementById("deleteModal").classList.add("hidden");
-  }
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.add("hidden");
+      }
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {

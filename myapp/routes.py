@@ -1,5 +1,6 @@
 from collections import defaultdict
-from operator import or_
+from datetime import datetime, timedelta
+from sqlalchemy import or_
 import os
 from io import BytesIO
 import dropbox
@@ -34,21 +35,46 @@ client_permission = Permission(RoleNeed('cliente'))
 
 @main_bp.route('/', methods=['GET', 'POST'])
 def login():
-    from app import bcrypt
+    from app import bcrypt, db
     form = LoginForm()
     errors = {}
+    
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
         user = User.query.filter(or_(User.username == username, User.email == username)).first()
         
+        now = datetime.utcnow()
+        if user and user.blocked_until:
+            if now < user.blocked_until:
+                minutes_left = int((user.blocked_until - now).total_seconds() // 60)
+                errors['login'] = f'Cuenta bloqueada. Intenta de nuevo en {minutes_left} minutos.'
+                return render_template('login.html', form=form, errors=errors, username=username)
+            else:
+                user.login_attempts = 0
+                user.blocked_until = None
+                db.session.commit()
+        
         if not user:
             errors['login'] = 'El usuario o correo electrónico no existe'
             return render_template('login.html', form=form, errors=errors, username=username)
-            
+
         if not bcrypt.check_password_hash(user.password_hash, password):
-            errors['login'] = 'La contraseña es incorrecta'
+            user.login_attempts = (user.login_attempts or 0) + 1
+            
+            if user.login_attempts >= 3:
+                user.blocked_until = now + timedelta(minutes=30)
+                errors['login'] = 'Has excedido el límite de intentos. Cuenta bloqueada por 30 minutos.'
+            else:
+                intentos_restantes = 3 - user.login_attempts
+                errors['login'] = f'Contraseña incorrecta. Te quedan {intentos_restantes} intentos.'
+            
+            db.session.commit()
             return render_template('login.html', form=form, errors=errors, username=username)
+        
+        user.login_attempts = 0
+        user.blocked_until = None
+        db.session.commit()
         
         login_user(user)
         

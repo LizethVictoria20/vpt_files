@@ -1,5 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
+import bcrypt
 from sqlalchemy import or_
 import os
 from io import BytesIO
@@ -552,4 +553,62 @@ def search_users():
 def preview_file(file_id):
     return preview_file_logic(file_id)
 
-
+@main_bp.route('/reset-password', methods=['POST'])
+def reset_password():
+    from app import db, bcrypt
+    import traceback
+    
+    try:
+        data = request.get_json()
+        
+        if not data:
+            print("No se recibieron datos")
+            return jsonify({
+                'success': False, 
+                'message': 'No se recibieron datos'
+            }), 400
+        
+        email = data.get('email')
+        nueva_contrasena = data.get('nueva_contrasena')
+        
+        if not email:
+            print("Correo electrónico no proporcionado")
+            return jsonify({
+                'success': False, 
+                'message': 'Correo electrónico no proporcionado'
+            }), 400
+        
+        if not nueva_contrasena:
+            print("Contraseña no proporcionada")
+            return jsonify({
+                'success': False, 
+                'message': 'Contraseña no proporcionada'
+            }), 400
+        user = User.query.filter_by(email=email).first()
+        
+        if not user:
+            print(f"Usuario no encontrado: {email}")
+            return jsonify({
+                'success': False, 
+                'message': 'Usuario no encontrado'
+            }), 404
+        
+        user.password_hash = bcrypt.generate_password_hash(nueva_contrasena).decode('utf-8')
+        db.session.commit()
+        
+        print(f"Contraseña restablecida para {email}")
+        return jsonify({
+            'success': True, 
+            'message': 'Contraseña restablecida exitosamente'
+        })
+    
+    except Exception as e:
+        db.session.rollback()
+        
+        print("Error detallado:")
+        traceback.print_exc()
+        
+        return jsonify({
+            'success': False, 
+            'message': f'Error al restablecer contraseña: {str(e)}'
+        }), 500
